@@ -1,26 +1,30 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
-import Schedule from '../../components/schedule'
 import Seasons from '../../components/seasons'
-import Cars from '../../components/cars'
+import Standings from '../../components/standings'
 
 const ScheduleArchivePage = ({ data }) => {
 	return (
 		<main>
 			<h2 className="text-center">
-				{data.season.name.replace('Output Racing ', '')} Schedule
+				{data.season.name.replace('Output Racing ', '')} Standings
 			</h2>
-			{ data.season.cars &&
-				<Cars cars={
-					data.league.cars.filter(
-						({ name }) => data.season.cars.includes(name)
-					)
-				}/>
-			}
-			<Schedule {...data.season}/>
 			
+			<h6 className="text-center" style={{ margin: "1rem 0 2rem" }}>
+				After {data.season.results ? data.season.schedule.filter(({ counts, uploaded }) => counts && uploaded).length : 0} of {data.season.schedule.filter(({ counts }) => counts).length} Races
+			</h6>
+			
+			<Standings 
+				standings={
+					data.season.standings.map(row => ({
+						...row, 
+						driver: data.drivers.nodes.find(({ name }) => name === row.driver)
+					}))
+				}
+			/>
+
 			<Seasons 
-				path="schedule" 
+				path="standings" 
 				seasons={data.league.seasons} 
 				drivers={data.drivers.nodes}
 			/>
@@ -30,31 +34,31 @@ const ScheduleArchivePage = ({ data }) => {
 }
 
 export const query = graphql`
-	query ScheduleArchivePage($contentful_id: String) {
+	query StandingsArchivePage($contentful_id: String) {
 		season: contentfulSeason(contentful_id: {eq: $contentful_id}) {
 			name
-			cars
 			schedule {
 				counts
-				name
-				raceNo
+				uploaded
+			}
+			results {
 				raceId
-				offWeek
-				track
-				time
+			}
+			standings {
+				driver
+				change
+				starts
+				points
+				behindNext
+				behindLeader
+				wins
+				t5s
+				t10s
 				laps
-				date
+				incidents
 			}
 		}
 		league: contentfulLeague(leagueId: {eq: 2732}) {
-			cars {
-				name
-				image {
-					childImageSharp {
-						gatsbyImageData(height: 150)
-					}					
-				}
-			}
 			seasons {
 				name
 				id: contentful_id

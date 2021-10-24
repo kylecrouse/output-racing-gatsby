@@ -19,8 +19,11 @@ const SchedulePage = ({ data }) => {
 			}
 			<Schedule {...data.league.activeSeason}/>
 			
-			<h3 className="text-center" style={{ margin: "3rem 0 2rem" }}>Other Seasons</h3>
-			<Seasons seasons={data.league.seasons} drivers={data.drivers.nodes}/>
+			<Seasons 
+				path="schedule" 
+				seasons={data.league.seasons} 
+				drivers={data.drivers.nodes}
+			/>
 	
 		</main>
 	)
