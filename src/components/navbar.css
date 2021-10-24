@@ -1,0 +1,31 @@
+.navbar {
+	background: black;
+	padding: 1rem 0;
+}
+
+.logo {
+	display: block;
+	height: 2.5rem;
+	position: relative;
+	top: 2px;
+}
+
+.navbar-section:not(:first-child):last-child {
+	justify-content: flex-end;
+}
+
+@media (max-width: 1280px) {
+	.navbar-section {
+		justify-content: center !important;
+	}
+	
+	.logo {
+		margin-bottom: 1rem;
+	}
+}
+
+@media (max-width: 600px) {
+	.logo {
+		left: 8px;
+	}
+}

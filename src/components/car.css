@@ -1,0 +1,15 @@
+.car-container {
+	margin: 0 0 1rem;
+	overflow: hidden;
+	text-align: center;
+}
+
+.car-image {
+	max-height: 150px;
+	max-width: 102%; 
+	margin-left: -1%;
+}
+
+.car-caption {
+	font-size: 0.6rem;
+}
