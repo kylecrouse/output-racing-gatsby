@@ -33,7 +33,7 @@ const DriversPage = ({ data }) => {
 											}
 										</td>
 										<td className="name">
-											<a href={`/driver/${props.name.replace(/\s/g, '-').toLowerCase()}/`}>
+											<a href={`/drivers/${props.name.replace(/\s/g, '-').toLowerCase()}/`}>
 												{props.nickname || props.name}
 											</a>
 										</td>

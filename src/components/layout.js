@@ -6,16 +6,20 @@ import Navbar from './navbar'
 import Footer from './footer'
 
 const Layout = (props) => {
-	return (
-		<React.Fragment>
-			<Navbar page={props.uri.substr(1)}/>
-			<div className="container content">
+	const path = props.uri.split('/');
+	let content = props.children
+	if (!(path[1] === 'drivers' && path.length > 2))
+		content = <div className="container content">
 				<div className="columns">
 					<div className="column col-8 col-xl-12 col-mx-auto">
 						{props.children}
 					</div>
 				</div>
 			</div>
+	return (
+		<React.Fragment>
+			<Navbar page={ path[1] }/>
+			{ content }
 			<Footer/>
 		</React.Fragment>
 	)
