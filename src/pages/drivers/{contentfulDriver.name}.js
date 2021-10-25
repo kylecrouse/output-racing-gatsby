@@ -18,7 +18,7 @@ const DriverPage = ({ data }) => {
 							image={ getImage(image) } 
 							style={{ 
 								display: "block",
-								maxHeight: "50vh",
+								maxHeight: "40vh",
 								width: "100%"
 							}} 
 						/>
