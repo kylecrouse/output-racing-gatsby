@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
+import { Helmet } from 'react-helmet'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import moment from 'moment'
 import DriverChip from '../../components/driverChip'
@@ -11,6 +12,11 @@ const LatestPage = ({ data }) => {
 	const logo = getImage(track.logo)
 	return (
 		<main>
+
+			<Helmet>
+				<meta charSet="utf-8" />
+				<title>Output Racing League | Results | { race.name } </title>
+			</Helmet>
 
 			<div className="columns" style={{ marginBottom: "2rem", alignItems: "center" }}>
 				<div className="column col-4 col-sm-12 text-center">

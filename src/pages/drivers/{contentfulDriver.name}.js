@@ -1,5 +1,6 @@
 import * as React from "react"
 import { graphql } from 'gatsby'
+import { Helmet } from 'react-helmet'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import License from '../../components/license'
 
@@ -9,6 +10,11 @@ const DriverPage = ({ data }) => {
 	return (
 		<main>
 			
+			<Helmet>
+				<meta charSet="utf-8" />
+				<title>Output Racing League | Drivers | { driver.nickname || driver.name }</title>
+			</Helmet>
+
 			{ driver.media && 
 				driver.media
 					.slice(0, 1)

@@ -1,5 +1,6 @@
 import * as React from "react"
 import { graphql } from 'gatsby'
+import { Helmet } from 'react-helmet'
 import { BLOCKS, MARKS } from "@contentful/rich-text-types"
 import { renderRichText } from "gatsby-source-contentful/rich-text"
 
@@ -28,6 +29,11 @@ const options = {
 const RulesPage = ({ data }) => {
 	return (
 		<main>
+		<Helmet>
+			<meta charSet="utf-8" />
+			<title>Output Racing League | Rules</title>
+		</Helmet>
+
 			<div class="columns">
 				<div class="column col-6 col-sm-4 col-mx-auto">
 					<h2 className="text-center" style={{ margin: "0 0 3rem" }}>Race Info</h2>

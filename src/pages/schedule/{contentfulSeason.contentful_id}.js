@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
+import { Helmet } from 'react-helmet'
 import Schedule from '../../components/schedule'
 import Seasons from '../../components/seasons'
 import Cars from '../../components/cars'
@@ -7,6 +8,12 @@ import Cars from '../../components/cars'
 const ScheduleArchivePage = ({ data }) => {
 	return (
 		<main>
+
+			<Helmet>
+				<meta charSet="utf-8" />
+				<title>Output Racing League | Schedule | {data.season.name.replace('Output Racing ', '')}</title>
+			</Helmet>
+
 			<h2 className="text-center">
 				{data.season.name.replace('Output Racing ', '')} Schedule
 			</h2>
@@ -21,7 +28,7 @@ const ScheduleArchivePage = ({ data }) => {
 			
 			<Seasons 
 				path="schedule" 
-				seasons={data.league.seasons} 
+				seasons={data.league.seasons.filter(({ id }) => id !== data.season.id)} 
 				drivers={data.drivers.nodes}
 			/>
 	
@@ -33,6 +40,7 @@ export const query = graphql`
 	query ScheduleArchivePage($contentful_id: String) {
 		season: contentfulSeason(contentful_id: {eq: $contentful_id}) {
 			name
+			id: contentful_id
 			cars
 			schedule {
 				counts

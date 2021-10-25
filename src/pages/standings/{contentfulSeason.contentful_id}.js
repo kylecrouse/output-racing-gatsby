@@ -1,11 +1,18 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
+import { Helmet } from 'react-helmet'
 import Seasons from '../../components/seasons'
 import Standings from '../../components/standings'
 
 const ScheduleArchivePage = ({ data }) => {
 	return (
 		<main>
+
+			<Helmet>
+				<meta charSet="utf-8" />
+				<title>Output Racing League | Standings | {data.season.name.replace('Output Racing ', '')}</title>
+			</Helmet>
+
 			<h2 className="text-center">
 				{data.season.name.replace('Output Racing ', '')} Standings
 			</h2>
@@ -25,7 +32,7 @@ const ScheduleArchivePage = ({ data }) => {
 
 			<Seasons 
 				path="standings" 
-				seasons={data.league.seasons} 
+				seasons={data.league.seasons.filter(({ id }) => id !== data.season.id)} 
 				drivers={data.drivers.nodes}
 			/>
 	
@@ -37,6 +44,7 @@ export const query = graphql`
 	query StandingsArchivePage($contentful_id: String) {
 		season: contentfulSeason(contentful_id: {eq: $contentful_id}) {
 			name
+			id: contentful_id
 			schedule {
 				counts
 				uploaded

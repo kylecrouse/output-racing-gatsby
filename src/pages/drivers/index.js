@@ -1,11 +1,17 @@
 import * as React from "react"
 import { graphql } from 'gatsby'
+import { Helmet } from "react-helmet"
 import './drivers.css'
 
 const DriversPage = ({ data }) => {
 	return (
 		<main>
 						
+			<Helmet>
+				<meta charSet="utf-8" />
+				<title>Output Racing League | Drivers</title>
+			</Helmet>
+
 			<h2 className="text-center">Drivers</h2>
 			
 			<table>
