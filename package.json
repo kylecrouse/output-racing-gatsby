@@ -15,9 +15,9 @@
     "clean": "gatsby clean"
   },
   "dependencies": {
-    "gatsby": "^3.14.3",
+    "gatsby": "^4.0.1",
     "gatsby-plugin-image": "^2.0.0",
-    "gatsby-plugin-remote-images": "^3.1.1",
+    "gatsby-plugin-react-helmet": "^5.0.0",
     "gatsby-plugin-sharp": "^4.0.0",
     "gatsby-source-contentful": "^6.0.0",
     "gatsby-source-filesystem": "^4.0.0",
@@ -25,6 +25,7 @@
     "moment": "^2.29.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-helmet": "^6.1.0",
     "spectre.css": "^0.5.9"
   }
 }
