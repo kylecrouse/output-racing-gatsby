@@ -1,0 +1,31 @@
+.tagline {
+	background: black;
+	margin: 0 -2.5rem;
+}
+
+.tagline p {
+	text-align: center;
+	color: #fff;
+	font-size: 1.2rem;
+	font-weight: 400;
+	text-transform: uppercase;
+	font-style: oblique;
+	line-height: 1.5em;
+	letter-spacing: 1.8px;
+	margin: 0;
+	padding: 0.6rem 0 1rem;
+}
+
+.tagline figure {
+	border-left: 0.4rem solid black;
+	border-right: 0.4rem solid black;
+	margin: 0.4rem 0;
+	transform: skew(-20deg);
+	overflow: hidden;
+}
+
+.tagline .thumbnail {
+	height: auto;
+	max-width: 100%;
+	transform: skew(20deg) scale(1.3);
+}
