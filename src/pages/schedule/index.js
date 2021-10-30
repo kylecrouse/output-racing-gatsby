@@ -56,11 +56,7 @@ export const query = graphql`
 			}
 			cars {
 				name
-				image {
-					childImageSharp {
-						gatsbyImageData(height: 150)
-					}					
-				}
+				image
 			}
 			seasons {
 				name

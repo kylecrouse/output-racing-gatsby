@@ -57,11 +57,7 @@ export const query = graphql`
 		league: contentfulLeague(leagueId: {eq: 2732}) {
 			cars {
 				name
-				image {
-					childImageSharp {
-						gatsbyImageData(height: 150)
-					}					
-				}
+				image
 			}
 			seasons {
 				name

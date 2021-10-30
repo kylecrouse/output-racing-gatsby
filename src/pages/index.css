@@ -27,5 +27,79 @@
 .tagline .thumbnail {
 	height: auto;
 	max-width: 100%;
+	position: relative;
 	transform: skew(20deg) scale(1.3);
+}
+
+.tagline figure::before {
+	background-color: transparent;
+	/* background-image: url(../images/plus-x2.png);  */
+	background-position: center;
+	background-repeat: repeat;
+	background-size: 8px;
+	bottom: 0;
+	content: ' ';
+	left: 0;
+	opacity: 0.4;
+	position: absolute;
+	right: 0;
+	top: 0;
+	transform: skew(20deg);
+	z-index: 1;
+}
+
+.tagline figure::after {
+	background-color: transparent;
+	background-image: 
+		radial-gradient(farthest-corner at 50% 45%, transparent 50%, rgba(0,0,0,0.9)); 
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 100%;
+	bottom: 0;
+	content: ' ';
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 1;
+}
+
+.schedule-container {
+	background: 
+		linear-gradient(black, transparent 10%, transparent 90%, black),
+		radial-gradient(circle at center, rgba(0,0,0,0.7), rgba(0,0,0,0.5)),
+		black url(../images/track.jpg) no-repeat center/cover;
+	padding: 2rem 0;
+}
+
+.schedule-container .columns {
+	position: relative;
+}
+
+.schedule-container .glide__arrow {
+	background: none;
+	border: 0;
+	box-shadow: none;
+	margin: 0;
+	padding: 0;
+	text-shadow: none;
+}
+
+.schedule-container .glide__arrow--left {
+	left: 30%;
+	top: 47%;
+}
+
+.schedule-container .glide__arrow--right {
+	right: 30%;
+	top: 47%;
+}
+
+.schedule-container .schedule-card {
+	position: relative;
+	left: -1.3%;
+}
+
+.schedule-container .icon {
+	color: #f4a913;
 }

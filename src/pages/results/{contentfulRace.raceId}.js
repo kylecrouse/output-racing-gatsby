@@ -1,15 +1,13 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
-import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import moment from 'moment'
 import DriverChip from '../../components/driverChip'
-import Video from '../../components/Video'
+import Video from '../../components/video'
 
 const ResultsPage = ({ data }) => {
 	const race = data.race;
 	const track = data.league.tracks.find(({ name }) => race.track.includes(name))
-	const logo = getImage(track.logo)
 	return (
 		<main>
 
@@ -35,7 +33,7 @@ const ResultsPage = ({ data }) => {
 					</ul>
 				</div>
 				<div className="column col-4 col-sm-12">
-					<GatsbyImage image={logo} alt={`${track.name} logo`} style={{ display: "block", height: "100%", maxHeight: "150px", margin: "0 auto", maxWidth: "100%" }} />
+					<img src={track.logo} alt={`${track.name} logo`} style={{ display: "block", height: "100%", maxHeight: "150px", margin: "0 auto", maxWidth: "100%" }} />
 				</div>
 			</div>
 
@@ -141,11 +139,7 @@ export const query = graphql`
 		league: contentfulLeague(leagueId: {eq: 2732}) {
 			tracks {
 				name
-				logo {
-					childImageSharp {
-						gatsbyImageData(height: 150)
-					}					
-				}
+				logo
 			}
 		}
 		drivers: allContentfulDriver {

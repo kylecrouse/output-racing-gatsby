@@ -3,6 +3,7 @@ import { graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import License from '../../components/license'
+import './driver.css'
 
 const DriverPage = ({ data }) => {
 	const driver = data.driver
@@ -21,12 +22,8 @@ const DriverPage = ({ data }) => {
 					.map(image => (
 						<GatsbyImage 
 							alt="car screenshot"
+							className="driver-image"
 							image={ getImage(image) } 
-							style={{ 
-								display: "block",
-								maxHeight: "40vh",
-								width: "100%"
-							}} 
 						/>
 					)) 
 			}

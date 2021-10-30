@@ -1,8 +1,8 @@
 import * as React from "react"
 import { graphql } from 'gatsby'
-import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import { Helmet } from 'react-helmet'
-import moment from 'moment'
+import { Carousel, Slide } from '../components/carousel'
+import ScheduleCard from '../components/scheduleCard'
 import Video from '../components/video'
 import './index.css'
 import img1 from '../images/header/Champ.png'
@@ -37,15 +37,54 @@ const IndexPage = ({ data }) => {
         <p>An Asphalt Oval League for the Late-Night Racer</p>
       </div>
       
-      <div className="container content">
-        <div className="columns">   
-          <div className="column col-5 col-md-12 col-ml-auto">
-
-          </div>
-          <div className="column col-3 col-md-12 col-mr-auto">
-
-          </div>
-        </div>
+      <div className="content schedule-container">
+        <Carousel options={{ 
+          perView: 1, 
+          startAt: data.league.activeSeason.schedule
+            .filter(event => event.counts)
+            .sort((a, b) => a.date - b.date)
+            .findIndex(event => !event.uploaded), 
+          type: "carousel" 
+        }}>
+          { data.league.activeSeason.schedule
+            .filter(event => event.counts)
+            .map((event, round, events) => {
+              let results = []
+              if (data.league.activeSeason.results) {
+                const race = data.league.activeSeason.results.find(
+                  ({ raceId }) => parseInt(raceId) === parseInt(event.raceId)
+                )
+                if (race && race.results.length > 0)
+                  results = race.results.map(item => {
+                    const driver = data.drivers.nodes.find(
+                      ({ name }) => name === item.name
+                    )
+                    return ({ ...item, driver })
+                  })
+              }
+                
+              const track = data.league.tracks.find(
+                ({ name }) => event.track.includes(name)
+              )
+              
+              const cars = data.league.cars.filter(
+                ({ name }) => data.league.activeSeason.cars.includes(name)
+              )
+    
+              return (
+                <Slide>
+                  <ScheduleCard 
+                    { ...event } 
+                    round={round}
+                    cars={cars}
+                    track={track} 
+                    results={results} 
+                  />
+                </Slide>
+              )
+            })
+          }
+        </Carousel>
       </div>
       
       <div className="container" style={{ margin: "0.5rem 0 -4rem" }}>
@@ -63,7 +102,50 @@ const IndexPage = ({ data }) => {
 export const query = graphql`
   query IndexQuery {
     league: contentfulLeague(leagueId: {eq: 2732}) {
-      name
+      activeSeason {
+        name
+        cars
+        schedule {
+          track
+          name
+          date
+          raceId
+          counts
+          uploaded
+        }
+        results {
+          raceId
+          results {
+            finish
+            name
+            points
+            bonus
+            penalty
+          }
+        }
+      }
+      tracks {
+        name
+        logo
+        map
+      }
+      cars {
+        name
+        image 
+      }
+    }
+    drivers: allContentfulDriver {
+      nodes {
+        name
+        nickname
+        active
+        number
+        numberArt {
+          file {
+            url
+          }
+        }
+      }
     }
   }
 `
