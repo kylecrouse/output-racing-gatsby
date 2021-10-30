@@ -124,7 +124,7 @@
 }
 
 .schedule-results {
-	margin-bottom: 1rem;
+	margin-bottom: 1.2rem;
 }
 
 .schedule-result-item {
@@ -172,6 +172,10 @@
 
 .schedule-result-item b {
 	font-weight: 900;
+}
+
+.schedule-countdown {
+	padding-bottom: 0.2rem;
 }
 
 .schedule-countdown h3 {
