@@ -22,11 +22,11 @@ export const Carousel = React.forwardRef(({ options, children }, ref) => {
 			<div className="glide__track" data-glide-el="track">
 				<ul className="glide__slides">{children}</ul>
 			</div>
-			<div class="glide__arrows" data-glide-el="controls">
-				<button class="glide__arrow glide__arrow--left" data-glide-dir="<">
+			<div className="glide__arrows" data-glide-el="controls">
+				<button className="glide__arrow glide__arrow--left" data-glide-dir="<">
 					<i className="icon icon-arrow-left">prev</i>
 				</button>
-				<button class="glide__arrow glide__arrow--right" data-glide-dir=">">
+				<button className="glide__arrow glide__arrow--right" data-glide-dir=">">
 					<i className="icon icon-arrow-right">next</i>
 				</button>
 			</div>
