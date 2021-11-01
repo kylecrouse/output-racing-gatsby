@@ -16,7 +16,7 @@
 
 .schedule-round {
 	background: black;
-	box-shadow: 0 0 0.6rem rgba(0,0,0,0.5);
+	/* box-shadow: 0 0 0.6rem rgba(0,0,0,0.5); */
 	color: white;
 	letter-spacing: 5px;
 	position: relative;
@@ -27,26 +27,27 @@
 }
 
 .schedule-round h3 {
-	background: linear-gradient(90deg, black 5px, #333 5px, #333 calc(100% - 5px), black calc(100% - 5px));
-	border-color: #333;
-	border-style: solid;
-	border-width: 0 5px;
-	display: inline-block;
+	background: linear-gradient(110deg, 
+		black 25%, 
+		#333 25%, 
+		#333 calc(25% + 5px), 
+		black calc(25% + 5px), 
+		black calc(25% + 10px), 
+		#333 calc(25% + 10px), 
+		#454545, 
+		#333 calc(75% - 10px), 
+		black calc(75% - 10px), 
+		black calc(75% - 5px), 
+		#333 calc(75% - 5px), 
+		#333 75%, 
+		black 75%
+	);
 	font-size: 0.8rem;
 	font-style: italic;
 	font-weight: 100;
-	line-height: 1.5;
+	line-height: 1.8;
 	position: relative;
 	margin: 0 auto;
-	padding: 0 40px;
-	top: -1px;
-	text-shadow: 1px 1px 2px black;
-	transform: skew(-20deg);
-}
-
-.schedule-round > h3 > span {
-	display: inline-block;
-	transform: skew(20deg);
 }
 
 .schedule-round span span {
@@ -117,7 +118,7 @@
 }
 
 .schedule-card .car-container {
-	margin: 0 0 0.5rem;
+	margin: -0.2rem 0 1rem;
 }
 
 .schedule-card .car-container figcaption {

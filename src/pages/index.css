@@ -103,3 +103,81 @@
 .schedule-container .icon {
 	color: #f4a913;
 }
+
+.tab {
+	background: linear-gradient(110deg, #333, #454545 40%, #454545 60%, #333);
+	border-bottom: 2px solid black;
+	box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+	justify-content: center;	
+	margin: 2rem -20px 0;
+	overflow: hidden;
+	position: relative;
+}
+
+.tab .tab-item {
+	border-right: 2px solid black;
+	overflow: hidden;
+	transform: skew(-20deg);
+}
+
+.tab .tab-item:first-child {
+	border-left: 2px solid black;
+}
+
+.tab .tab-item a {
+	color: #999;
+	padding: 0.5rem 4rem;
+	text-transform: uppercase;
+	transform: skew(20deg);
+}
+
+.tab .tab-item a:hover,
+.tab .tab-item a:focus {
+	color: #f4a913;
+}
+
+.tab .tab-item.active a {
+	background: #f4a913;
+	border: 0;
+	box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+	color: black;
+	margin: 0 -20px;
+	padding: 0.5rem calc(4rem + 20px);
+}
+
+.tab-body {
+	background: #f0f0f0 url(../images/bg@2x.jpg) no-repeat top/100%;
+}
+
+.tab-body h3 {
+	background: linear-gradient(rgba(0,0,0,0.5), transparent 10px);
+	color: white;
+	font-size: 2rem;
+	font-style: italic;
+	font-weight: 100;
+	letter-spacing: 10px;
+	padding: 3.5rem 0 5rem;
+	text-align: center;
+	text-shadow: 1px 1px 2px black;
+	text-transform: uppercase;
+}
+
+.tab-body table { 
+	border-collapse: separate; 
+	border-spacing: 0 0.2rem; 
+	margin: 2rem 0;
+}
+
+.tab-body tr:nth-child(odd) td {
+	background-color: white;
+}
+
+.tab-body td:first-child {
+	border-top-left-radius: 5px; 
+	border-bottom-left-radius: 5px;
+}
+
+.tab-body td:last-child {
+	border-bottom-right-radius: 5px; 
+	border-top-right-radius: 5px; 
+}

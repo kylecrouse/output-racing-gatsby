@@ -3,6 +3,8 @@ import { graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
 import { Carousel, Slide } from '../components/carousel'
 import ScheduleCard from '../components/scheduleCard'
+import StandingsCard from '../components/standingsCard'
+import Standings from '../components/standings'
 import Video from '../components/video'
 import './index.css'
 import img1 from '../images/header/Champ.png'
@@ -87,6 +89,61 @@ const IndexPage = ({ data }) => {
         </Carousel>
       </div>
       
+      <ul class="tab">
+        <li class="tab-item active">
+          <a href="#standings">Standings</a>
+        </li>
+        <li class="tab-item">
+          <a href="#rankings">Rankings</a>
+        </li>
+        <li class="tab-item">
+          <a href="#race">Last Race</a>
+        </li>
+      </ul>
+      
+      <div id="standings" className="tab-body">
+        <h3>Standings</h3>
+        <div className="columns col-8 col-mx-auto">
+          { data.league.activeSeason.standings
+              .sort((a, b) => a.position - b.position)
+              .slice(0, 3)
+              .map(item => {
+                return (
+                  <div className="col-4">
+                    <StandingsCard 
+                      { ...item } 
+                      driver={
+                        data.drivers.nodes.find(({ name }) => name === item.driver)
+                      } 
+                    />
+                  </div>
+                )
+              })
+          }
+          <div class="columns">
+            <div className="col-8 col-mx-auto">
+              <Standings 
+                standings={
+                  data.league.activeSeason.standings
+                    .sort((a, b) => a.position - b.position)
+                    .slice(0, 10)
+                    .map(item => ({
+                      ...item, 
+                      driver: data.drivers.nodes.find(({ name }) => name === item.driver)
+                    }))
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="rankings" className="tab-body">
+      </div>
+      
+      <div id="race" className="tab-body">
+      </div>        
+      
       <div className="container" style={{ margin: "0.5rem 0 -4rem" }}>
         <div className="columns">
           <div className="column col-8 col-md-12 col-mx-auto">
@@ -123,6 +180,20 @@ export const query = graphql`
             penalty
           }
         }
+        standings {
+          position
+          driver
+          change
+          starts
+          points
+          behindNext
+          behindLeader
+          wins
+          t5s
+          t10s
+          laps
+          incidents
+        }
       }
       tracks {
         name
@@ -144,6 +215,11 @@ export const query = graphql`
           file {
             url
           }
+        }
+        media {
+          gatsbyImageData(
+            placeholder: BLURRED
+          )
         }
       }
     }

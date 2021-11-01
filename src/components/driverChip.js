@@ -7,14 +7,14 @@ const DriverChip = (props) => {
 			{ props.numberArt &&
 				<NumberArt number={props.number} image={props.numberArt.file.url}/>
 			}
-			{props.nickname || props.name}
+			{ renderName(props) }
 		</a>    
 	) : (
 		<div className="driverChip">
 			{ props.numberArt &&
 				<NumberArt number={props.number} image={props.numberArt.file.url}/>
 			}
-			{props.nickname || props.name}
+			{ renderName(props) }
 		</div>    
 	)
 }
@@ -24,6 +24,23 @@ const NumberArt = (props) => {
 		<div className="numberArtContainer">
 			<img className="numberArt" src={ props.image } alt={props.number} />
 		</div>
+	)
+}
+
+const renderName = (props) => {
+	const name = props.nickname || props.name
+	const parts = name.split(' ')
+	const last = parts.pop()
+	return (
+		<span className="driver-name">
+			<span className="first-name">
+				{ parts.join(' ') }
+			</span>
+			&nbsp;
+			<span className="last-name">
+				{ last }
+			</span>
+		</span>
 	)
 }
 
