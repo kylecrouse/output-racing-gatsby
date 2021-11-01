@@ -7,7 +7,7 @@
 	background-repeat: no-repeat, repeat;
 	background-size: 100%, 8px;
 	border-radius: 10px;
-	box-shadow: 10px 10px 20px black, inset 0 0 0.6rem rgba(0,0,0,0.5);
+	/* box-shadow: 10px 10px 20px black, inset 0 0 0.6rem rgba(0,0,0,0.5); */
 	margin: 0 auto;
 	overflow: hidden;
 	position: relative;

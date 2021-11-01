@@ -19,6 +19,7 @@ const IndexPage = ({ data }) => {
       <Helmet>
         <meta charset="utf-8"/>
         <title>{ data.league.name }</title>
+        <script async src="https://www.youtube.com/iframe_api"></script>
       </Helmet>
       
       <div className="tagline">
@@ -89,14 +90,14 @@ const IndexPage = ({ data }) => {
         </Carousel>
       </div>
       
-      <ul class="tab">
-        <li class="tab-item active">
+      <ul className="tab">
+        <li className="tab-item active">
           <a href="#standings">Standings</a>
         </li>
-        <li class="tab-item">
+        <li className="tab-item">
           <a href="#rankings">Rankings</a>
         </li>
-        <li class="tab-item">
+        <li className="tab-item">
           <a href="#race">Last Race</a>
         </li>
       </ul>
@@ -120,19 +121,23 @@ const IndexPage = ({ data }) => {
                 )
               })
           }
-          <div class="columns">
-            <div className="col-8 col-mx-auto">
-              <Standings 
-                standings={
-                  data.league.activeSeason.standings
-                    .sort((a, b) => a.position - b.position)
-                    .slice(0, 10)
-                    .map(item => ({
-                      ...item, 
-                      driver: data.drivers.nodes.find(({ name }) => name === item.driver)
-                    }))
-                }
-              />
+          <div class="container">
+            <div class="columns">
+              <div className="col-8 col-mx-auto">
+                <Standings 
+                  headers={false}
+                  fields={['pos', 'driver', 'points']}
+                  standings={
+                    data.league.activeSeason.standings
+                      .sort((a, b) => a.position - b.position)
+                      .slice(0, 10)
+                      .map(item => ({
+                        ...item, 
+                        driver: data.drivers.nodes.find(({ name }) => name === item.driver)
+                      }))
+                  }
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -144,14 +149,10 @@ const IndexPage = ({ data }) => {
       <div id="race" className="tab-body">
       </div>        
       
-      <div className="container" style={{ margin: "0.5rem 0 -4rem" }}>
-        <div className="columns">
-          <div className="column col-8 col-md-12 col-mx-auto">
-            <Video src="https://www.youtube.com/embed/34KPVZWE5Ks"/>
-          </div>
-        </div>
+      <div className="promo">
+        <div id="embeddable"></div>
       </div>
-      
+            
     </main>
   )
 }
