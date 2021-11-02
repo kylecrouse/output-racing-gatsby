@@ -121,6 +121,10 @@
 	transform: skew(-20deg);
 }
 
+.tab .tab-item:not(.react-tabs__tab--selected):hover {
+	cursor: pointer;
+}
+
 .tab .tab-item:first-child {
 	border-left: 2px solid black;
 }
@@ -152,6 +156,7 @@
 }
 
 .tab-body hgroup {
+	background: linear-gradient(rgba(0,0,0,0.5), transparent 10px);
 	padding: 3.5rem 0;
 }
 
