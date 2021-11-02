@@ -2,7 +2,7 @@ import * as React from 'react'
 import { graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
 import moment from 'moment'
-import DriverChip from '../../components/driverChip'
+import Results from '../../components/results'
 import Video from '../../components/video'
 
 const LatestPage = ({ data }) => {
@@ -37,46 +37,14 @@ const LatestPage = ({ data }) => {
 				</div>
 			</div>
 
-			<table>
-				<thead>
-					<tr>
-						<th width="2%">F</th>
-						<th width="2%">S</th>
-						<th>Driver</th>
-						<th width="7%">Points</th>
-						<th width="7%">Interval</th>
-						<th width="7%">Laps</th>
-						<th width="7%">Led</th>
-						<th width="7%">Fastest</th>
-						<th width="7%">Average</th>
-						<th width="7%">Inc</th>
-						<th width="7%">Status</th>
-					</tr>
-				</thead>
-				<tbody>
-					{ race.results
-							.sort((a, b) => parseInt(a.finish, 10) > parseInt(b.finish, 10))
-							.map(props => {
-								const driver = data.drivers.nodes.find(({ name }) => name === props.name)
-								return (
-									<tr key={props.id} style={{ opacity: driver.active ? 1 : 0.3 }}>
-										<td>{props.finish}</td>
-										<td>{props.start}</td>
-										<td><DriverChip {...driver}/></td>
-										<td>{parseInt(props.points, 10) + parseInt(props.bonus, 10) + parseInt(props.penalty, 10)}</td>
-										<td>{props.interval}</td>
-										<td>{props.completed}</td>
-										<td>{props.led}</td>
-										<td>{props.fastest}</td>
-										<td>{props.average}</td>
-										<td>{props.incidents}</td>
-										<td>{props.status}</td>
-									</tr>
-								)
-							}) 
-					}
-				</tbody>
-			</table>
+			<Results 
+				results={
+					race.results.map(item => ({
+						...item,
+						driver: data.drivers.nodes.find(({ name }) => name === item.name)
+					}))
+				}
+			/>
 			
 			{ race.broadcast && 
 				<Video src={race.broadcast} style={{ marginTop: "3rem" }}/> 

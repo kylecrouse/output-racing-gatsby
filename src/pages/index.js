@@ -1,7 +1,9 @@
 import * as React from "react"
 import { graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import { Carousel, Slide } from '../components/carousel'
+import Results from '../components/results'
 import ScheduleCard from '../components/scheduleCard'
 import StandingsCard from '../components/standingsCard'
 import Standings from '../components/standings'
@@ -13,6 +15,7 @@ import img3 from '../images/header/Chambliss.png'
 import img4 from '../images/header/Autoclub.png'
 
 const IndexPage = ({ data }) => {
+  const race = data.race.nodes[0];
   return (
     <main>
 
@@ -90,65 +93,91 @@ const IndexPage = ({ data }) => {
         </Carousel>
       </div>
       
-      <ul className="tab">
-        <li className="tab-item active">
-          <a href="#standings">Standings</a>
-        </li>
-        <li className="tab-item">
-          <a href="#rankings">Rankings</a>
-        </li>
-        <li className="tab-item">
-          <a href="#race">Last Race</a>
-        </li>
-      </ul>
-      
-      <div id="standings" className="tab-body">
-        <h3>Standings</h3>
-        <div className="columns col-8 col-mx-auto">
-          { data.league.activeSeason.standings
-              .sort((a, b) => a.position - b.position)
-              .slice(0, 3)
-              .map(item => {
-                return (
-                  <div className="col-4">
-                    <StandingsCard 
-                      { ...item } 
-                      driver={
-                        data.drivers.nodes.find(({ name }) => name === item.driver)
-                      } 
-                    />
-                  </div>
-                )
-              })
-          }
-          <div class="container">
-            <div class="columns">
-              <div className="col-8 col-mx-auto">
-                <Standings 
-                  headers={false}
-                  fields={['pos', 'driver', 'points']}
-                  standings={
-                    data.league.activeSeason.standings
-                      .sort((a, b) => a.position - b.position)
-                      .slice(0, 10)
-                      .map(item => ({
-                        ...item, 
-                        driver: data.drivers.nodes.find(({ name }) => name === item.driver)
-                      }))
-                  }
-                />
+      <Tabs>
+        <TabList className="tab">
+          <Tab className="tab-item"><span>Standings</span></Tab>
+          <Tab className="tab-item"><span>Rankings</span></Tab>
+          <Tab className="tab-item"><span>Last Race</span></Tab>
+        </TabList>      
+        
+        <TabPanel className="tab-body">
+          <h3>Standings</h3>
+          <div className="columns col-8 col-mx-auto">
+            { data.league.activeSeason.standings
+                .sort((a, b) => a.position - b.position)
+                .slice(0, 3)
+                .map(item => {
+                  return (
+                    <div className="col-4">
+                      <StandingsCard 
+                        { ...item } 
+                        driver={
+                          data.drivers.nodes.find(({ name }) => name === item.driver)
+                        } 
+                      />
+                    </div>
+                  )
+                })
+            }
+            <div class="container">
+              <div class="columns">
+                <div className="table-container col-8 col-mx-auto">
+                  <Standings 
+                    headers={false}
+                    fields={['pos', 'driver', 'points']}
+                    standings={
+                      data.league.activeSeason.standings
+                        .sort((a, b) => a.position - b.position)
+                        .slice(0, 10)
+                        .map(item => ({
+                          ...item, 
+                          driver: data.drivers.nodes.find(({ name }) => name === item.driver)
+                        }))
+                    }
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </TabPanel>
+        
+        <TabPanel className="tab-body">
+          <h3>Rankings</h3>
+        </TabPanel>
 
-      <div id="rankings" className="tab-body">
-      </div>
-      
-      <div id="race" className="tab-body">
-      </div>        
-      
+        <TabPanel className="tab-body">
+          <hgroup>
+            <h4>{race.track}</h4>
+            <h5>{race.name}</h5>
+          </hgroup>
+          <div className="columns col-8 col-mx-auto">
+            <div class="container">
+              <div class="columns">
+                {/*<div className="col-6">
+                  { race.broadcast && 
+                    <Video src={race.broadcast} /> 
+                  }
+                </div>*/}
+                <div className="table-container col-8 col-mx-auto">
+                  <Results 
+                    headers={false}
+                    fields={['finish', 'driver', 'points']}
+                    results={
+                      data.race.nodes[0].results
+                        .slice(0,10)
+                        .map(item => ({
+                          ...item,
+                          driver: data.drivers.nodes.find(({ name }) => name === item.name)
+                        }))
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </TabPanel>
+      </Tabs>
+
       <div className="promo">
         <div id="embeddable"></div>
       </div>
@@ -222,6 +251,40 @@ export const query = graphql`
             placeholder: BLURRED
           )
         }
+      }
+    }
+    race: allContentfulRace(
+      filter: { uploaded: { eq: true }}
+      sort: { fields: date, order: DESC }
+      limit: 1
+    ) {
+      nodes {
+        raceId
+        broadcast
+        date
+        name
+        logo {
+          file {
+            url
+          }
+        }
+        media {
+          file {
+            url
+          }
+        }
+        track
+        time
+        results {
+          bonus
+          finish
+          interval
+          led
+          name
+          penalty
+          points
+          start
+        }				
       }
     }
   }
