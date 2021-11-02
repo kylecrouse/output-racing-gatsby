@@ -1,5 +1,6 @@
 import * as React from "react"
 import { graphql } from 'gatsby'
+import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import { Helmet } from 'react-helmet'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import { Carousel, Slide } from '../components/carousel'
@@ -135,6 +136,9 @@ const IndexPage = ({ data }) => {
                         }))
                     }
                   />
+                  <p className="cta">
+                    <a href="/standings" className="btn btn btn-primary"><span>View Full Standings</span></a>
+                  </p>
                 </div>
               </div>
             </div>
@@ -159,11 +163,14 @@ const IndexPage = ({ data }) => {
                   }
                 </div>*/}
                 <div className="table-container col-8 col-mx-auto">
+                  { race.media && 
+                    <GatsbyImage image={ getImage(race.media[0]) } alt="race screenshot" className="screenshot"/>
+                  }
                   <Results 
                     headers={false}
                     fields={['finish', 'driver', 'points']}
                     results={
-                      data.race.nodes[0].results
+                      race.results
                         .slice(0,10)
                         .map(item => ({
                           ...item,
@@ -171,6 +178,9 @@ const IndexPage = ({ data }) => {
                         }))
                     }
                   />
+                  <p className="cta">
+                    <a href="/results/latest" className="btn btn btn-primary"><span>View Full Results</span></a>
+                  </p>
                 </div>
               </div>
             </div>
@@ -269,9 +279,9 @@ export const query = graphql`
           }
         }
         media {
-          file {
-            url
-          }
+          gatsbyImageData(
+            placeholder: BLURRED
+          )
         }
         track
         time
