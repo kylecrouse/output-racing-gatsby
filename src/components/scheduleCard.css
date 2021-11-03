@@ -125,6 +125,10 @@
 	display: none;
 }
 
+.schedule-card .car-image {
+	max-height: 1.8rem;
+}
+
 .schedule-results {
 	margin-bottom: 1.2rem;
 }

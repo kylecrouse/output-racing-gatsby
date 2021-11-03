@@ -26,9 +26,9 @@ const Standings = (props) => {
 				{ Array.isArray(props.standings) && props.standings.length > 0 
 					? props.standings.map((row, index) => ( row.driver &&
 							<tr key={index} style={{opacity: row.driver.active ? 1 : 0.3}}>
-								{ fields.includes('pos') && <td><b>{index + 1}</b></td>}
+								{ fields.includes('pos') && <td className="field-position">{index + 1}</td>}
 								{ fields.includes('gain') && 
-									<td>
+									<td className="field-gain">
 										{ parseInt(row.change, 10) > 0
 												? <span style={{color:"green"}}>&#9650;&nbsp;{row.change.substr(1)}</span>
 												: parseInt(row.change, 10) < 0
@@ -54,8 +54,8 @@ const Standings = (props) => {
 							.sort((a, b) => parseInt(a.number || 1000, 10) - parseInt(b.number || 1000, 10))
 							.map((driver, index) => ( driver &&
 							<tr key={index} style={{opacity: driver.active ? 1 : 0.3}}>
-								{ fields.includes('pos') && <td><b>{index + 1}</b></td> }
-								{ fields.includes('gain') && <td></td> }
+								{ fields.includes('pos') && <td className="field-position">{index + 1}</td> }
+								{ fields.includes('gain') && <td className="field-gain"></td> }
 								{ fields.includes('driver') && <td><DriverChip {...driver}/></td> }
 								{ fields.includes('starts') && <td>0</td> }
 								{ fields.includes('points') && <td>0</td> }

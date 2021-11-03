@@ -18,24 +18,72 @@ iframe {
 }
 
 table {
+	background: #fff;
 	border: 0;
-	width: 100%;
-	font-family: monospace;
+	border-collapse: separate; 
+	/* border-radius: 10px; */
+	border-spacing: 0 0.2rem; 
+	font-family: input-mono, mono;
+	font-weight: 300;
+	font-style: normal;
+	margin: 0 -0.4rem;
+	padding: 0.3rem 0.4rem;
+	width: calc(100% + 0.8rem);
 }
 
-tbody tr:nth-child(odd) {
-	background-color: #f1f1f1;
+tbody tr:nth-child(odd) td {
+	background-color: #f0f0f0;
+}
+
+thead th:first-child,
+/* tbody tr:nth-child(odd) td:first-child */ {
+	border-top-left-radius: 5px; 
+	/* border-bottom-left-radius: 5px; */
+}
+
+tbody tr:last-child td:first-child {
+	border-bottom-left-radius: 5px;
+}
+
+thead th:last-child,
+/* tbody tr:nth-child(odd) td:last-child */ {
+	/* border-bottom-right-radius: 5px;  */
+	border-top-right-radius: 5px; 
+}
+
+tbody tr:last-child td:last-child {
+	border-bottom-right-radius: 5px; 
 }
 
 th {
+	font-family: obvia, sans-serif;
 	font-size: 0.6rem;
-	line-height: 1.2;
-	vertical-align: bottom;
+	font-weight: 600;
+	line-height: 1;
+	padding: 0.35rem 0.5rem 0.3rem;
+	text-transform: uppercase;
 }
 
 td { 
 	font-size: 0.7rem;
 	padding: 5px 10px; 
+	text-align: center;
+}
+
+td.field-position {
+	font-family: obvia, sans-serif;
+	font-weight: 600;
+	text-align: right;
+}
+
+td.field-gain {
+	background-image: linear-gradient(90deg, 
+		rgba(0,0,0,0) calc(100% - 3px),
+		rgba(0,0,0,0.05) calc(100% - 3px)
+	);
+	font-size: 0.5rem;
+	padding-left: 5px;
+	padding-right: 15px;
 }
 
 ul, ol {
@@ -51,22 +99,55 @@ ul li, ol li {
 	margin-top: .2rem;
 }
 
-h3 b {
-	font-weight: inherit;
-}
-
-* + h3 {
-	margin-top: 2.4rem !important;
-}
-
-div + div:not(.column) > h2 {
-	margin: 4rem 0 2.4rem !important;
-	border-top: 1px solid #ccc;
-	padding-top: 2.4rem;
-}
-
 .content {
-	background: white;
+	background: #fff;
+}
+
+.page-header {
+	background: 
+		linear-gradient(rgba(255,255,255,0) 80%, rgb(255, 255, 255)), 
+		linear-gradient(110deg, #fff, rgba(255,255,255,0.4) 70%, #fff), 
+		url(../images/plus-x2.png) repeat center/8px;
+	padding-top: 3.5rem;
+	padding-bottom: 8rem;
+	margin-bottom: -8rem;
+}
+
+.page-header > div {
+	align-items: flex-end;
+	background: 
+		linear-gradient(90deg, #fff 0.4rem, transparent 0.4rem, transparent calc(100% - 0.4rem), #fff calc(100% - 0.4rem)),
+		linear-gradient(#fff calc(100% - 2px), #f0f0f0 calc(100% - 2px));
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: -0.3rem;
+	padding: 1.4rem 0.5rem 1.4rem 1rem;
+	position: relative;
+	z-index: 1;
+}
+
+.page-title {
+	color: #454545;
+	display: inline-block;
+	font-family: obvia-expanded, sans-serif;
+	font-size: 2rem;
+	font-style: italic;
+	font-weight: 900;
+	letter-spacing: 3px;
+	line-height: 0.7;
 	margin: 0;
-	padding: 2rem 0;
+	text-transform: uppercase;
+}
+
+.page-header .cars-container {
+	margin: 0;
+	position: relative;
+	top: 0.3rem;
+	width: 20%;
+}
+
+.page-header .car-caption {
+	display: none;
 }

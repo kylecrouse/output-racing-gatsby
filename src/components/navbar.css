@@ -1,3 +1,8 @@
+header {
+	box-shadow: 0 0 10px black;
+	position: relative;
+}
+
 .navbar {
 	background: black;
 	padding: 1rem 0;
