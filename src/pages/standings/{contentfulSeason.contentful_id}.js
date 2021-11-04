@@ -1,42 +1,15 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
-import { Helmet } from 'react-helmet'
-import Seasons from '../../components/seasons'
-import Standings from '../../components/standings'
+import StandingsPage from '../../components/standingsPage'
 
-const ScheduleArchivePage = ({ data }) => {
+const ArchiveStandingsPage = ({ data }) => {
 	return (
-		<main>
-
-			<Helmet>
-				<meta charSet="utf-8" />
-				<title>Output Racing League | Standings | {data.season.name.replace('Output Racing ', '')}</title>
-			</Helmet>
-
-			<h2 className="text-center">
-				{data.season.name.replace('Output Racing ', '')} Standings
-			</h2>
-			
-			<h6 className="text-center" style={{ margin: "1rem 0 2rem" }}>
-				After {data.season.results ? data.season.schedule.filter(({ counts, uploaded }) => counts && uploaded).length : 0} of {data.season.schedule.filter(({ counts }) => counts).length} Races
-			</h6>
-			
-			<Standings 
-				standings={
-					data.season.standings.map(row => ({
-						...row, 
-						driver: data.drivers.nodes.find(({ name }) => name === row.driver)
-					}))
-				}
-			/>
-
-			<Seasons 
-				path="standings" 
-				seasons={data.league.seasons.filter(({ id }) => id !== data.season.id)} 
-				drivers={data.drivers.nodes}
-			/>
-	
-		</main>
+		<StandingsPage 
+			season={data.season}
+			cars={data.league.cars}
+			seasons={data.league.seasons}
+			drivers={data.drivers.nodes}
+		/>
 	)
 }
 
@@ -44,6 +17,7 @@ export const query = graphql`
 	query StandingsArchivePage($contentful_id: String) {
 		season: contentfulSeason(contentful_id: {eq: $contentful_id}) {
 			name
+			cars
 			id: contentful_id
 			schedule {
 				counts
@@ -53,6 +27,7 @@ export const query = graphql`
 				raceId
 			}
 			standings {
+				position
 				driver
 				change
 				starts
@@ -69,10 +44,17 @@ export const query = graphql`
 		league: contentfulLeague(leagueId: {eq: 2732}) {
 			seasons {
 				name
+				cars
 				id: contentful_id
 				standings {
 					driver
+					points
 				}
+			}
+			cars {
+				name
+				image
+				transform
 			}
 		}
 		drivers: allContentfulDriver {
@@ -91,4 +73,4 @@ export const query = graphql`
 	}
 `
 
-export default ScheduleArchivePage
+export default ArchiveStandingsPage

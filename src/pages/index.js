@@ -8,7 +8,6 @@ import Results from '../components/results'
 import ScheduleCard from '../components/scheduleCard'
 import StandingsCard from '../components/standingsCard'
 import Standings from '../components/standings'
-import Video from '../components/video'
 import './index.css'
 import img1 from '../images/header/Champ.png'
 import img2 from '../images/header/dega.png'
@@ -243,6 +242,7 @@ export const query = graphql`
       cars {
         name
         image 
+        transform
       }
     }
     drivers: allContentfulDriver {

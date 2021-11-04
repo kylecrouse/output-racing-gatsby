@@ -1,5 +1,5 @@
 .seasons-container {
-	background: #f0f0f0;
+	background: linear-gradient(110deg,#eaeaea,#f0f0f0,#eaeaea);
 	margin-top: 3rem;
 	padding: 3rem 0;
 }

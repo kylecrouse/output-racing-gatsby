@@ -41,6 +41,7 @@
 .season-day {
 	display: block;
 	color: #f4a913;
+	font-family: obvia-expanded, sans-serif;
 	font-size: 1.6rem;
 	font-weight: 900;
 	letter-spacing: 0;
@@ -52,14 +53,18 @@
 }
 
 .season-track h4 {
+	font-family: obvia-expanded, sans-serif;
 	font-size: 0.9rem;
+	font-style: italic;
 	margin-bottom: 0.1rem;
 	/* overflow: hidden; */
 	/* text-overflow: ellipsis; */
+	text-transform: uppercase;
 	/* white-space: nowrap; */
 }
 
 .season-track h5 {
+	font-family: museo-sans, sans-serif;
 	font-size: 0.8rem;
 	font-weight: 100;
 	margin: 0;
@@ -91,6 +96,7 @@
 	border-color: black;
 	border-style: solid;
 	border-width: 0 5px 0 0;
+	font-family: obvia, sans-serif;
 	font-size: 0.6rem;
 	line-height: 1.6;
 	margin: 0 1.5rem 0.25rem 1rem;
@@ -128,5 +134,6 @@
 }
 
 .season-result-item .last-name {
-	font-weight: 900;
+	font-size: calc(0.6rem - 0.2px);
+	font-weight: 600;
 }

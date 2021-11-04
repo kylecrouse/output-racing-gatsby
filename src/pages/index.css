@@ -342,6 +342,7 @@
 
 .btn {
 	border-radius: 0;
+	font-family: obvia-expanded, sans-serif;
 	font-size: 0.6rem;
 	font-weight: 900;
 	transform: skew(-20deg);
@@ -358,7 +359,7 @@
 
 .btn:not(.btn-action):after {
 	display: inline-block;
-	content: "\2192";
+	content: "\203A";
 	padding-left: 0.4rem;
 	transform: skew(20deg);
 }

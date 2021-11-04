@@ -9,7 +9,9 @@
 .nav a:link,
 .nav a:visited {
 	display: inline-block;
+	font-family: obvia, sans-serif;
 	font-size: 0.6rem;
+	font-weight: 300;
 	color: #f4a913;
 	padding: 10px;
 	text-transform: uppercase;

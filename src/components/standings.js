@@ -1,76 +1,107 @@
 import * as React from 'react'
 import DriverChip from './driverChip'
+import Table from './table'
 
 const Standings = (props) => {
-	const fields = props.fields || ['pos', 'gain', 'driver', 'starts', 'points', 'next', 'leader', 'wins', 't5s', 't10s', 'laps', 'inc'];
-	const headers = props.headers !== undefined ? props.headers : true;
-	return (
-		<table className="standings">
-			<thead className={ !headers ? 'd-hide' : '' }>
-				<tr>
-					{ fields.includes('pos') && <th width="2%">&nbsp;</th> }
-					{ fields.includes('gain') && <th width="2%">&nbsp;</th> }
-					{ fields.includes('driver') && <th>Driver</th> }
-					{ fields.includes('starts') && <th width="7%">Starts</th> }
-					{ fields.includes('points') && <th width="7%">Points</th> }
-					{ fields.includes('next') && <th width="7%">Behind Next</th> }
-					{ fields.includes('leader') && <th width="7%">Behind Leader</th> }
-					{ fields.includes('wins') && <th width="7%">Wins</th> }
-					{ fields.includes('t5s') && <th width="7%">Top 5s</th> }
-					{ fields.includes('t10s') && <th width="7%">Top 10s</th> }
-					{ fields.includes('laps') && <th width="7%">Total Laps</th> }
-					{ fields.includes('inc') && <th width="7%">Incidents per&nbsp;Race</th> }
-				</tr>
-			</thead>
-			<tbody>
-				{ Array.isArray(props.standings) && props.standings.length > 0 
-					? props.standings.map((row, index) => ( row.driver &&
-							<tr key={index} style={{opacity: row.driver.active ? 1 : 0.3}}>
-								{ fields.includes('pos') && <td className="field-position">{index + 1}</td>}
-								{ fields.includes('gain') && 
-									<td className="field-gain">
-										{ parseInt(row.change, 10) > 0
-												? <span style={{color:"green"}}>&#9650;&nbsp;{row.change.substr(1)}</span>
-												: parseInt(row.change, 10) < 0
-													? <span style={{color:"red"}}>&#9660;&nbsp;{row.change.substr(1)}</span>
-													: '\u00a0'
-										}
-									</td>
-								}
-								{ fields.includes('driver') && <td><DriverChip {...row.driver}/></td> }
-								{ fields.includes('starts') && <td>{row.starts}</td> }
-								{ fields.includes('points') && <td>{row.points}</td> }
-								{ fields.includes('next') && <td>{row.behindNext}</td> }
-								{ fields.includes('leader') && <td>{row.behindLeader}</td> }
-								{ fields.includes('wins') && <td>{row.wins}</td> }
-								{ fields.includes('t5s') && <td>{row.t5s}</td> }
-								{ fields.includes('t10s') && <td>{row.t10s}</td> }
-								{ fields.includes('laps') && <td>{row.laps}</td> }
-								{ fields.includes('inc') && <td>{(row.incidents / row.starts).toFixed(2)}</td> }
-							</tr>
-						))
-					: props.drivers
-							.filter(driver => driver.active)
-							.sort((a, b) => parseInt(a.number || 1000, 10) - parseInt(b.number || 1000, 10))
-							.map((driver, index) => ( driver &&
-							<tr key={index} style={{opacity: driver.active ? 1 : 0.3}}>
-								{ fields.includes('pos') && <td className="field-position">{index + 1}</td> }
-								{ fields.includes('gain') && <td className="field-gain"></td> }
-								{ fields.includes('driver') && <td><DriverChip {...driver}/></td> }
-								{ fields.includes('starts') && <td>0</td> }
-								{ fields.includes('points') && <td>0</td> }
-								{ fields.includes('next') && <td>-</td> }
-								{ fields.includes('leader') && <td>-</td> }
-								{ fields.includes('wins') && <td>0</td> }
-								{ fields.includes('t5s') && <td>0</td> }
-								{ fields.includes('t10s') && <td>0</td> }
-								{ fields.includes('laps') && <td>0</td> }
-								{ fields.includes('inc') && <td>0.00</td> }
-							</tr>
-						))
+	const columns = React.useMemo(
+		() => [
+			{
+				Header: () => null,
+				accessor: 'position',
+				className: 'cell-position'
+			},
+			{
+				Header: () => null,
+				accessor: 'change',
+				className: 'cell-change',
+				Cell: ({ value }) => {
+					const change = parseInt(value, 10)
+					return (
+						<span className={ 
+							change > 0 
+								? 'positive' 
+								: change < 0 
+									? 'negative' 
+									: 'neutral'
+							}>
+							{ value.substr(1) || '\u00a0' }
+						</span>
+					)
 				}
-			</tbody>
-		</table> 
+			},
+			{
+				Header: 'Driver',
+				accessor: 'driver',
+				className: 'cell-driver',
+				Cell: ({ value }) => (
+					<DriverChip { ...value } />
+				)
+			},
+			{
+				Header: 'Points',
+				accessor: 'points',
+			},
+			{
+				Header: 'Behind Next',
+				accessor: 'behindNext',
+			},
+			{
+				Header: 'Behind Leader',
+				accessor: 'behindLeader',
+			},
+			{
+				Header: 'Starts',
+				accessor: 'starts',
+			},
+			{
+				Header: 'Wins',
+				accessor: 'wins',
+			},
+			{
+				Header: 'Top 5',
+				accessor: 't5s',
+			},
+			{
+				Header: 'Top 10',
+				accessor: 't10s',
+			},
+			{
+				Header: 'Laps',
+				accessor: 'laps',
+			},
+			{
+				id: 'incPerRace',
+				Header: 'Incidents per Race',
+				accessor: ({ incidents, starts }) => (incidents / starts).toFixed(2),
+			},
+			{
+				id: 'incPerLap',
+				Header: 'Incidents per Lap',
+				accessor: ({ incidents, laps }) => (incidents / parseInt(laps.replace(/,/g, ''), 10)).toFixed(2),
+			},
+		],
+		[]
+	)
+	
+	return (
+		<Table 
+			columns={columns} 
+			data={props.standings} 
+			getRowProps={row => ({
+				style: {
+					opacity: row.values.driver.active ? 1 : 0.3
+				}
+			})}
+			initialState={{
+				hiddenColumns: columns
+					.map(({ id, accessor }) => id || accessor)
+					.filter(
+						typeof props.fields === 'function'
+							? props.fields
+							: (column) => props.fields && !props.fields.includes(column)
+					)
+			}}
+		/>
 	)
 }
 

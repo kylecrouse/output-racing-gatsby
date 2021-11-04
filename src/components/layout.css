@@ -64,19 +64,29 @@ th {
 	text-transform: uppercase;
 }
 
+th .sort-indicator {
+	display: inline-block;
+	transform: rotate(90deg) translate(-0.05rem, -0.4rem);
+}
+
 td { 
 	font-size: 0.7rem;
 	padding: 5px 10px; 
 	text-align: center;
 }
 
-td.field-position {
+td:not(.cell-driver) {
+	width: 7%;
+}
+
+td.cell-position {
 	font-family: obvia, sans-serif;
 	font-weight: 600;
 	text-align: right;
+	width: 2%;
 }
 
-td.field-gain {
+td.cell-change {
 	background-image: linear-gradient(90deg, 
 		rgba(0,0,0,0) calc(100% - 3px),
 		rgba(0,0,0,0.05) calc(100% - 3px)
@@ -84,6 +94,31 @@ td.field-gain {
 	font-size: 0.5rem;
 	padding-left: 5px;
 	padding-right: 15px;
+	white-space: nowrap;
+	width: 2%;
+}
+
+td.cell-change .positive::before,
+td.cell-change .negative::before {
+	display: inline-block;
+	margin-right: 0.2rem;
+	transform: rotate(90deg);
+}
+
+td.cell-change .positive {
+	color: green;
+}
+
+td.cell-change .positive::before {
+	content: '‹';
+}
+
+td.cell-change .negative {
+	color: red;
+}
+
+td.cell-change .negative::before {
+	content: '›';
 }
 
 ul, ol {
@@ -123,7 +158,7 @@ ul li, ol li {
 	display: flex;
 	justify-content: space-between;
 	margin-bottom: -0.3rem;
-	padding: 1.4rem 0.5rem 1.4rem 1rem;
+	padding: 1.5rem 0.5rem 1rem 1rem;
 	position: relative;
 	z-index: 1;
 }
@@ -141,11 +176,31 @@ ul li, ol li {
 	text-transform: uppercase;
 }
 
+.page-subtitle {
+	font-family: museo-sans, sans-serif;
+	font-size: 0.7rem;
+	font-weight: 300;
+	margin: 0.5rem 0 0;
+	text-transform: uppercase;
+}
+
+.page-subtitle > span {
+	border-right: 1px solid rgba(0,0,0,0.4);
+	display: inline-block;
+	margin-right: 0.5rem;
+	padding-right: 0.5rem;
+}
+
 .page-header .cars-container {
 	margin: 0;
-	position: relative;
-	top: 0.3rem;
-	width: 20%;
+}
+
+.page-header .car-container {
+	margin-left: 0.4rem;
+}
+
+.page-header .car-image {
+	max-height: 1.5rem;
 }
 
 .page-header .car-caption {

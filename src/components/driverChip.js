@@ -28,7 +28,7 @@ const NumberArt = (props) => {
 }
 
 const renderName = (props) => {
-	const name = props.nickname || props.name
+	const name = props.nickname || props.name || ''
 	const parts = name.split(' ')
 	const last = parts.pop()
 	return (
