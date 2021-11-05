@@ -15,7 +15,7 @@ const Seasons = (props) => {
 	return Object.entries(seasons)
 		.sort((a, b) => b[0] - a[0])
 		.map(([years, seasons]) => (
-			<div class="columns">
+			<div className="columns">
 				{ seasons.map(season => {
 						season.standings = season.standings
 							.slice(0, 3)
@@ -29,7 +29,7 @@ const Seasons = (props) => {
 							name => props.cars.find(car => car.name === name)
 						)
 						return (
-							<div class="col-4 season-container">
+							<div className="col-4 season-container">
 								<SeasonCard {...season} path={props.path}/>
 							</div>
 						)

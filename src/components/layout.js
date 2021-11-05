@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Helmet } from 'react-helmet'
 import 'spectre.css/dist/spectre.min.css'
 import 'spectre.css/dist/spectre-icons.min.css'
 import 'spectre.css/dist/spectre-exp.min.css'
@@ -10,6 +11,10 @@ const Layout = (props) => {
 	const path = props.uri.split('/');
 	return (
 		<React.Fragment>
+			<Helmet>
+				<meta charset="utf-8"/>
+				<link rel="stylesheet" href="https://use.typekit.net/ovc0kir.css"/>
+			</Helmet>
 			<Navbar page={ path[1] }/>
 			{ props.children }
 			<Footer/>

@@ -12,9 +12,7 @@ const StandingsPage = ({ season, seasons, drivers, cars }) => {
 		<main>
 
 			<Helmet>
-				<meta charSet="utf-8" />
 				<title>Output Racing League | Standings | {season.name.replace('Output Racing ', '')}</title>
-				<link rel="stylesheet" href="https://use.typekit.net/ovc0kir.css"/>
 			</Helmet>
 			
 			<div className="content container">

@@ -1,0 +1,43 @@
+.toc {
+	background: #f0f0f0;
+	border-radius: 10px;
+	margin: 0;
+	padding: 0.2rem 0;
+	position: sticky;
+	list-style: none;
+	top: 1rem;
+}
+
+.toc li {
+	counter-increment: sections;
+	margin: 0;
+	padding: 0.2rem 1rem 0.3rem;
+}
+
+.toc li:not(:last-child) {
+	border-bottom: 1px solid white;
+}
+
+.toc li::before {
+	content: counter(sections) '.';
+	display: inline-block;
+	font-family: obvia, sans-serif;
+	font-size: 0.66rem;
+	font-weight: 600;
+	line-height: 1;
+	padding-right: 0.4rem;
+}
+
+.toc a {
+	color: inherit;
+	font-family: obvia, sans-serif;
+	font-size: 0.7rem;
+	line-height: 1;
+	text-transform: uppercase;
+}
+
+
+.toc a:hover,
+.toc a:focus {
+	color: #f4a913;
+}

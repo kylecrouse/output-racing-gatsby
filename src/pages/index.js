@@ -20,7 +20,6 @@ const IndexPage = ({ data }) => {
     <main>
 
       <Helmet>
-        <meta charset="utf-8"/>
         <title>{ data.league.name }</title>
         <script async src="https://www.youtube.com/iframe_api"></script>
       </Helmet>
