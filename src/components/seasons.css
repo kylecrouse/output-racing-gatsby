@@ -1,6 +1,7 @@
 .seasons-container {
 	background: linear-gradient(110deg,#eaeaea,#f0f0f0,#eaeaea);
 	margin-top: 3rem;
+	margin-bottom: -3.5rem;
 	padding: 3rem 0;
 }
 

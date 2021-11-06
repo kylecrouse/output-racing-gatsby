@@ -35,30 +35,51 @@ const options = {
 
 const RulesPage = ({ data }) => {
 	return (
-		<main>
+		<main className="container">
 			<Helmet>
 				<title>Output Racing League | Rules</title>
 			</Helmet>
 	
-			<div className="content container">
-			
-				<hgroup className="page-header columns">
-					<div className="column col-8 col-xl-12 col-mx-auto">
+			<div className="columns">
+				<div className="column col-8 col-xl-12 col-mx-auto content">
+
+					<hgroup className="page-header">
 						<h2 className="page-title">Rulebook</h2>
-					</div>
-				</hgroup>
+					</hgroup>
 				
-				<div className="columns">
-					<div className="column col-8 col-xl-12 col-mx-auto content">
-						<Tabs 
-							tabs={[
-								{
-									title: 'Rules',
-									content: (
-										<div className="columns">
-											<div className="column col-4">
+					<Tabs 
+						tabs={[
+							{
+								title: 'Rules',
+								content: (
+									<div className="columns">
+										<div className="column col-4">
+											<ol className={ styles.toc }>
+												{ mapRawTextToSections(data.league.rules.raw)
+														.map(section => (
+															<li>
+																<a href={`#section-${section.replace(/\s/g,'-').toLowerCase()}`}>
+																	{ section }
+																</a>
+															</li>
+														))
+												}
+											</ol>
+										</div>
+										<div className="column col-6 col-mx-auto">
+											{ renderRichText(data.league.rules, options) }
+										</div>
+									</div>
+								),
+							},
+							{
+								title: 'Session Info',
+								content: (
+									<div className="columns">
+										<div className="column col-4">
+											<div className={ styles.toc }>
 												<ol className={ styles.toc }>
-													{ mapRawTextToSections(data.league.rules.raw)
+													{ mapRawTextToSections(data.league.raceInfo.raw)
 															.map(section => (
 																<li>
 																	<a href={`#section-${section.replace(/\s/g,'-').toLowerCase()}`}>
@@ -67,55 +88,31 @@ const RulesPage = ({ data }) => {
 																</li>
 															))
 													}
-												</ol>
-											</div>
-											<div className="column col-6 col-mx-auto">
-												{ renderRichText(data.league.rules, options) }
+												</ol>												
 											</div>
 										</div>
-									),
-								},
-								{
-									title: 'Session Info',
-									content: (
-										<div className="columns">
-											<div className="column col-4">
-												<div className={ styles.toc }>
-													<ol className={ styles.toc }>
-														{ mapRawTextToSections(data.league.raceInfo.raw)
-																.map(section => (
-																	<li>
-																		<a href={`#section-${section.replace(/\s/g,'-').toLowerCase()}`}>
-																			{ section }
-																		</a>
-																	</li>
-																))
-														}
-													</ol>												
-												</div>
-											</div>
-											<div className="column col-6 col-mx-auto">
-												{ renderRichText(data.league.raceInfo, options) }
-											</div>
+										<div className="column col-6 col-mx-auto">
+											{ renderRichText(data.league.raceInfo, options) }
 										</div>
-									),
-								},
-								{
-									title: 'Code of Conduct',
-									content: (
-										<div className="columns">
-											<div className="column col-6 col-mx-auto">
-												{ renderRichText(data.league.codeOfConduct, options) }
-											</div>
+									</div>
+								),
+							},
+							{
+								title: 'Code of Conduct',
+								content: (
+									<div className="columns">
+										<div className="column col-6 col-mx-auto">
+											{ renderRichText(data.league.codeOfConduct, options) }
 										</div>
-									),
-								},
-							]}
-						/>
-					</div>
-				</div>
+									</div>
+								),
+							},
+						]}
+					/>
 
+				</div>
 			</div>
+
 		</main>
 	)
 }

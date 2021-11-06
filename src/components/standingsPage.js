@@ -9,16 +9,16 @@ const StandingsPage = ({ season, seasons, drivers, cars }) => {
 	const roundsCompleted = season.schedule.filter(({ counts, uploaded }) => counts && uploaded).length || 0
 	const totalRounds = season.schedule.filter(({ counts }) => counts).length
 	return (
-		<main>
+		<main className="container">
 
 			<Helmet>
 				<title>Output Racing League | Standings | {season.name.replace('Output Racing ', '')}</title>
 			</Helmet>
 			
-			<div className="content container">
-
-				<hgroup className="page-header columns">
-					<div className="column col-8 col-xl-12 col-mx-auto">
+			<div className="columns">
+				<div className="column col-8 col-xl-12 col-mx-auto content">
+			
+					<hgroup className="page-header columns">
 						<div>
 							<h2 className="page-title">Standings</h2>
 							<h3 className="page-subtitle">
@@ -38,39 +38,33 @@ const StandingsPage = ({ season, seasons, drivers, cars }) => {
 								} 
 							/>
 						}
-					</div>
-				</hgroup>
+					</hgroup>
 
-				<div className="columns">
-					<div className="column col-8 col-xl-12 col-mx-auto">
-			
-						<Standings 
-							standings={
-								season.standings.map(row => ({
-									...row, 
-									driver: drivers.find(({ name }) => name === row.driver)
-								}))
-							}
-							fields={column => column === 'laps'}
-						/>
+					<Standings 
+						standings={
+							season.standings.map(row => ({
+								...row, 
+								driver: drivers.find(({ name }) => name === row.driver)
+							}))
+						}
+						fields={column => column === 'laps'}
+					/>
 						
-					</div>
 				</div>
+			</div>
 				
-				<div className="columns seasons-container">
-					<div className="column col-8 col-xl-12 col-mx-auto">
+			<div className="columns seasons-container">
+				<div className="column col-8 col-xl-12 col-mx-auto">
+			
+					<Seasons 
+						path="standings" 
+						seasons={seasons.filter(({ id }) => id !== season.id)} 
+						cars={cars}
+						drivers={drivers}
+					/>
 				
-						<Seasons 
-							path="standings" 
-							seasons={seasons.filter(({ id }) => id !== season.id)} 
-							cars={cars}
-							drivers={drivers}
-						/>
-					
-					</div>
 				</div>
-
-			</div>			
+			</div>
 
 		</main>
 	)

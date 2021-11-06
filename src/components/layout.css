@@ -26,7 +26,7 @@ table {
 	font-weight: 300;
 	font-style: normal;
 	margin: 0 -0.4rem;
-	padding: 0.3rem 0.4rem;
+	padding: 0.4rem;
 	width: calc(100% + 0.8rem);
 }
 
@@ -55,11 +55,12 @@ tbody tr:last-child td:last-child {
 }
 
 th {
+	border-top: 2px solid #f0f0f0;
 	font-family: obvia, sans-serif;
 	font-size: 0.6rem;
 	font-weight: 600;
 	line-height: 1;
-	padding: 0.35rem 0.5rem 0.3rem;
+	padding: 0.4rem 0.5rem 0.3rem;
 	text-transform: uppercase;
 }
 
@@ -144,33 +145,34 @@ p + :is(h2, h3, h4, h5, h6) {
 	margin-top: 2.4rem;
 }
 
+main {
+	background: 
+		linear-gradient(
+			rgba(255,255,255,0),
+			rgba(255,255,255,1) 15rem,
+			rgba(255,255,255,1) calc(100% - 15rem), 
+			rgba(255,255,255,0)
+		), 
+		linear-gradient(
+			110deg, 
+			rgba(255,255,255,0.8), 
+			rgba(255,255,255,0.4) 70%, 
+			rgba(255,255,255,0.9)), 
+		#fff url(../images/plus-x2.png) repeat center/8px;
+	padding: 3.5rem 0;
+}
+
 .content {
 	background: #fff;
+	border-radius: 10px;
+	padding: 0.5rem 0.5rem 0;
 }
 
 .page-header {
-	background: 
-		linear-gradient(rgba(255,255,255,0) 80%, rgb(255, 255, 255)), 
-		linear-gradient(110deg, #fff, rgba(255,255,255,0.4) 70%, #fff), 
-		url(../images/plus-x2.png) repeat center/8px;
-	padding-top: 3.5rem;
-	padding-bottom: 8rem;
-	margin-bottom: -8rem;
-}
-
-.page-header > div {
 	align-items: flex-end;
-	background: 
-		linear-gradient(90deg, #fff 0.4rem, transparent 0.4rem, transparent calc(100% - 0.4rem), #fff calc(100% - 0.4rem)),
-		linear-gradient(#fff calc(100% - 2px), #f0f0f0 calc(100% - 2px));
-	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
 	display: flex;
 	justify-content: space-between;
-	margin-bottom: -0.3rem;
-	padding: 1.5rem 0.5rem 1rem 1rem;
-	position: relative;
-	z-index: 1;
+	padding: 1rem 0 1.5rem 0.5rem;
 }
 
 .page-title {
@@ -190,7 +192,7 @@ p + :is(h2, h3, h4, h5, h6) {
 	font-family: museo-sans, sans-serif;
 	font-size: 0.7rem;
 	font-weight: 300;
-	margin: 0.5rem 0 0;
+	margin: 0.4rem 0 0;
 	text-transform: uppercase;
 }
 
