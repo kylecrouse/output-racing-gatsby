@@ -5,7 +5,10 @@ import * as styles from './driverCard.module.css'
 
 const DriverCard = (props) => {
 	return (
-		<div className={ styles.container }>
+		<a 
+			className={ styles.container } 
+			href={`/drivers/${props.driver.name.replace(/\s/g,'-').toLowerCase()}`}
+		>
 			{ props.driver.media 
 				? props.driver.media
 						.slice(0, 1)
@@ -36,7 +39,7 @@ const DriverCard = (props) => {
 					<dd>{ props.top5s }</dd>
 				</dl>
 			</div>
-		</div>		
+		</a>		
 	)
 }
 

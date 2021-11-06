@@ -8,10 +8,19 @@
 		);
 	border-radius: 10px;
 	color: #454545;
+	display: block;
 	margin: 0 0.5rem 1rem;
 	overflow: hidden;
 	position: relative;
 	text-transform: uppercase;
+	transition: 150ms ease-in-out;
+}
+
+.container:hover,
+.container:focus {
+	color: inherit;
+	box-shadow: 0 0 10px rgba(0,0,0,0.4);
+	text-decoration: none;
 }
 
 .image {
