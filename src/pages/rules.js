@@ -55,14 +55,21 @@ const RulesPage = ({ data }) => {
 									<div className="columns">
 										<div className="column col-4">
 											<ol className={ styles.toc }>
-												{ mapRawTextToSections(data.league.rules.raw)
-														.map(section => (
-															<li>
-																<a href={`#section-${section.replace(/\s/g,'-').toLowerCase()}`}>
-																	{ section }
-																</a>
-															</li>
-														))
+												{ React.useMemo(
+														() => (
+															(JSON.parse(data.league.rules.raw)).content
+																.filter(({ nodeType }) => nodeType === 'heading-3')
+																.map(({ content }) => content[0].value)
+																.map(section => (
+																	<li>
+																		<a href={`#section-${section.replace(/\s/g,'-').toLowerCase()}`}>
+																			{ section }
+																		</a>
+																	</li>
+																))
+														),
+														[data.league.rules.raw]
+													)		
 												}
 											</ol>
 										</div>
@@ -79,14 +86,21 @@ const RulesPage = ({ data }) => {
 										<div className="column col-4">
 											<div className={ styles.toc }>
 												<ol className={ styles.toc }>
-													{ mapRawTextToSections(data.league.raceInfo.raw)
-															.map(section => (
-																<li>
-																	<a href={`#section-${section.replace(/\s/g,'-').toLowerCase()}`}>
-																		{ section }
-																	</a>
-																</li>
-															))
+													{ React.useMemo(
+															() => (
+																(JSON.parse(data.league.raceInfo.raw)).content
+																	.filter(({ nodeType }) => nodeType === 'heading-3')
+																	.map(({ content }) => content[0].value)
+																	.map(section => (
+																		<li>
+																			<a href={`#section-${section.replace(/\s/g,'-').toLowerCase()}`}>
+																				{ section }
+																			</a>
+																		</li>
+																	))
+															),
+															[data.league.raceInfo.raw]
+														)		
 													}
 												</ol>												
 											</div>
@@ -115,13 +129,6 @@ const RulesPage = ({ data }) => {
 
 		</main>
 	)
-}
-
-const mapRawTextToSections = (raw) => {
-	const json = JSON.parse(raw)
-	return json.content
-		.filter(({ nodeType }) => nodeType === 'heading-3')
-		.map(({ content }) => content[0].value)
 }
 
 export const query = graphql`
