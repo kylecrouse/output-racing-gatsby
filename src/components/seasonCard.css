@@ -11,14 +11,22 @@
 	flex-direction: column;
 	height: 100%;
 	justify-content: space-between;
+	transition: 100ms ease-out;
 }
 
 .season-card:link,
-.season-card:visited,
-.season-card:hover,
-.season-card:focus {
+.season-card:visited {
 	color: inherit;
 	text-decoration: none;
+}
+
+.season-card:hover,
+.season-card:focus {
+	/* box-shadow: 0 0 10px rgba(0,0,0,0.4); */
+	color: inherit;
+	text-decoration: none;
+	/* transform: scale(1.025); */
+	transition-timing-function: ease-in;
 }
 
 .season-details {
@@ -60,7 +68,7 @@
 	/* overflow: hidden; */
 	/* text-overflow: ellipsis; */
 	text-transform: uppercase;
-	/* white-space: nowrap; */
+	white-space: nowrap;
 }
 
 .season-track h5 {
@@ -68,6 +76,7 @@
 	font-size: 0.8rem;
 	font-weight: 100;
 	margin: 0;
+	white-space: nowrap;
 }
 
 .season-card .cars-container {

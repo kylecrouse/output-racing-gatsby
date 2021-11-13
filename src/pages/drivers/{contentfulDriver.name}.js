@@ -2,36 +2,45 @@ import * as React from "react"
 import { graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
+import DriverChip from '../../components/driverChip'
 import License from '../../components/license'
-import './driver.css'
+import * as styles from './driver.module.css'
 
 const DriverPage = ({ data }) => {
 	const driver = data.driver
+	const name = driver.nickname || driver.name
 	const stats = data.stats
 	return (
-		<main>
-			
+		<>
 			<Helmet>
-				<meta charSet="utf-8" />
-				<title>Output Racing League | Drivers | { driver.nickname || driver.name }</title>
+				<title>Output Racing League | Drivers | { name }</title>
 			</Helmet>
-
+			
 			{ driver.media && 
 				driver.media
 					.slice(0, 1)
 					.map(image => (
 						<GatsbyImage 
 							alt="car screenshot"
-							className="driver-image"
+							className={ styles.driverImage }
 							image={ getImage(image) } 
 						/>
 					)) 
 			}
-			
-			<div className="container content">
 
+			<main className="container">
+				
 				<div className="columns">   
-					<div className="column col-8 col-xl-12 col-mx-auto">
+					<div className="column col-8 col-xl-12 col-mx-auto content">
+					
+						<hgroup classNane="page-header">
+							<DriverChip 
+								{...driver } 
+								className={ styles.driverChip }
+								license={true}
+								link={false}
+							/>
+						</hgroup>
 					
 						<div className="columns" style={{ display: "flex", alignItems: "center" }}>
 							<div className="column col-6 col-sm-4">
@@ -138,10 +147,9 @@ const DriverPage = ({ data }) => {
 					
 					</div>
 				</div>
-				
-			</div>
-
-		</main>
+	
+			</main>
+		</>
 	)
 }
 

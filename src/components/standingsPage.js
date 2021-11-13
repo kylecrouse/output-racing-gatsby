@@ -9,53 +9,56 @@ const StandingsPage = ({ season, seasons, drivers, cars }) => {
 	const roundsCompleted = season.schedule.filter(({ counts, uploaded }) => counts && uploaded).length || 0
 	const totalRounds = season.schedule.filter(({ counts }) => counts).length
 	return (
-		<main className="container">
-
-			<Helmet>
-				<title>Output Racing League | Standings | {season.name.replace('Output Racing ', '')}</title>
-			</Helmet>
-			
-			<div className="columns">
-				<div className="column col-8 col-xl-12 col-mx-auto content">
-			
-					<hgroup className="page-header columns">
-						<div>
-							<h2 className="page-title">Standings</h2>
-							<h3 className="page-subtitle">
-								<span>{ `${name[2]} ${name[3]}` }</span>
-								{	roundsCompleted < totalRounds
-										? `Round ${roundsCompleted} of ${totalRounds}`
-										: 'Final'
-								}
-							</h3>
-						</div>
-						{ season.cars &&
-							<Cars 
-								cars={
-									cars.filter(
-										({ name }) => season.cars.includes(name)
-									)
-								} 
-							/>
-						}
-					</hgroup>
-
-					<Standings 
-						standings={
-							season.standings.map(row => ({
-								...row, 
-								driver: drivers.find(({ name }) => name === row.driver)
-							}))
-						}
-						fields={column => column === 'laps'}
-					/>
-						
-				</div>
-			</div>
+		<>
+			<main className="container">
+	
+				<Helmet>
+					<title>Output Racing League | Standings | {season.name.replace('Output Racing ', '')}</title>
+				</Helmet>
 				
+				<div className="columns">
+					<div className="column col-8 col-xl-12 col-mx-auto content">
+				
+						<hgroup className="page-header columns">
+							<div>
+								<h2 className="page-title">Standings</h2>
+								<h3 className="page-subtitle">
+									<span>{ `${name[2]} ${name[3]}` }</span>
+									{	roundsCompleted < totalRounds
+											? `Round ${roundsCompleted} of ${totalRounds}`
+											: 'Final'
+									}
+								</h3>
+							</div>
+							{ season.cars &&
+								<Cars 
+									cars={
+										cars.filter(
+											({ name }) => season.cars.includes(name)
+										)
+									} 
+								/>
+							}
+						</hgroup>
+	
+						<Standings 
+							standings={
+								season.standings.map(row => ({
+									...row, 
+									driver: drivers.find(({ name }) => name === row.driver)
+								}))
+							}
+							fields={column => column === 'laps'}
+						/>
+							
+					</div>
+				</div>
+					
+			</main>
+	
 			<div className="columns seasons-container">
 				<div className="column col-8 col-xl-12 col-mx-auto">
-			
+				
 					<Seasons 
 						path="standings" 
 						seasons={seasons.filter(({ id }) => id !== season.id)} 
@@ -65,8 +68,8 @@ const StandingsPage = ({ season, seasons, drivers, cars }) => {
 				
 				</div>
 			</div>
-
-		</main>
+			
+		</>
 	)
 }
 

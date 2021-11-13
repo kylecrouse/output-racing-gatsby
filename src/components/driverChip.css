@@ -22,6 +22,10 @@ a.driverChip:focus .driver-name::after {
 	/* padding-left: 0.4rem; */
 }
 
+.driverChip.inactive {
+	opacity: 0.3;
+}
+
 .numberArtContainer {
 	display: flex;
 	align-items: center; 

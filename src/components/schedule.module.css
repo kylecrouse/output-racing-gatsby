@@ -1,0 +1,224 @@
+.container {
+	margin-top: -0.8rem;
+}
+
+.details {
+	align-items: stretch;
+	background: linear-gradient(120deg, transparent 20%, white 60%, transparent);
+	border-top: 2px solid #f0f0f0;
+	display: flex;
+	flex-direction: row;
+	overflow: hidden;
+	padding: 1rem 1rem 0.9rem;
+	position: relative;
+	z-index: 1;
+}
+
+.details > * {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	position: relative;
+}
+
+.date {
+	border-right: 2px solid #f0f0f0;
+	font-size: 0.7rem;
+	font-weight: 100;
+	letter-spacing: 5px;
+	text-align: center;
+	padding: 0 1rem 0 0;
+}
+
+.day {
+	display: block;
+	color: #f4a913;
+	font-family: obvia-expanded, sans-serif;
+	font-size: 1.6rem;
+	font-weight: 900;
+	letter-spacing: 0;
+	line-height: 1;
+	margin-left: -0.2rem;
+}
+
+.track {
+	padding-left: 1rem;
+}
+
+.track h4 {
+	font-family: obvia-expanded, sans-serif;
+	font-size: 1rem;
+	font-style: italic;
+	margin-bottom: 0.1rem;
+	/* overflow: hidden; */
+	/* text-overflow: ellipsis; */
+	/* white-space: nowrap; */
+}
+
+.track h5 {
+	font-family: museo-sans, sans-serif;
+	font-size: 0.8rem;
+	font-weight: 100;
+	margin: 0 0 0.1rem;
+}
+
+.logo {
+	position: absolute;
+	width: 300px;
+	right: 34%;
+	top: -12%;
+	transform: scale(1.2);
+	z-index: 0;
+}
+
+.logo img {
+	display: block;
+	margin: 0 auto;
+	max-width: 300px;
+}
+
+.logo::after {
+	background: 
+		linear-gradient(
+			110deg,
+			rgba(255,255,255,1) 20%, 
+			rgba(255,255,255,0.8)
+		),
+		linear-gradient(
+			rgba(255,255,255,0.5) 20%,
+			transparent 30%, 
+			transparent 70%, 
+			rgba(255,255,255,0.5) 80%
+		);
+	bottom: 0;
+	content: ' ';
+	left: 0;
+	right: 0;
+	position: absolute;
+	top: 0;
+	z-index: 1;
+}
+
+.info {
+	align-items: flex-end;
+	font-size: 0.6rem;
+	font-weight: 100;
+	margin-left: auto;
+	text-transform: uppercase;
+}
+
+.info span + span {
+	border-left: 1px solid rgba(0,0,0,0.4);
+	display: inline-block;
+	margin-left: 0.5rem;
+	padding-left: 0.5rem;
+}
+
+.container [class*="cars-container"] {
+	margin: 0.5rem -0.5rem 0 auto;
+}
+
+.container [class*="car-container"] {
+	margin-left: -0.2rem;
+}
+
+.container [class*="car-image"] {
+	max-height: 1rem;
+}
+
+.container [class*="car-caption"] {
+	display: none;
+}
+
+.results {
+	font-family: obvia, sans-serif;
+	font-size: 0.6rem;
+	font-weight: 300;
+	line-height: 1.6;
+	margin: -0.3rem 0 -0.3rem auto;
+	width: 25%;
+}
+
+.resultItem {
+	background: linear-gradient(90deg, transparent 67%, black);
+	border-color: black;
+	border-style: solid;
+	border-width: 0 5px 0 0;
+	margin: 0 0 0.2rem;
+	text-align: center;
+	transform: skew(-20deg);
+}
+
+.resultItem:nth-child(1) {
+	background: linear-gradient(110deg, transparent 67%, rgba(249,166,2,0.6));
+	border-color: rgb(249,166,2);
+}
+
+.resultItem:nth-child(2) {
+	background: linear-gradient(110deg, transparent 67%, rgba(195,199,199,0.6));
+	border-color: rgb(195,199,199);
+}
+
+.resultItem:nth-child(3) {
+	background: linear-gradient(110deg, transparent 67%, rgba(177,86,15,0.6));
+	border-color: rgb(177,86,15);
+	margin-bottom: 0;
+}
+
+.resultItem > div {
+	transform: skew(20deg);
+}
+
+.resultItem [class*="numberArtContainer"] {
+}
+
+.resultItem [class*="numberArt"] {
+}
+
+.resultItem [class*="driver-name"] {
+	text-transform: uppercase;
+}
+
+.resultItem [class*="last-name"] {
+	font-size: calc(0.6rem - 0.2px);
+	font-weight: 600;
+}
+
+.resultItem b {
+	font-weight: 900;
+}
+
+.chase {
+	border-top: 2px solid #f0f0f0;
+	color: black;
+	font-family: obvia-expanded, sans-serif;
+	font-size: 1.4rem;
+	font-style: italic;
+	font-weight: 900;
+	line-height: 1;
+	padding-top: 3rem;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.chase::after {
+	background: linear-gradient(110deg, 
+		transparent 10%, 
+		#f0f0f0 10%, 
+		#f0f0f0 calc(10% + 5px), 
+		transparent calc(10% + 5px), 
+		transparent calc(10% + 10px), 
+		#f0f0f0 calc(10% + 10px), 
+		#f0f0f0 calc(90% - 10px), 
+		transparent calc(90% - 10px), 
+		transparent calc(90% - 5px), 
+		#f0f0f0 calc(90% - 5px), 
+		#f0f0f0 90%, 
+		transparent 90%
+	);
+	content: ' ';
+	display: block;
+	margin-top: -1.7rem;
+	height: 2rem;
+	width: 100%;
+}

@@ -2,15 +2,18 @@ import * as React from 'react'
 import './driverChip.css'
 
 const DriverChip = (props) => {
-	return props.active ? (
-		<a href={`/driver/${props.name.replace(/\s/g, '-').toLowerCase()}/`} className="driverChip">
+	return props.active && props.link !== false ? (
+		<a 
+			href={`/driver/${props.name.replace(/\s/g, '-').toLowerCase()}/`} 
+			className={`driverChip ${props.className}`}
+		>
 			{ props.numberArt &&
 				<NumberArt number={props.number} image={props.numberArt.file.url}/>
 			}
 			{ renderName(props) }
 		</a>    
 	) : (
-		<div className="driverChip">
+		<div className={`driverChip ${props.className} ${!props.active ? 'inactive' : ''}`}>
 			{ props.numberArt &&
 				<NumberArt number={props.number} image={props.numberArt.file.url}/>
 			}
