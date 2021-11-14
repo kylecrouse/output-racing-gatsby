@@ -60,6 +60,7 @@ export const query = graphql`
 						url
 					}
 				}
+				active
 				contentful_id
 				media {
 					gatsbyImageData(

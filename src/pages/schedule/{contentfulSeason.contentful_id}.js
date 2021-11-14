@@ -1,38 +1,31 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
-import { Helmet } from 'react-helmet'
-import Schedule from '../../components/schedule'
-import Seasons from '../../components/seasons'
-import Cars from '../../components/cars'
+import SchedulePage from '../../components/schedulePage'
 
-const ScheduleArchivePage = ({ data }) => {
-	return (
-		<main>
-
-			<Helmet>
-				<meta charSet="utf-8" />
-				<title>Output Racing League | Schedule | {data.season.name.replace('Output Racing ', '')}</title>
-			</Helmet>
-
-			<h2 className="text-center">
-				{data.season.name.replace('Output Racing ', '')} Schedule
-			</h2>
-			{ data.season.cars &&
-				<Cars cars={
-					data.league.cars.filter(
-						({ name }) => data.season.cars.includes(name)
-					)
-				}/>
-			}
-			<Schedule {...data.season}/>
-			
-			<Seasons 
-				path="schedule" 
-				seasons={data.league.seasons.filter(({ id }) => id !== data.season.id)} 
-				drivers={data.drivers.nodes}
-			/>
+const ArchiveSchedulePage = ({ data }) => {
+	const season = {
+		...data.season,
+		schedule: data.season.schedule.map(item => ({
+			...item,
+			track: {
+				...data.league.tracks.find(
+					({ name }) => item.track.includes(name)
+				),
+				config: item.track
+			},
+			results: data.season.results.find(
+				({ raceId }) => parseInt(raceId) === parseInt(item.raceId)
+			)
+		}))
+	}
 	
-		</main>
+	return (
+		<SchedulePage 
+			season={season}
+			cars={data.league.cars}
+			seasons={data.league.seasons}
+			drivers={data.drivers.nodes}
+		/>
 	)
 }
 
@@ -52,6 +45,17 @@ export const query = graphql`
 				time
 				laps
 				date
+				chase
+			}
+			results {
+				raceId
+				results {
+					finish
+					name
+					points
+					bonus
+					penalty
+				}
 			}
 		}
 		league: contentfulLeague(leagueId: {eq: 2732}) {
@@ -59,11 +63,17 @@ export const query = graphql`
 				name
 				image
 			}
+			tracks {
+				name
+				logo
+			}
 			seasons {
 				name
+				cars
 				id: contentful_id
 				standings {
 					driver
+					points
 				}
 			}
 		}
@@ -83,4 +93,4 @@ export const query = graphql`
 	}
 `
 
-export default ScheduleArchivePage
+export default ArchiveSchedulePage
