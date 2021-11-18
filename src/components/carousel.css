@@ -16,3 +16,8 @@
 	background: #fa9104;
 	color: black !important;
 }
+
+.glide__bullet {
+	overflow: hidden;
+	text-indent: -9999px;
+}

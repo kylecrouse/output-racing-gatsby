@@ -136,7 +136,7 @@ const Results = (props) => {
 				accessor: 'status'
 			}
 		],
-		[props.duration]
+		[props.duration, props.counts]
 	)
 	
 	return (
