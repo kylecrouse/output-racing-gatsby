@@ -75,18 +75,18 @@ const ResultsPage = ({ data }) => {
 							}
 							duration={race.duration}
 							counts={!!race.counts}
-							fields={column => ['status', 'bonus', 'penalty', race.counts ? '' : 'points'].includes(column)}
+							fields={column => ['status', 'bonus', 'penalty', race.counts !== true && 'points'].includes(column)}
 						/>
 						
-<div className="columns">
-<div className="column col-4 col-sm-12 text-center">
-	<ul className="text-center" style={{ listStyle: "none", marginBottom: "1rem" }}>
-		<li style={{ marginTop: "0.5rem", fontSize: "0.6rem" }}>{race.laps} laps ({race.duration})</li>
-		<li style={{ fontSize: "0.6rem" }}>{race.cautions} cautions for {race.cautionLaps} laps</li>
-		<li style={{ fontSize: "0.6rem" }}>{race.leadChanges} lead changes between {race.leaders} drivers</li>
-	</ul>
-</div>
-</div>
+						<div className={ styles.stats }>
+							<h3>Race Statistics</h3>
+							<dl>
+								<dt>Cautions</dt>
+								<dd>{race.cautions} cautions for {race.cautionLaps} laps</dd>
+								<dt>Lead Changes</dt>
+								<dd>{race.leadChanges} lead changes between {race.leaders} drivers</dd>
+							</dl>
+						</div>
 
 						{ race.broadcast && 
 							<Video src={race.broadcast} className={ styles.broadcast }/> 
@@ -108,6 +108,7 @@ export const query = graphql`
 			broadcast
 			cautionLaps
 			cautions
+			counts
 			date
 			duration
 			name

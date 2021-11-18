@@ -90,3 +90,45 @@
 	position: relative;
 	margin-bottom: 0.4rem;
 }
+
+.stats {
+	margin: 2rem 50% 2rem 0.4rem;
+}
+
+.stats dl {
+	border-bottom: 2px solid #f0f0f0;
+	display: grid;
+	grid-template-columns: 33% auto;
+}
+
+.stats dt {
+	font-family: obvia, sans-serif;
+	font-size: 0.6rem;
+	font-weight: 600;
+	grid-column: 1;
+	text-transform: uppercase;
+}
+
+.stats dt::before,
+.stats dd::before {
+	border-top: 2px solid #f0f0f0;
+	display: block;
+	content: ' ';
+	padding-top: 0.8rem;
+}
+
+.stats dt::after,
+.stats dd::after {
+	display: block;
+	content: ' ';
+	line-height: 0;
+	margin-bottom: 0.7rem;
+}
+
+.stats dd {
+	font-size: 0.65rem;
+	font-weight: 100;
+	grid-column: 2;
+	line-height: 1.1;
+	margin: 0;
+}
