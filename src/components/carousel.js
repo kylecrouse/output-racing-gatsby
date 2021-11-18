@@ -1,5 +1,6 @@
-import Glide from "@glidejs/glide";
-import * as React from "react";
+import * as React from "react"
+import Glide from "@glidejs/glide"
+import './carousel.css'
 
 import "@glidejs/glide/dist/css/glide.core.min.css";
 import "@glidejs/glide/dist/css/glide.theme.min.css";
@@ -30,6 +31,14 @@ export const Carousel = React.forwardRef(({ options, children }, ref) => {
 					<i className="icon icon-arrow-right">next</i>
 				</button>
 			</div>
+			{ options.showNav === true &&
+				<div class="glide__bullets" data-glide-el="controls[nav]">
+					{ children.map((el, i) => (
+							<button class="glide__bullet" data-glide-dir={`=${i}`}></button>
+						)) 
+					}
+				</div>	
+			}
 		</div>
 	);
 });

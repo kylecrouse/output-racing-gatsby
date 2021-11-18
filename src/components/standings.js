@@ -69,16 +69,16 @@ const Standings = (props) => {
 				Header: 'Laps',
 				accessor: 'laps',
 			},
-			{
-				id: 'incPerRace',
-				Header: 'Incidents per Race',
-				accessor: ({ incidents, starts }) => (incidents / starts).toFixed(2),
-			},
-			{
-				id: 'incPerLap',
-				Header: 'Incidents per Lap',
-				accessor: ({ incidents, laps }) => (incidents / parseInt(laps.replace(/,/g, ''), 10)).toFixed(2),
-			},
+			// {
+			// 	id: 'incPerRace',
+			// 	Header: 'Incidents per Race',
+			// 	accessor: ({ incidents, starts }) => (incidents / starts).toFixed(2),
+			// },
+			// {
+			// 	id: 'incPerLap',
+			// 	Header: 'Incidents per Lap',
+			// 	accessor: ({ incidents, laps }) => (incidents / parseInt(laps.replace(/,/g, ''), 10)).toFixed(2),
+			// },
 		],
 		[]
 	)
@@ -86,11 +86,10 @@ const Standings = (props) => {
 	return (
 		<Table 
 			columns={columns} 
-			data={props.standings} 
+			data={props.standings}
+			disableSortBy={true} 
 			getRowProps={row => ({
-				style: {
-					opacity: row.values.driver.active ? 1 : 0.3
-				}
+				className: row.values.driver.active ? '' : 'inactive'
 			})}
 			initialState={{
 				hiddenColumns: columns

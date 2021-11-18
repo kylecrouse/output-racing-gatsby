@@ -4,7 +4,7 @@ import './driverChip.css'
 const DriverChip = (props) => {
 	return props.active && props.link !== false ? (
 		<a 
-			href={`/driver/${props.name.replace(/\s/g, '-').toLowerCase()}/`} 
+			href={`/drivers/${props.name.replace(/\s/g, '-').toLowerCase()}/`} 
 			className={`driverChip ${props.className}`}
 		>
 			{ props.numberArt &&

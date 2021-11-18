@@ -1,0 +1,18 @@
+.glide__slides,
+.glide__slides > .glide__slide {
+	margin: 0;
+}
+
+.glide__arrow {
+	border: 0 !important;
+	box-shadow: none !important;
+	color: #fa9104 !important;
+	text-shadow: none !important;
+	transition: 200ms ease-out !important;
+}
+
+.glide__arrow:hover,
+.glide__arrow:focus {
+	background: #fa9104;
+	color: black !important;
+}

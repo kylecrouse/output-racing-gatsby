@@ -6,6 +6,7 @@ const Table = ({
 	columns, 
 	data, 
 	initialState = {},
+	disableSortBy = false,
 	getRowProps = () => ({}),
 }) => {
 	const {
@@ -19,6 +20,7 @@ const Table = ({
 			columns,
 			data,
 			initialState,
+			disableSortBy
 		},
 		useSortBy
 	)

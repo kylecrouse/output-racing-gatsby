@@ -1,14 +1,13 @@
 import * as React from 'react'
-import moment from 'moment'
 import Cars from '../components/cars'
 import DriverChip from '../components/driverChip'
+import RaceHeader from '../components/raceHeader'
 import * as styles from './schedule.module.css'
 
 const Schedule = (props) => {
 	return (
 		<div className={ styles.container }>
 			{ props.schedule.map((race) => {
-					const date = moment(race.date)
 					const config = race.track.config.replace(`${race.track.name}`, '')
 					const { results = [] } = race.results || {}
 					return race.chase
@@ -18,27 +17,8 @@ const Schedule = (props) => {
 									</div>
 								)
 							: (
-									<div className={ styles.details }>
-										{ race.track && race.track.logo &&
-												<div className={ styles.logo }>
-													<img 
-														src={ race.track.logo }
-														alt={ `${race.track.name} logo` }
-													/>
-												</div>
-										}
-										<div className={ styles.date }>
-											<span className={ styles.day }>
-												{ date.format('DD') }
-											</span> 
-											<span className={ styles.month }>
-												{ date.format('MMM').toUpperCase() }
-											</span>
-										</div>
-										<div className={ styles.track }>
-											<h4>{ race.track && race.track.name }</h4>
-											<h5>{ race.name }</h5>
-										</div>
+									<a href={ `/results/${race.raceId}` } className={ styles.details }>
+										<RaceHeader {...race}/>
 										{	results.length > 0
 												?	<div className={ styles.results }>
 														{ results
@@ -50,7 +30,7 @@ const Schedule = (props) => {
 																		<div className={ styles.resultItem }>
 																			<div className="columns">
 																				<div className="col-8">
-																					<DriverChip { ...driver }/>
+																					<DriverChip { ...driver } link={false}/>
 																				</div>
 																				<div className="col-4">
 																					{ race.counts
@@ -78,7 +58,7 @@ const Schedule = (props) => {
 															}
 														</div>
 										}
-									</div>
+									</a>
 								)
 				}) 
 			}

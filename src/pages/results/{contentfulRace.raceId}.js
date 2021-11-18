@@ -1,67 +1,103 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
+import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import moment from 'moment'
 import Results from '../../components/results'
+import { Carousel, Slide } from '../../components/carousel'
 import Video from '../../components/video'
+import * as styles from './results.module.scss'
 
 const ResultsPage = ({ data }) => {
 	const race = data.race;
 	const track = data.league.tracks.find(({ name }) => race.track.includes(name))
 	return (
-		<main>
-
+		<>
 			<Helmet>
-				<meta charSet="utf-8" />
 				<title>Output Racing League | Results | { race.name }</title>
 			</Helmet>
-
-			<div className="columns" style={{ marginBottom: "2rem", alignItems: "center" }}>
-				<div className="column col-4 col-sm-12 text-center">
-					{ race.logo
-							? <img src={ race.logo.file.url } alt={`${race.name} logo`} style={{ display: "block", height: "100%", maxHeight: "150px", margin: "0 auto", maxWidth: "100%" }} />
-							: <h3 style={{ marginBottom: "2rem" }}>{race.name}</h3>
-					}
-				</div>
-				<div className="column col-4 col-sm-12 text-center">
-					<ul className="text-center" style={{ listStyle: "none", marginBottom: "1rem" }}>
-						<li><b>{track.name}</b></li>
-						<li>{moment.parseZone(race.date).format('MMMM Do, YYYY')}</li>
-						<li style={{ marginTop: "0.5rem", fontSize: "0.6rem" }}>{race.laps} laps ({race.duration})</li>
-						<li style={{ fontSize: "0.6rem" }}>{race.cautions} cautions for {race.cautionLaps} laps</li>
-						<li style={{ fontSize: "0.6rem" }}>{race.leadChanges} lead changes between {race.leaders} drivers</li>
-					</ul>
-				</div>
-				<div className="column col-4 col-sm-12">
-					<img src={track.logo} alt={`${track.name} logo`} style={{ display: "block", height: "100%", maxHeight: "150px", margin: "0 auto", maxWidth: "100%" }} />
-				</div>
-			</div>
-
-			<Results 
-				results={
-					race.results.map(item => ({
-						...item,
-						driver: data.drivers.nodes.find(({ name }) => name === item.name)
-					}))
-				}
-			/>
 			
-
-			
-			{ race.broadcast && 
-				<Video src={race.broadcast} style={{ marginTop: "3rem" }}/> 
+			{ race.media && 
+				(race.media.length > 1 
+					? (
+							<Carousel options={{ type: "carousel", showNav: true }}>
+								{ race.media.map((image) => {
+										return (
+											<Slide>
+												<GatsbyImage 
+													alt="screenshot"
+													className={ styles.media }
+													image={ getImage(image) } 
+												/>
+											</Slide>
+										)
+									}) 
+								}
+							</Carousel>
+						)
+					: race.media.slice(0,1).map((image) => (
+							<GatsbyImage 
+								alt="screenshot"
+								className={ styles.media }
+								image={ getImage(image) } 
+							/>						
+						))
+				)
 			}
 
-			<div style={{ marginTop: "2rem" }}>
-				{ race.media && race.media.map((image) => {
-						return (
-							<img src={ image.file.url } style={{ width: "100%", marginBottom: "2rem" }}  alt="screenshot"/>
-						)
-					}) 
-				}
-			</div>
+			<main className="container">
+			
+				<div className="columns">
+					<div className="column col-8 col-xl-12 col-mx-auto content">
 
-		</main>
+						<hgroup className={`columns page-header ${styles.header}`}>
+							<div className="column col-8">
+								<h4 className="page-title">Results</h4>
+								<h5 className="page-subtitle">
+									<span>{moment.parseZone(race.date).format('DD MMM YYYY')}</span>
+									<span>{track.name}</span>
+								</h5>
+							</div>
+							<div className="column col-2 col-ml-auto">
+								{ race.logo
+									? <img src={ race.logo.file.url } alt={`${race.name} logo`} className={ styles.logo }/>
+									: <img src={ track.logo } alt={`${track.name} logo`} className={ styles.logo } />
+								}
+							</div>
+						</hgroup>
+			
+						<Results 
+							results={
+								race.results.map(item => ({
+									...item,
+									driver: data.drivers.nodes.find(({ name }) => name === item.name)
+								}))
+							}
+							duration={race.duration}
+							counts={!!race.counts}
+							fields={column => ['status', 'bonus', 'penalty', race.counts ? '' : 'points'].includes(column)}
+						/>
+						
+<div className="columns">
+<div className="column col-4 col-sm-12 text-center">
+	<ul className="text-center" style={{ listStyle: "none", marginBottom: "1rem" }}>
+		<li style={{ marginTop: "0.5rem", fontSize: "0.6rem" }}>{race.laps} laps ({race.duration})</li>
+		<li style={{ fontSize: "0.6rem" }}>{race.cautions} cautions for {race.cautionLaps} laps</li>
+		<li style={{ fontSize: "0.6rem" }}>{race.leadChanges} lead changes between {race.leaders} drivers</li>
+	</ul>
+</div>
+</div>
+
+						{ race.broadcast && 
+							<Video src={race.broadcast} className={ styles.broadcast }/> 
+						}
+						
+					</div>
+				</div>
+
+			</main>
+
+		</>
 	)
 }
 
@@ -84,9 +120,10 @@ export const query = graphql`
 				}
 			}
 			media {
-				file {
-					url
-				}
+				gatsbyImageData(
+					layout: FULL_WIDTH
+					placeholder: BLURRED
+				)
 			}
 			track
 			time

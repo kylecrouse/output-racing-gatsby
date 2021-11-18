@@ -1,0 +1,19 @@
+.date {
+	border-right: 2px solid #f0f0f0;
+	font-size: 0.7rem;
+	font-weight: 100;
+	letter-spacing: 5px;
+	text-align: center;
+	padding: 0 1rem 0 0;
+}
+
+.day {
+	display: block;
+	color: #f4a913;
+	font-family: obvia-expanded, sans-serif;
+	font-size: 1.6rem;
+	font-weight: 900;
+	letter-spacing: 0;
+	line-height: 1;
+	margin-left: -0.2rem;
+}

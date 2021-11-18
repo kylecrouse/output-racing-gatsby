@@ -1,10 +1,10 @@
 import * as React from 'react'
-import './video.css'
+import * as styles from './video.module.scss'
 
 const Video = (props) => {
 	return (
-		<div className="video-container" style={props.style}>
-			<iframe title="broadcast" className="video" src={props.src} allowFullScreen></iframe>
+		<div className={`${styles.container} ${props.className}`} style={props.style}>
+			<iframe title="broadcast" className={ styles.video } src={props.src} allowFullScreen></iframe>
 		</div>
 	)
 }

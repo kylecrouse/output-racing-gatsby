@@ -1,6 +1,8 @@
 .driverChip {
 	display: flex;
+	font-family: obvia, sans-serif;
 	font-weight: 400;
+	text-transform: uppercase;
 	white-space: nowrap;
 }
 
@@ -24,6 +26,11 @@ a.driverChip:focus .driver-name::after {
 
 .driverChip.inactive {
 	opacity: 0.3;
+}
+
+.last-name {
+	font-size: 95%;
+	font-weight: 600;
 }
 
 .numberArtContainer {

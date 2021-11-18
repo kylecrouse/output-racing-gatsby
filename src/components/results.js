@@ -1,54 +1,164 @@
 import * as React from 'react'
+import moment from 'moment'
 import DriverChip from './driverChip'
+import Table from './table'
 
 const Results = (props) => {
-	const fields = props.fields || ['finish', 'start', 'driver', 'points', 'interval', 'laps', 'led', 'fastest', 'average', 'incidents', 'status'];
-	const headers = props.headers !== undefined ? props.headers : true;
-	return (
-		<table>
-			<thead className={ !headers ? 'd-hide' : '' }>
-				<tr>
-					{ fields.includes('finish') && <th width="2%">F</th> }
-					{ fields.includes('start') && <th width="2%">S</th> }
-					{ fields.includes('driver') && <th>Driver</th> }
-					{ fields.includes('points') && <th width="7%">Points</th> }
-					{ fields.includes('interval') && <th width="7%">Interval</th> }
-					{ fields.includes('laps') && <th width="7%">Laps</th> }
-					{ fields.includes('led') && <th width="7%">Led</th> }
-					{ fields.includes('fastest') && <th width="7%">Fastest</th> }
-					{ fields.includes('average') && <th width="7%">Average</th> }
-					{ fields.includes('incidents') && <th width="7%">Inc</th> }
-					{ fields.includes('status') && <th width="7%">Status</th> }
-				</tr>
-			</thead>
-			<tbody>
-				{ props.results
-						.sort((a, b) => parseInt(a.finish, 10) > parseInt(b.finish, 10))
-						.map(props => {
-							return (
-								<tr key={props.id} style={{ opacity: props.driver.active ? 1 : 0.3 }}>
-									{ fields.includes('finish') && <td>{props.finish}</td> }
-									{ fields.includes('start') && <td>{props.start}</td> }
-									{ fields.includes('driver') && <td><DriverChip {...props.driver}/></td> }
-									{ fields.includes('points') && 	
-										<td>
-											{parseInt(props.points, 10) + parseInt(props.bonus, 10) + parseInt(props.penalty, 10)}
-										</td> 
-									}
-									{ fields.includes('interval') && <td>{props.interval}</td> }
-									{ fields.includes('laps') && <td>{props.completed}</td> }
-									{ fields.includes('led') && <td>{props.led}</td> }
-									{ fields.includes('fastest') && <td>{props.fastest}</td> }
-									{ fields.includes('average') && <td>{props.average}</td> }
-									{ fields.includes('incidents') && <td>{props.incidents}</td> }
-									{ fields.includes('status') && <td>{props.status}</td> }
-								</tr>
-							)
-						}) 
+	const columns = React.useMemo(
+		() => [
+			{
+				Header: () => null,
+				accessor: 'finish',
+				className: 'cell-position'
+			},
+			{
+				Header: () => null,
+				accessor: 'start',
+				className: 'cell-change',
+				Cell: ({ row, value }) => {
+					const change = value - row.values.finish
+					return (
+						<span className={ 
+							change > 0 
+								? 'positive' 
+								: change < 0 
+									? 'negative' 
+									: 'neutral'
+							}>
+							{ Math.abs(change) || '\u00a0' }
+						</span>
+					)
 				}
-			</tbody>
-		</table>		
+			},
+			{
+				Header: 'Driver',
+				accessor: 'driver',
+				className: 'cell-driver',
+				Cell: ({ value }) => (
+					<DriverChip { ...value } />
+				)
+			},
+			{
+				Header: 'Points',
+				accessor: 'points',
+				className: 'cell-totalPoints',
+				Cell: ({ value, row }) => {
+					const { bonus, penalty } = row.values
+					return (
+						<div>
+							<span>
+								{ parseInt(value, 10) + parseInt(bonus, 10) + parseInt(penalty, 10) }
+							</span>
+							<span className="adjustments">
+								{ bonus > 0 && <span className="positive">{ `+${bonus}` }</span> }
+								{ penalty > 0 && <span className="negative">{ `-${penalty}` }</span> }
+							</span>
+						</div>
+					)
+				},
+			},
+			{
+				Header: 'Bonus',
+				accessor: 'bonus',
+				className: 'cell-bonus',
+				Cell: ({ value }) => value > 0 ? `+${value}` : ''
+			},
+			{
+				Header: 'Penalty',
+				accessor: 'penalty',
+				className: 'cell-penalty',
+				Cell: ({ value }) => value > 0 ? `-${value}` : ''
+			},
+			{
+				Header: 'Laps',
+				accessor: 'completed',
+			},
+			{
+				Header: 'Time',
+				accessor: 'interval',
+				Cell: ({ value, row }) => {
+					const { finish, status } = row.values
+					return parseInt(finish) === 1
+						? props.duration.replace(/\s(\d[ms])/g, ' 0$1') // add 0 to m and s < 10
+								.replace(/[hms]/g,'') // remove m, h, s
+								.replace(/\s/g,':') // replace space with :
+						: (status.toLowerCase() === 'running')
+							? value.replace('-', '+')
+									.replace('L', parseInt(value) < -1 ? ' laps': ' lap')
+							: 'DNF'
+				}
+			},
+			{
+				Header: 'Led',
+				accessor: 'led',
+				Cell: ({ value, data }) => {
+					return parseInt(value) === Math.max(
+						...data.map(({ led }) => parseInt(led))
+					)
+						? <b className={ props.counts ? 'positive' : '' }>{ value }</b>
+						: parseInt(value) >= 1 
+							? <span className={ props.counts ? 'positive' : '' }>{value}</span>
+							: value
+				}
+			},
+			{
+				Header: 'Inc',
+				accessor: 'incidents',
+				Cell: ({ value, data }) => {
+					return parseInt(value) === Math.max(
+						...data.map(({ incidents }) => parseInt(incidents))
+					)
+						? parseInt(value) >= 8 
+							? <b className={ props.counts ? 'negative' : '' }>{ value }</b>
+							: <b>{ value }</b>
+						: parseInt(value) >= 8 
+							? <span className={ props.counts ? 'negative' : '' }>{value}</span>
+							: value
+				}
+			},
+			{
+				Header: 'Fast Lap',
+				accessor: 'fastest',
+				Cell: ({ value, data }) => {
+					return moment(value, ['m:s.S', 's.S']).isSame(
+						moment.min(
+							...data
+								.filter(({ fastest }) => parseFloat(fastest) > 0)
+								.map(({ fastest }) => moment(fastest, ['m:s.S', 's.S']))
+						)
+					)
+						? <b>{ value }</b>
+						: parseFloat(value) > 0 ? value : '-'
+				}
+			},
+			{
+				Header: 'Status',
+				accessor: 'status'
+			}
+		],
+		[props.duration]
 	)
+	
+	return (
+		<Table 
+			columns={columns} 
+			data={props.results}
+			disableSortBy={true} 
+			getRowProps={row => ({
+				className: row.values.driver.active ? '' : 'inactive'
+			})}
+			initialState={{
+				hiddenColumns: columns
+					.map(({ id, accessor }) => id || accessor)
+					.filter(
+						typeof props.fields === 'function'
+							? props.fields
+							: (column) => props.fields && !props.fields.includes(column)
+					)
+			}}
+		/>
+	)
+
 }
 
 export default Results
