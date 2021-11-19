@@ -24,10 +24,10 @@ const StandingsPage = ({ season, seasons, drivers, cars }) => {
 								<h2 className="page-title">Standings</h2>
 								<h3 className="page-subtitle">
 									<span>{ `${name[2]} ${name[3]}` }</span>
-									{	roundsCompleted < totalRounds
+									<span>{	roundsCompleted < totalRounds
 											? `Round ${roundsCompleted} of ${totalRounds}`
 											: 'Final'
-									}
+									}</span>
 								</h3>
 							</div>
 							{ season.cars &&

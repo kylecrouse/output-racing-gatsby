@@ -78,19 +78,26 @@ const ResultsPage = ({ data }) => {
 							fields={column => ['status', 'bonus', 'penalty', race.counts !== true && 'points'].includes(column)}
 						/>
 						
-						<div className={ styles.stats }>
-							<h3>Race Statistics</h3>
-							<dl>
-								<dt>Cautions</dt>
-								<dd>{race.cautions} cautions for {race.cautionLaps} laps</dd>
-								<dt>Lead Changes</dt>
-								<dd>{race.leadChanges} lead changes between {race.leaders} drivers</dd>
-							</dl>
+						<div className="columns">
+							<div className="column col-6 col-mr-auto">
+						
+								<div className={ styles.stats }>
+									<h3>Race Statistics</h3>
+									<dl>
+										<dt>Cautions</dt>
+										<dd>{race.cautions} cautions for {race.cautionLaps} laps</dd>
+										<dt>Lead Changes</dt>
+										<dd>{race.leadChanges} lead changes between {race.leaders} drivers</dd>
+									</dl>
+								</div>
+							</div>
+							<div className="column col-6 col-ml-auto">
+								{ race.broadcast && 
+									<Video src={race.broadcast} className={ styles.broadcast }/> 
+								}
+							</div>
 						</div>
 
-						{ race.broadcast && 
-							<Video src={race.broadcast} className={ styles.broadcast }/> 
-						}
 						
 					</div>
 				</div>
