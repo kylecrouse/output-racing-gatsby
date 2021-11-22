@@ -23,7 +23,6 @@ a.details:visited {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	position: relative;
 }
 
 a.details:hover .track h4,
@@ -62,49 +61,6 @@ a.details:focus .track h4 {
 
 .container [class*="car-caption"] {
 	display: none;
-}
-
-.results {
-	font-family: obvia, sans-serif;
-	font-size: 0.6rem;
-	font-weight: 300;
-	line-height: 1.6;
-	margin: -0.3rem 0 -0.3rem auto;
-	width: 25%;
-}
-
-.resultItem {
-	background: linear-gradient(90deg, transparent 67%, black);
-	border-color: black;
-	border-style: solid;
-	border-width: 0 5px 0 0;
-	margin: 0 0 0.2rem;
-	text-align: center;
-	transform: skew(-20deg);
-}
-
-.resultItem:nth-child(1) {
-	background: linear-gradient(110deg, transparent 67%, rgba(249,166,2,0.6));
-	border-color: rgb(249,166,2);
-}
-
-.resultItem:nth-child(2) {
-	background: linear-gradient(110deg, transparent 67%, rgba(195,199,199,0.6));
-	border-color: rgb(195,199,199);
-}
-
-.resultItem:nth-child(3) {
-	background: linear-gradient(110deg, transparent 67%, rgba(177,86,15,0.6));
-	border-color: rgb(177,86,15);
-	margin-bottom: 0;
-}
-
-.resultItem > div {
-	transform: skew(20deg);
-}
-
-.resultItem b {
-	font-weight: 900;
 }
 
 .chase {

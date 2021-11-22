@@ -1,0 +1,108 @@
+.container {
+	background: linear-gradient(110deg, #333 25%, #454545, #333 75%);
+	border-radius: 10px;
+	color: white;
+	margin: 0 0.25rem;
+	overflow: hidden;
+	position: relative;
+}
+
+.header {
+	background: linear-gradient(110deg, 
+		black 25%, 
+		#333 25%, 
+		#333 calc(25% + 5px), 
+		black calc(25% + 5px), 
+		black calc(25% + 10px), 
+		#333 calc(25% + 10px), 
+		#454545, 
+		#333 calc(75% - 10px), 
+		black calc(75% - 10px), 
+		black calc(75% - 5px), 
+		#333 calc(75% - 5px), 
+		#333 75%, 
+		black 75%
+	);
+	font-family: obvia-expanded, sans-serif;
+	font-size: 0.7rem;
+	font-style: italic;
+	font-weight: 300;
+	line-height: 2;
+	margin: 0;
+	padding: 0.2rem 0;
+	text-align: center;
+}
+
+.header b {
+	font-weight: 500;
+	margin-left: -0.2rem;
+}
+
+.image {
+	max-height: 100px;
+}
+
+.image::after {
+	background: linear-gradient(rgba(0,0,0,0.5), transparent 5%, transparent 95%, rgba(0,0,0,0.5));
+}
+
+.details {
+	padding: 0 1rem;
+	
+	[class*="driverChip"] {
+		align-items: center;
+		color: #f0f0f0;
+		font-family: museo-sans, sans-serif;
+		font-weight: 300;
+		line-height: 1;
+	}
+	
+	[class*="numberArtContainer"] {
+		height: 3.5rem;
+		width: 3.5rem;
+		margin-right: 0.8rem;
+		padding: 0.4rem 0;
+	}
+	
+	[class*="numberArt"] {
+		max-height: 100%;
+	}
+	
+	[class*="last-name"] {
+		display: block;
+		font-family: obvia-expanded, sans-serif;
+		font-size: 1.1rem;
+		font-style: italic;
+		font-weight: 900;
+		margin-left: -2px;
+	}
+	
+	dl {
+		border-top: 1px solid #666;
+		color: #f0f0f0;
+		display: grid;
+		grid-template-rows: auto auto;
+		grid-auto-columns: 1fr;
+		grid-auto-flow: column;
+		margin: 0;
+		padding: 0.5rem 0 0.75rem;
+		text-align: center;
+	}
+	
+	dt {
+		color: #999;
+		font-family: obvia, sans-serif;
+		font-size: 0.5rem;
+		font-weight: 300;
+		line-height: 1;
+		text-transform: uppercase;
+	}
+	
+	dd {
+		font-family: obvia-expanded, sans-serif;
+		font-size: 1rem;
+		font-weight: 600;
+		line-height: 1;
+		margin: 0.2rem 0 0;
+	}
+}

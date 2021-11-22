@@ -89,7 +89,7 @@
 
 .stats dl {
 	border-top: 1px solid #ccc;
-	color: rgba(0,0,0,0.4);
+	color: #666;
 	display: grid;
 	grid-template-rows: auto auto;
 	grid-auto-columns: 1fr;
@@ -100,16 +100,18 @@
 }
 
 .stats dt {
+	color: #999;
 	font-family: obvia, sans-serif;
-	font-size: 0.6rem;
+	font-size: 0.5rem;
 	font-weight: 300;
 	line-height: 1;
+	text-transform: uppercase;
 }
 
 .stats dd {
 	font-family: obvia-expanded, sans-serif;
 	font-size: 1rem;
-	font-weight: 900;
+	font-weight: 600;
 	line-height: 1;
 	margin: 0.2rem 0 0;
 }

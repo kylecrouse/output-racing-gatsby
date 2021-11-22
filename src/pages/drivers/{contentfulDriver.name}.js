@@ -4,12 +4,91 @@ import { Helmet } from 'react-helmet'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import DriverChip from '../../components/driverChip'
 import License from '../../components/license'
+import Table from '../../components/table'
 import * as styles from './driver.module.css'
 
 const DriverPage = ({ data }) => {
 	const driver = data.driver
 	const name = driver.nickname || driver.name
 	const stats = data.stats
+	const columns = React.useMemo(
+		() => [
+			{
+				Header: 'Starts',
+				accessor: 'starts'
+			},
+			{
+				Header: 'Avg Start',
+				accessor: 'avgStart'
+			},
+			{
+				Header: 'Avg Finish',
+				accessor: 'avgFinish'
+			},
+			{
+				Header: 'Laps',
+				accessor: 'laps'
+			},
+			{
+				Header: 'Led',
+				accessor: 'lapsLed',
+			},
+			{
+				Header: 'Led\u00A0%',
+				id: 'ledPercentage',
+				Cell: ({ row, value }) => {
+					return (
+						`${((parseInt(row.original.lapsLed.replace(',','')) / parseInt((row.original.laps || '0').replace(',',''))) * 100).toFixed(0)}%`
+					)
+				}
+			},
+			{
+				Header: 'Inc',
+				accessor: 'incidents'
+			},
+			{
+				Header: 'Inc/Race',
+				accessor: 'incidentsRace'
+			},
+			{
+				Header: 'Inc/Lap',
+				accessor: 'incidentsLap'
+			},
+			{
+				Header: 'Wins',
+				accessor: 'wins'
+			},
+			{
+				Header: 'W%',
+				accessor: 'winPercentage'
+			},
+			{
+				Header: 'T5',
+				accessor: 'top5s'
+			},
+			{
+				Header: 'T5%',
+				accessor: 'top5Percentage'
+			},
+			{
+				Header: 'T10',
+				accessor: 'top10s'
+			},
+			{
+				Header: 'T10%',
+				accessor: 'top10Percentage'
+			},
+			{
+				Header: 'Poles',
+				accessor: 'poles'
+			},
+			{
+				Header: `Pole\u00A0%`,
+				accessor: 'polePercentage'
+			},
+		],
+		[]
+	)
 	return (
 		<>
 			<Helmet>
@@ -33,118 +112,24 @@ const DriverPage = ({ data }) => {
 				<div className="columns">   
 					<div className="column col-8 col-xl-12 col-mx-auto content">
 					
-						<hgroup classNane="page-header">
+						<hgroup className={`page-header ${styles.pageHeader}`}>
 							<DriverChip 
 								{...driver } 
-								className={ styles.driverChip }
+								active={true}
 								license={true}
 								link={false}
 							/>
+							{ driver.license && 
+								<License {...driver.license}/>
+							}
 						</hgroup>
-					
-						<div className="columns" style={{ display: "flex", alignItems: "center" }}>
-							<div className="column col-6 col-sm-4">
-								{ driver.numberArt &&
-										<img 
-											alt={ driver.number }
-											src={ driver.numberArt.file.url } 
-											style={{ 
-												display: "block", 
-												width: "100%", 
-												margin: "0 20px 0 auto", 
-												maxWidth: "200px" 
-											}}
-										/>
-								}
-							</div>
-							<div className="column col-6 col-sm-8 col-mx-auto">
-								<h2>{driver.nickname || driver.name}</h2>
-								{ driver.license && 
-									<License {...driver.license}/>
-								}
-							</div>
-						</div>
-						
-						{ Object.keys(stats).length > 0 &&
-							<>
-								<h4 className="text-center" style={{ margin: "2rem 0 1rem" }}>Output Racing League Career Stats</h4>
-								<table>
-									<thead>
-										<tr>
-											<th>Starts</th>
-											<th>Wins</th>
-											<th>Top 5s</th>
-											<th>Poles</th>
-											<th>Avg Start</th>
-											<th>Avg Finish</th>
-											<th>Total Laps</th>
-											<th>Laps Led</th>
-											<th>Inc/Race</th>
-											<th>Win %</th>
-											<th>Top 5 %</th>
-											<th>Led %</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>{stats.starts}</td>
-											<td>{stats.wins}</td>
-											<td>{stats.top5s}</td>
-											<td>{stats.poles}</td>
-											<td>{stats.avgStart}</td>
-											<td>{stats.avgFinish}</td>
-											<td>{stats.laps}</td>
-											<td>{stats.lapsLed}</td>
-											<td>{stats.incidentsRace}</td>
-											<td>{stats.winPercentage}</td>
-											<td>{stats.top5Percentage}</td>
-											<td>{((parseInt(stats.lapsLed.replace(',','')) / parseInt((stats.laps || '0').replace(',',''))) * 100).toFixed(0)}%</td>
-										</tr>
-									</tbody>
-								</table>
-							</>
-						}
-		
-						{ driver.careerStats &&
-							<>
-								<h4 className="text-center" style={{ margin: "2rem 0 1rem" }}>iRacing Career Stats</h4>
-								<table>
-									<thead>
-										<tr>
-											<th>Starts</th>
-											<th>Wins</th>
-											<th>Top 5s</th>
-											<th>Poles</th>
-											<th>Avg Start</th>
-											<th>Avg Finish</th>
-											<th>Total Laps</th>
-											<th>Laps Led</th>
-											<th>Inc/Race</th>
-											<th>Win %</th>
-											<th>Top 5 %</th>
-											<th>Led %</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>{driver.careerStats.starts}</td>
-											<td>{driver.careerStats.wins}</td>
-											<td>{driver.careerStats.top5}</td>
-											<td>{driver.careerStats.poles}</td>
-											<td>{driver.careerStats.avgStart}</td>
-											<td>{driver.careerStats.avgFinish}</td>
-											<td>{driver.careerStats.totalLaps}</td>
-											<td>{driver.careerStats.lapsLed}</td>
-											<td>{driver.careerStats.avgIncPerRace.toFixed(2)}</td>
-											<td>{driver.careerStats.winPerc.toFixed(0)}%</td>
-											<td>{driver.careerStats.top5Perc.toFixed(0)}%</td>
-											<td>{driver.careerStats.lapsLedPerc.toFixed(0)}%</td>
-										</tr>
-									</tbody>
-								</table>
-							</>
-						}
-					
+
+						<Table 
+							columns={columns} 
+							data={[stats]}
+							disableSortBy={true} 
+						/>
+
 					</div>
 				</div>
 	
@@ -179,22 +164,6 @@ export const query = graphql`
 				licLevelDisplayName
 				srPrime
 				srSub
-			}
-			careerStats {
-				avgFinish
-				avgIncPerRace
-				avgPtsPerRace
-				avgStart
-				lapsLed
-				lapsLedPerc
-				poles
-				starts
-				top5
-				top5Perc
-				totalLaps
-				totalclubpoints
-				winPerc
-				wins
 			}
 		}
 		stats: contentfulLeagueStatsJsonNode(driver: {eq: $name}) {

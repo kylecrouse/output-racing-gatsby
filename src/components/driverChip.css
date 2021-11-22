@@ -47,3 +47,8 @@ a.driverChip:focus .driver-name::after {
 	margin: 0 auto; 
 	max-height: 1.8rem;
 }
+
+.driver-children {
+	font-family: museo-sans, sans-serif;
+	margin-left: 0.6rem;
+}

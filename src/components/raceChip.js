@@ -1,10 +1,10 @@
 import * as React from 'react'
 import RaceDate from '../components/raceDate'
-import * as styles from './raceHeader.module.scss'
+import * as styles from './raceChip.module.scss'
 
-const RaceHeader = (props) => {
+const RaceChip = (props) => {
 	return (
-		<>
+		<div className={ styles.container }>
 			{ props.track && props.track.logo &&
 					<div className={ styles.logo }>
 						<img 
@@ -20,8 +20,8 @@ const RaceHeader = (props) => {
 				}
 				<h5>{ props.name }</h5>
 			</div>
-		</>
+		</div>
 	)
 }
 
-export default RaceHeader
+export default RaceChip

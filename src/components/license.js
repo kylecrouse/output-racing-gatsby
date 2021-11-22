@@ -1,18 +1,17 @@
 import * as React from 'react'
-import './license.css'
+import * as styles from './license.module.scss'
 
 const License = (props) => {
 	return (
-		<ul className="license-container">
-			<li>
-				<span style={{ backgroundColor: `#${props.licColor}`, color: props.licGroup === 3 ? 'black' : 'white' }}> {props.licGroupDisplayName}
-					<span>{props.srPrime}.{props.srSub}</span>
+		<ul className={ styles.container }>
+			<li style={{ backgroundColor: `#${props.licColor}`, color: props.licGroup === 3 ? 'black' : 'white' }}>
+				<span>
+					{props.licGroupDisplayName.replace('Class ', '')}&nbsp;
+					{props.srPrime}.{props.srSub}
 				</span>
 			</li>
-			<li>
-				<span style={{ border: "1px solid black" }}>
-					iRating <span>{props.iRating}</span>
-				</span>
+			<li style={{ borderRightColor: `#${props.licColor}` }}>
+				<span>{`${Math.floor(props.iRating/100)/10}k`}</span>
 			</li>
 		</ul>		
 	)

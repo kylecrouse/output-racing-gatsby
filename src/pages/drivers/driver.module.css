@@ -17,6 +17,34 @@
 	z-index: 1;
 }
 
-.driverChip {
-	
+.page-header {
+	margin-bottom: 0.4rem;
+}
+
+.page-header [class*="driverChip"] {
+	align-items: center;
+	color: #454545;
+	font-family: museo-sans, sans-serif;
+	font-size: 1.2rem;
+	font-weight: 300;
+	line-height: 1;
+}
+
+.page-header [class*="numberArtContainer"] {
+	height: 4rem;
+	width: 4rem;
+	margin-right: 1rem;
+}
+
+.page-header [class*="numberArt"] {
+	max-height: 100%;
+}
+
+.page-header [class*="last-name"] {
+	display: block;
+	font-family: obvia-expanded, sans-serif;
+	font-size: 2rem;
+	font-style: italic;
+	font-weight: 900;
+	margin-left: -2px;
 }

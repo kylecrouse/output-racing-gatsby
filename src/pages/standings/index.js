@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
-import StandingsPage from '../../components/standingsPage'
+import Standings from '../../templates/standings'
 
 const CurrentStandingsPage = ({ data }) => {
 	return (
-		<StandingsPage 
+		<Standings 
 			season={data.league.activeSeason}
 			cars={data.league.cars}
 			seasons={data.league.seasons}

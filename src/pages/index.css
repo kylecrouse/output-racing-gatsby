@@ -6,14 +6,16 @@
 .tagline p {
 	text-align: center;
 	color: #fff;
+	font-family: obvia-expanded, sans-serif;
 	font-size: 1.2rem;
-	font-weight: 400;
+	font-weight: 600;
 	text-transform: uppercase;
 	font-style: oblique;
-	line-height: 1.5em;
+	line-height: 1;
 	letter-spacing: 1.8px;
 	margin: 0;
-	padding: 0.6rem 0 1rem;
+	padding: 1rem 0 2rem;
+	word-spacing: 1.8px;
 }
 
 .tagline figure {
@@ -105,10 +107,8 @@
 }
 
 .tab {
-	/* background: linear-gradient(110deg, black, #333 15%, #454545, #333 85%, black); */
 	background: linear-gradient(110deg, black, #333 15%, #454545, #333 85%, black);
 	border-bottom: 2px solid black;
-	/* box-shadow: inset 0 0 20px rgba(0,0,0,0.8); */
 	justify-content: center;	
 	margin: 2rem -20px 0;
 	overflow: hidden;
@@ -132,6 +132,10 @@
 .tab .tab-item span {
 	color: #999;
 	display: block;
+	font-family: obvia, sans-serif;
+	font-size: 0.7rem;
+	font-weight: 300;
+	line-height: 1;
 	padding: 0.5rem 4rem;
 	text-transform: uppercase;
 	transform: skew(20deg);
@@ -146,12 +150,26 @@
 	border: 0;
 	/* box-shadow: inset 0 0 20px rgba(0,0,0,0.8); */
 	color: black;
+	font-weight: 600;
 	margin: 0 -20px;
 	padding: 0.5rem calc(4rem + 20px);
 }
 
 .tab-body {
-	background: #f0f0f0 url(../images/bg@2x.jpg) no-repeat top/100%;
+	background: 
+		url(../images/bg@2x.jpg) no-repeat top/100%,
+		linear-gradient(
+			rgba(255,255,255,0),
+			rgba(255,255,255,1) 15rem,
+			rgba(255,255,255,1) calc(100% - 15rem), 
+			rgba(255,255,255,0)
+		), 
+		linear-gradient(
+			110deg, 
+			rgba(255,255,255,0.8), 
+			rgba(255,255,255,0.4) 70%, 
+			rgba(255,255,255,0.9)), 
+		#fff url(../images/plus-x2.png) repeat center/8px;
 	position: relative;
 }
 
@@ -163,51 +181,48 @@
 .tab-body h3 {
 	background: linear-gradient(rgba(0,0,0,0.5), transparent 10px);
 	color: white;
+	font-family: obvia-expanded, sans-serif;
 	font-size: 2rem;
 	font-style: italic;
-	font-weight: 100;
-	letter-spacing: 10px;
+	font-weight: 900;
+	letter-spacing: 5px;
 	padding: 3.5rem 0 5rem;
 	text-align: center;
-	text-shadow: 1px 1px 2px black;
 	text-transform: uppercase;
 }
 
 .tab-body h4 {
 	color: white;
 	font-size: 1.6rem;
-	font-weight: 900;
+	font-weight: 600;
 	line-height: 1;
-	margin-bottom: 1rem;
+	margin-bottom: 0.4rem;
 	text-align: center;
-	text-shadow: 1px 1px 2px black;
 }
 
 .tab-body h5 {
 	color: white;
+	font-family: museo-sans, sans-serif;
 	font-size: 1rem;
 	font-weight: 100;
 	line-height: 1;
+	margin-bottom: 0.2rem;
 	text-align: center;
-	text-shadow: 1px 1px 2px black;
 }
 
 .tab-body .table-container {
-	background: #f1f1f1;
+	background: white;
 	border-radius: 10px;
 	margin-top: 2rem;
 	margin-bottom: 2rem;
-	padding: 0.2rem 0.3rem;
+	padding: 0 0.4rem 1rem;
 }
 
 .tab-body .table-container .screenshot:first-child {
-	border-color: white;
 	border-top-left-radius: 8px;
 	border-top-right-radius: 8px;
-	border-style: solid;
-	border-width: 0.5rem 0.5rem 0;
-	margin-top: 0.1rem;
-	margin-bottom: -0.2rem;
+	margin-top: 0.4rem;
+	margin-bottom: -0.6rem;
 	max-height: 250px;
 	position: relative;
 }
@@ -239,12 +254,15 @@
 .tab-body table { 
 	border-collapse: separate; 
 	border-spacing: 0 0.2rem; 
-	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-	/* margin: 2rem 0; */
+	font-family: obvia, sans-serif;
+}
+
+.tab-body thead {
+	display: none;
 }
 
 .tab-body tr:nth-child(odd) td {
-	background-color: white;
+	background-color: #f0f0f0;
 }
 
 .tab-body tr:nth-child(odd) td:first-child {
@@ -267,14 +285,13 @@
 	font-size: 1rem;
 }
 
-.tab-body tbody td:first-child {
+.tab-body:nth-of-type(3) tbody td:first-child {
 	background-image: linear-gradient(90deg, 
 		rgba(0,0,0,0) 85%, 
 		rgba(0,0,0,0.05) 85%, 
 		rgba(0,0,0,0.05) calc(85% + 5px),
 		rgba(0,0,0,0) calc(85% + 5px)
 	);
-	font-weight: 700;
 	padding-right: 1.2rem;
 	text-align: right;
 	width: 3rem;
@@ -283,12 +300,18 @@
 .tab-body tbody td:last-child {
 	font-weight: 900;
 	text-align: right;
+	white-space: nowrap;
 }
 
-.tab-body tbody td:last-child::after {
+.tab-body:not(:last-of-type) tbody td:last-child::after,
+.tab-body:last-of-type tbody td:last-child span::after {
 	content: ' pts';
 	font-weight: normal;
 	white-space: nowrap;
+}
+
+.tab-body tbody td .adjustments {
+	display: none;
 }
 
 .tab-body td .driverChip {
@@ -306,6 +329,10 @@
 	height: 1.6rem;
 	margin-right: 1rem;
 	width: 1.6rem;
+}
+
+.tab-body .cta {
+	margin: 0.4rem 0 0;
 }
 
 .promo {

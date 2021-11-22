@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import Schedule from './schedule'
-import Seasons from './seasons'
+import Schedule from '../components/schedule'
+import Seasons from '../components/seasons'
 
-const SchedulePage = ({ season, seasons, cars, drivers, tracks }) => {
+const ScheduleTemplate = ({ season, seasons, cars, drivers, tracks }) => {
 	const name = season.name.match(/Output Racing (\d+) (Season \d)?(.*)/)	
 	return (
 		<>
@@ -54,4 +54,4 @@ const SchedulePage = ({ season, seasons, cars, drivers, tracks }) => {
 	)
 }
 
-export default SchedulePage
+export default ScheduleTemplate

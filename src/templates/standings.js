@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import Cars from './cars'
-import Seasons from './seasons'
-import Standings from './standings'
+import Cars from '../components/cars'
+import Seasons from '../components/seasons'
+import Standings from '../components/standings'
 
-const StandingsPage = ({ season, seasons, drivers, cars }) => {
+const StandingsTemplate = ({ season, seasons, drivers, cars }) => {
 	const name = season.name.match(/Output Racing (\d+) (Season \d)?(.*)/)	
 	const roundsCompleted = season.schedule.filter(({ counts, uploaded }) => counts && uploaded).length || 0
 	const totalRounds = season.schedule.filter(({ counts }) => counts).length
@@ -73,4 +73,4 @@ const StandingsPage = ({ season, seasons, drivers, cars }) => {
 	)
 }
 
-export default StandingsPage
+export default StandingsTemplate

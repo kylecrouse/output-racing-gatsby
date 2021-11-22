@@ -1,0 +1,31 @@
+.container {
+	list-style: none;
+	margin: 0 0.2rem 0 0;
+	padding: 0;
+}
+
+.container li {
+	background-color: #f0f0f0;
+	font-family: obvia, sans-serif;
+	font-size: 0.6rem;
+	font-weight: 600;
+	display: inline-block;
+	margin-bottom: 0.4rem;
+	text-transform: uppercase;
+	transform: skew(-20deg);
+}
+
+.container li:last-child {
+	border-right-width: 5px;
+	border-right-style: solid;
+}
+
+.container li > span {
+	display: inline-block;
+	padding: 0.2rem 1rem;
+	transform: skew(20deg);
+}
+
+.container li > span span {
+	margin-left: 4px;
+}

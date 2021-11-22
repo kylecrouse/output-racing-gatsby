@@ -35,7 +35,7 @@ const DriverCard = (props) => {
 					<dd>{ props.starts } </dd>
 					<dt>Wins</dt>
 					<dd>{ props.wins }</dd>
-					<dt>Top 5s</dt>
+					<dt>Top 5</dt>
 					<dd>{ props.top5s }</dd>
 				</dl>
 			</div>

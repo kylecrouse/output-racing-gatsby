@@ -1,110 +1,21 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
-import { Helmet } from 'react-helmet'
-import { GatsbyImage, getImage } from 'gatsby-plugin-image'
-import moment from 'moment'
-import Results from '../../components/results'
-import { Carousel, Slide } from '../../components/carousel'
-import Video from '../../components/video'
-import * as styles from './results.module.scss'
+import Results from '../../templates/results'
 
 const ResultsPage = ({ data }) => {
-	const race = data.race;
-	const track = data.league.tracks.find(({ name }) => race.track.includes(name))
 	return (
-		<>
-			<Helmet>
-				<title>Output Racing League | Results | { race.name }</title>
-			</Helmet>
-			
-			{ race.media && 
-				(race.media.length > 1 
-					? (
-							<Carousel options={{ type: "carousel", showNav: true }}>
-								{ race.media.map((image) => {
-										return (
-											<Slide>
-												<GatsbyImage 
-													alt="screenshot"
-													className={ styles.media }
-													image={ getImage(image) } 
-												/>
-											</Slide>
-										)
-									}) 
-								}
-							</Carousel>
-						)
-					: race.media.slice(0,1).map((image) => (
-							<GatsbyImage 
-								alt="screenshot"
-								className={ styles.media }
-								image={ getImage(image) } 
-							/>						
-						))
-				)
+		<Results 
+			{ ...data.race }
+			track={
+				data.league.tracks.find(({ name }) => data.race.track.includes(name))
 			}
-
-			<main className="container">
-			
-				<div className="columns">
-					<div className="column col-8 col-xl-12 col-mx-auto content">
-
-						<hgroup className={`columns page-header ${styles.header}`}>
-							<div className="column col-8">
-								<h4 className="page-title">Results</h4>
-								<h5 className="page-subtitle">
-									<span>{moment.parseZone(race.date).format('DD MMM YYYY')}</span>
-									<span>{track.name}</span>
-								</h5>
-							</div>
-							<div className="column col-2 col-ml-auto">
-								{ race.logo
-									? <img src={ race.logo.file.url } alt={`${race.name} logo`} className={ styles.logo }/>
-									: <img src={ track.logo } alt={`${track.name} logo`} className={ styles.logo } />
-								}
-							</div>
-						</hgroup>
-			
-						<Results 
-							results={
-								race.results.map(item => ({
-									...item,
-									driver: data.drivers.nodes.find(({ name }) => name === item.name)
-								}))
-							}
-							duration={race.duration}
-							counts={!!race.counts}
-							fields={column => ['status', 'bonus', 'penalty', race.counts !== true && 'points'].includes(column)}
-						/>
-						
-						<div className="columns">
-							<div className="column col-6 col-mr-auto">
-						
-								<div className={ styles.stats }>
-									<h3>Race Statistics</h3>
-									<dl>
-										<dt>Cautions</dt>
-										<dd>{race.cautions} cautions for {race.cautionLaps} laps</dd>
-										<dt>Lead Changes</dt>
-										<dd>{race.leadChanges} lead changes between {race.leaders} drivers</dd>
-									</dl>
-								</div>
-							</div>
-							<div className="column col-6 col-ml-auto">
-								{ race.broadcast && 
-									<Video src={race.broadcast} className={ styles.broadcast }/> 
-								}
-							</div>
-						</div>
-
-						
-					</div>
-				</div>
-
-			</main>
-
-		</>
+			results={
+				data.race.results.map(item => ({
+					...item,
+					driver: data.drivers.nodes.find(({ name }) => name === item.name)
+				}))
+			}
+		/>
 	)
 }
 

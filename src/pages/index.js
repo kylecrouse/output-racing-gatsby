@@ -17,7 +17,7 @@ import img4 from '../images/header/Autoclub.png'
 const IndexPage = ({ data }) => {
   const race = data.race.nodes[0];
   return (
-    <main>
+    <>
 
       <Helmet>
         <title>{ data.league.name }</title>
@@ -190,7 +190,7 @@ const IndexPage = ({ data }) => {
         <div id="embeddable"></div>
       </div>
             
-    </main>
+    </>
   )
 }
 
