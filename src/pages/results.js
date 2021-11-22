@@ -1,20 +1,22 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
-import Results from '../../templates/results'
+import Results from '../templates/results'
 
 const LatestResultsPage = ({ data }) => {
 	return (
 		<Results 
-			{ ...data.race.nodes[0] }
-			track={
-				data.league.tracks.find(({ name }) => data.race.nodes[0].track.includes(name))
-			}
-			results={
-				data.race.nodes[0].results.map(item => ({
-					...item,
-					driver: data.drivers.nodes.find(({ name }) => name === item.name)
-				}))
-			}
+			pageContext={{
+				...data.race.nodes[0],
+				track: data.league.tracks.find(
+					({ name }) => data.race.nodes[0].track.includes(name)
+				),
+				results: data.race.nodes[0].results.map(
+					(item) => ({
+						...item,
+						driver: data.drivers.nodes.find(({ name }) => name === item.name)
+					})
+				)
+			}}
 		/>
 	)
 }

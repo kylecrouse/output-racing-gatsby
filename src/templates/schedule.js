@@ -3,7 +3,8 @@ import { Helmet } from 'react-helmet'
 import Schedule from '../components/schedule'
 import Seasons from '../components/seasons'
 
-const ScheduleTemplate = ({ season, seasons, cars, drivers, tracks }) => {
+const ScheduleTemplate = ({ pageContext }) => {
+	const { season, seasons, cars, drivers } = pageContext
 	const name = season.name.match(/Output Racing (\d+) (Season \d)?(.*)/)	
 	return (
 		<>

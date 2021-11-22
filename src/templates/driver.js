@@ -1,16 +1,14 @@
 import * as React from "react"
-import { graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
-import DriverChip from '../../components/driverChip'
-import License from '../../components/license'
-import Table from '../../components/table'
-import * as styles from './driver.module.css'
+import DriverChip from '../components/driverChip'
+import License from '../components/license'
+import Table from '../components/table'
+import * as styles from './driver.module.scss'
 
-const DriverPage = ({ data }) => {
-	const driver = data.driver
-	const name = driver.nickname || driver.name
-	const stats = data.stats
+const DriverTemplate = ({ pageContext: props }) => {
+	const driver = props.driver
+	console.log(props.stats)
 	const columns = React.useMemo(
 		() => [
 			{
@@ -92,7 +90,7 @@ const DriverPage = ({ data }) => {
 	return (
 		<>
 			<Helmet>
-				<title>Output Racing League | Drivers | { name }</title>
+				<title>Output Racing League | Drivers | { driver.nickname || driver.name }</title>
 			</Helmet>
 			
 			{ driver.media && 
@@ -124,11 +122,13 @@ const DriverPage = ({ data }) => {
 							}
 						</hgroup>
 
-						<Table 
-							columns={columns} 
-							data={[stats]}
-							disableSortBy={true} 
-						/>
+						{ props.stats && 
+							<Table 
+								columns={columns} 
+								data={[props.stats]}
+								disableSortBy={true} 
+							/>							
+						}
 
 					</div>
 				</div>
@@ -138,56 +138,4 @@ const DriverPage = ({ data }) => {
 	)
 }
 
-export const query = graphql`
-	query DriverQuery($name: String) {
-		driver: contentfulDriver(name: {eq: $name}) {
-			name
-			nickname
-			number
-			numberArt {
-				file {
-					url
-				}
-			}
-			media {
-				gatsbyImageData(
-					layout: FULL_WIDTH
-					placeholder: BLURRED
-				)
-			}
-			license {
-				iRating
-				licColor
-				licGroup
-				licGroupDisplayName
-				licLevel
-				licLevelDisplayName
-				srPrime
-				srSub
-			}
-		}
-		stats: contentfulLeagueStatsJsonNode(driver: {eq: $name}) {
-			avgFinish
-			avgStart
-			incidents
-			incidentsLap
-			incidentsRace
-			laps
-			lapsLed
-			miles
-			polePercentage
-			poles
-			provisionals
-			races
-			starts
-			top10Percentage
-			top10s
-			top5Percentage
-			top5s
-			winPercentage
-			wins
-		}	
-	}
-`
-
-export default DriverPage
+export default DriverTemplate

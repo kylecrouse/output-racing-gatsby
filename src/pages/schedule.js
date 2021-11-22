@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
-import Schedule from '../../templates/schedule'
+import Schedule from '../templates/schedule'
 
 const CurrentSchedulePage = ({ data }) => {
 	const season = {
@@ -21,10 +21,12 @@ const CurrentSchedulePage = ({ data }) => {
 	
 	return (
 		<Schedule 
-			season={season}
-			cars={data.league.cars}
-			seasons={data.league.seasons}
-			drivers={data.drivers.nodes}
+			pageContext={{
+				season,
+				cars: data.league.cars,
+				seasons: data.league.seasons,
+				drivers: data.drivers.nodes
+			}}
 		/>
 	)
 }

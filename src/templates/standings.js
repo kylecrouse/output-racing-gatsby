@@ -4,7 +4,8 @@ import Cars from '../components/cars'
 import Seasons from '../components/seasons'
 import Standings from '../components/standings'
 
-const StandingsTemplate = ({ season, seasons, drivers, cars }) => {
+const StandingsTemplate = ({ pageContext }) => {
+	const { season, seasons, drivers, cars } = pageContext
 	const name = season.name.match(/Output Racing (\d+) (Season \d)?(.*)/)	
 	const roundsCompleted = season.schedule.filter(({ counts, uploaded }) => counts && uploaded).length || 0
 	const totalRounds = season.schedule.filter(({ counts }) => counts).length

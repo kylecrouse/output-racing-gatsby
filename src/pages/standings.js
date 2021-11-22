@@ -1,14 +1,16 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
-import Standings from '../../templates/standings'
+import Standings from '../templates/standings'
 
 const CurrentStandingsPage = ({ data }) => {
 	return (
 		<Standings 
-			season={data.league.activeSeason}
-			cars={data.league.cars}
-			seasons={data.league.seasons}
-			drivers={data.drivers.nodes}
+			pageContext={{
+				season: data.league.activeSeason,
+				cars: data.league.cars,
+				seasons: data.league.seasons,
+				drivers: data.drivers.nodes
+			}}
 		/>
 	)
 }

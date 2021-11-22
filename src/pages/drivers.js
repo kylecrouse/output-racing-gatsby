@@ -1,7 +1,7 @@
 import * as React from "react"
 import { graphql } from 'gatsby'
 import { Helmet } from "react-helmet"
-import DriverCard from '../../components/driverCard'
+import DriverCard from '../components/driverCard'
 
 const DriversPage = ({ data }) => {
 	return (

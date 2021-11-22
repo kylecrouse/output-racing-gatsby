@@ -8,18 +8,19 @@ import Results from '../components/results'
 import Video from '../components/video'
 import * as styles from './results.module.scss'
 
-const ResultsTemplate = (props) => {
+const ResultsTemplate = ({ pageContext }) => {
+	console.log(pageContext.raceId, JSON.stringify(pageContext).length)
 	return (
 		<>
 			<Helmet>
-				<title>Output Racing League | Results | { props.name }</title>
+				<title>Output Racing League | Results | { pageContext.name }</title>
 			</Helmet>
 			
-			{ props.media && 
-				(props.media.length > 1 
+			{ pageContext.media && 
+				(pageContext.media.length > 1 
 					? (
 							<Carousel options={{ type: "carousel", showNav: true }}>
-								{ props.media.map((image) => {
+								{ pageContext.media.map((image) => {
 										return (
 											<Slide>
 												<GatsbyImage 
@@ -33,7 +34,7 @@ const ResultsTemplate = (props) => {
 								}
 							</Carousel>
 						)
-					: props.media.slice(0,1).map((image) => (
+					: pageContext.media.slice(0,1).map((image) => (
 							<GatsbyImage 
 								alt="screenshot"
 								className={ styles.media }
@@ -52,23 +53,23 @@ const ResultsTemplate = (props) => {
 							<div className="column col-8">
 								<h4 className="page-title">Results</h4>
 								<h5 className="page-subtitle">
-									<span>{moment.parseZone(props.date).format('DD MMM YYYY')}</span>
-									<span>{props.track.name}</span>
+									<span>{moment.parseZone(pageContext.date).format('DD MMM YYYY')}</span>
+									<span>{pageContext.track.name}</span>
 								</h5>
 							</div>
 							<div className="column col-2 col-ml-auto">
-								{ props.logo
-									? <img src={ props.logo.file.url } alt={`${props.name} logo`} className={ styles.logo }/>
-									: <img src={ props.track.logo } alt={`${props.track.name} logo`} className={ styles.logo } />
+								{ pageContext.logo
+									? <img src={ pageContext.logo.file.url } alt={`${pageContext.name} logo`} className={ styles.logo }/>
+									: <img src={ pageContext.track.logo } alt={`${pageContext.track.name} logo`} className={ styles.logo } />
 								}
 							</div>
 						</hgroup>
 			
 						<Results 
-							results={props.results}
-							duration={props.duration}
-							counts={!!props.counts}
-							fields={column => ['status', 'bonus', 'penalty', props.counts !== true && 'points'].includes(column)}
+							results={pageContext.results}
+							duration={pageContext.duration}
+							counts={!!pageContext.counts}
+							fields={column => ['status', 'bonus', 'penalty', pageContext.counts !== true && 'points'].includes(column)}
 						/>
 						
 						<div className="columns">
@@ -78,9 +79,9 @@ const ResultsTemplate = (props) => {
 									<h3>Race Statistics</h3>
 									<dl>
 										<dt>Cautions</dt>
-										<dd>{props.cautions} cautions for {props.cautionLaps} laps</dd>
+										<dd>{pageContext.cautions} cautions for {pageContext.cautionLaps} laps</dd>
 										<dt>Lead Changes</dt>
-										<dd>{props.leadChanges} lead changes between {props.leaders} drivers</dd>
+										<dd>{pageContext.leadChanges} lead changes between {pageContext.leaders} drivers</dd>
 										{/*
 										<dt>Best Average Position</dt>
 										<dd>
@@ -123,8 +124,8 @@ const ResultsTemplate = (props) => {
 								</div>
 							</div>
 							<div className="column col-6 col-ml-auto">
-								{ props.broadcast && 
-									<Video src={props.broadcast} className={ styles.broadcast }/> 
+								{ pageContext.broadcast && 
+									<Video src={pageContext.broadcast} className={ styles.broadcast }/> 
 								}
 							</div>
 						</div>
