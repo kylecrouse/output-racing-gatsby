@@ -12,7 +12,6 @@ const Layout = (props) => {
 	return (
 		<React.Fragment>
 			<Helmet>
-				<meta charset="utf-8"/>
 				<link rel="stylesheet" href="https://use.typekit.net/ovc0kir.css"/>
 			</Helmet>
 			<Navbar page={ path[1] }/>

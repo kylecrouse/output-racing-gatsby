@@ -1,11 +1,14 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
+import useSiteMetadata from '../hooks/use-site-metadata'
 import Cars from '../components/cars'
 import Seasons from '../components/seasons'
 import Standings from '../components/standings'
+import logo from '../images/logo.png'
 
-const StandingsTemplate = ({ pageContext }) => {
+const StandingsTemplate = ({ pageContext, location }) => {
 	const { season, seasons, drivers, cars } = pageContext
+	const { title, siteUrl } = useSiteMetadata()
 	const name = season.name.match(/Output Racing (\d+) (Season \d)?(.*)/)	
 	const roundsCompleted = season.schedule.filter(({ counts, uploaded }) => counts && uploaded).length || 0
 	const totalRounds = season.schedule.filter(({ counts }) => counts).length
@@ -15,6 +18,16 @@ const StandingsTemplate = ({ pageContext }) => {
 	
 				<Helmet>
 					<title>Output Racing League | Standings | {season.name.replace('Output Racing ', '')}</title>
+					<meta property="og:image" content={`${siteUrl}${logo}`} />
+					<meta property="og:description" content={`An asphalt oval league for the late-night racer.`} />
+					<meta property="og:title" content={ `${title} | ${name[2]} ${name[3]} Standings` } />
+					<meta property="og:type" content="website"/>
+					<meta property="og:url" content={ `${siteUrl}${location.pathname}` } />
+					<meta name="twitter:card" content="summary_large_image"/>
+					<meta name="twitter:title" content={ `${title} | ${name[2]} ${name[3]} Standings` } />
+					<meta name="twitter:description" content={`An asphalt oval league for the late-night racer.`} />
+					<meta name="twitter:image" content={`${siteUrl}${logo}`} />
+					<meta name="theme-color" content="#F4A913"/>
 				</Helmet>
 				
 				<div className="columns">

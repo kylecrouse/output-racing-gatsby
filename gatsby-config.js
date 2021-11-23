@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    siteUrl: "https://www.yourdomain.tld",
+    siteUrl: "http://output-racing-gatsby.s3-website-us-west-2.amazonaws.com",
     title: "Output Racing League",
   },
   plugins: [
@@ -23,6 +23,15 @@ module.exports = {
       __key: "images",
     },
     `gatsby-plugin-react-helmet`,
-    'gatsby-plugin-sass'
+    'gatsby-plugin-sass',
+    {
+      resolve: `gatsby-plugin-s3`,
+      options: {
+        bucketName: "output-racing-gatsby",
+        region: 'us-west-2',
+        acl: null
+      },
+    },
+    `gatsby-plugin-remove-trailing-slashes`,
   ],
 };

@@ -1,22 +1,5 @@
 const { createRemoteFileNode } = require("gatsby-source-filesystem")
 
-// Replacing '/' would result in empty string which is invalid
-// const replacePath = path => (path === `/` ? path : path.replace(/\/$/, ``))
-
-// Implement the Gatsby API “onCreatePage”. This is
-// called after every page is created.
-// exports.onCreatePage = ({ page, actions }) => {
-// 	const { createPage, deletePage } = actions
-// 	const oldPage = Object.assign({}, page)
-// 	// Remove trailing slash unless page is /
-// 	page.path = replacePath(page.path)
-// 	if (page.path !== oldPage.path) {
-// 		// Replace old page with new page
-// 		deletePage(oldPage)
-// 		createPage(page)
-// 	}
-// }
-
 exports.onCreateNode = async ({
 	node,
 	actions: { createNode },
@@ -78,6 +61,9 @@ exports.createPages = async function ({ actions, graphql }) {
 							layout: FULL_WIDTH
 							placeholder: BLURRED
 						)
+						file {
+							url
+						}
 					}
 					license {
 						iRating
@@ -92,6 +78,7 @@ exports.createPages = async function ({ actions, graphql }) {
 				}
 			}
 			league: contentfulLeague(leagueId: {eq: 2732}) {
+				name
 				cars {
 					name
 					image
@@ -139,6 +126,9 @@ exports.createPages = async function ({ actions, graphql }) {
 								layout: FULL_WIDTH
 								placeholder: BLURRED
 							)
+							file {
+								url
+							}
 						}
 						track
 						time
@@ -197,13 +187,20 @@ exports.createPages = async function ({ actions, graphql }) {
 					wins
 				}
 			}	
+			site {
+				siteMetadata {
+					title
+					siteUrl
+				}
+			}
 		}
 	`)
 	
 	// Build driver pages
-	data.drivers.nodes
+	await Promise.all(data.drivers.nodes
 		.filter(({ active }) => !!active)
-		.forEach(driver => {
+		.map(async (driver) => {
+			// Create page
 			actions.createPage({
 				path: `/drivers/${driver.name.replace(/\s/gi, '-').toLowerCase()}`,
 				component: require.resolve(`./src/templates/driver.js`),
@@ -213,6 +210,7 @@ exports.createPages = async function ({ actions, graphql }) {
 				},
 			})
 		})
+	)
 		
 	// Build schedule, standings and results pages
 	data.league.seasons.forEach(season => {

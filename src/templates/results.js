@@ -2,18 +2,39 @@ import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import moment from 'moment'
+import useSiteMetadata from '../hooks/use-site-metadata'
 import { Carousel, Slide } from '../components/carousel'
 import DriverChip from '../components/driverChip'
 import Results from '../components/results'
 import Video from '../components/video'
 import * as styles from './results.module.scss'
 
-const ResultsTemplate = ({ pageContext }) => {
-	console.log(pageContext.raceId, JSON.stringify(pageContext).length)
+const ResultsTemplate = ({ pageContext, location }) => {
+	const { title, siteUrl } = useSiteMetadata()
 	return (
 		<>
 			<Helmet>
-				<title>Output Racing League | Results | { pageContext.name }</title>
+				<title>{ title } | Results | { pageContext.name }</title>
+				{ pageContext.logo
+					? <meta property="og:image" content={`http:${pageContext.logo.file.url}`} />
+					: pageContext.media
+						? <meta property="og:image" content={`http:${pageContext.media[0].file.url}`} />
+						: <meta property="og:image" content={`http:${pageContext.track.logo}`} />
+				}
+				<meta property="og:description" content={`Race results from ${pageContext.track.name}.`} />
+				<meta property="og:title" content={ `${title} | ${pageContext.name}` } />
+				<meta property="og:type" content="website"/>
+				<meta property="og:url" content={ `${siteUrl}${location.pathname}` } />
+				<meta name="twitter:card" content="summary_large_image"/>
+				<meta name="twitter:title" content={ `${title} | ${pageContext.name}` } />
+				<meta name="twitter:description" content={`Race results from ${pageContext.track.name}.`} />
+				{ pageContext.logo
+					? <meta name="twitter:image" content={`http:${pageContext.logo.file.url}`} />
+					: pageContext.media
+						? <meta name="twitter:image" content={`http:${pageContext.media[0].file.url}`} />
+						: <meta name="twitter:image" content={`http:${pageContext.track.logo}`} />
+				}
+				<meta name="theme-color" content="#F4A913"/>
 			</Helmet>
 			
 			{ pageContext.media && 

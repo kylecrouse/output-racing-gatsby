@@ -3,24 +3,40 @@ import { graphql } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import { Helmet } from 'react-helmet'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
+import useSiteMetadata from '../hooks/use-site-metadata'
 import { Carousel, Slide } from '../components/carousel'
 import Results from '../components/results'
 import ScheduleCard from '../components/scheduleCard'
 import StandingsCard from '../components/standingsCard'
 import Standings from '../components/standings'
 import './index.css'
+import logo from '../images/logo.png'
 import img1 from '../images/header/Champ.png'
 import img2 from '../images/header/dega.png'
 import img3 from '../images/header/Chambliss.png'
 import img4 from '../images/header/Autoclub.png'
 
 const IndexPage = ({ data }) => {
-  const race = data.race.nodes[0];
+  const { title, siteUrl } = useSiteMetadata()
+  const race = data.race.nodes[0]
   return (
     <>
 
       <Helmet>
-        <title>{ data.league.name }</title>
+        <title>{ title }</title>
+        <meta property="og:image" content={`${siteUrl}${logo}`} />
+        <meta property="og:description" content={`An asphalt oval league for the late-night racer.`} />
+        <meta property="og:title" content={ title } />
+        <meta property="og:type" content="website"/>
+        <meta property="og:url" content={ siteUrl } />
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:title" content={ title } />
+        <meta name="twitter:description" content={`An asphalt oval league for the late-night racer.`} />
+        <meta name="twitter:player" content={`https://youtube.com/embed/34KPVZWE5Ks`} />
+        <meta name="twitter:player:width" content="640" />
+        <meta name="twitter:player:height" content="480" />
+        <meta name="twitter:image" content={`${siteUrl}${logo}`} />
+        <meta name="theme-color" content="#F4A913"/>
         <script async src="https://www.youtube.com/iframe_api"></script>
       </Helmet>
       
@@ -197,6 +213,7 @@ const IndexPage = ({ data }) => {
 export const query = graphql`
   query IndexQuery {
     league: contentfulLeague(leagueId: {eq: 2732}) {
+      name
       activeSeason {
         name
         cars

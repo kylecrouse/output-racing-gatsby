@@ -2,7 +2,7 @@ import * as React from 'react'
 import { graphql } from 'gatsby'
 import Standings from '../templates/standings'
 
-const CurrentStandingsPage = ({ data }) => {
+const CurrentStandingsPage = ({ data, location }) => {
 	return (
 		<Standings 
 			pageContext={{
@@ -11,6 +11,7 @@ const CurrentStandingsPage = ({ data }) => {
 				seasons: data.league.seasons,
 				drivers: data.drivers.nodes
 			}}
+			location={location}
 		/>
 	)
 }

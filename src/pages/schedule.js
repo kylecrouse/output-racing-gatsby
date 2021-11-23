@@ -2,7 +2,7 @@ import * as React from 'react'
 import { graphql } from 'gatsby'
 import Schedule from '../templates/schedule'
 
-const CurrentSchedulePage = ({ data }) => {
+const CurrentSchedulePage = ({ data, location }) => {
 	const season = {
 		...data.league.activeSeason,
 		schedule: data.league.activeSeason.schedule.map(item => ({
@@ -27,6 +27,7 @@ const CurrentSchedulePage = ({ data }) => {
 				seasons: data.league.seasons,
 				drivers: data.drivers.nodes
 			}}
+			location={location}
 		/>
 	)
 }

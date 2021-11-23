@@ -2,7 +2,7 @@ import * as React from 'react'
 import { graphql } from 'gatsby'
 import Results from '../templates/results'
 
-const LatestResultsPage = ({ data }) => {
+const LatestResultsPage = ({ data, location }) => {
 	return (
 		<Results 
 			pageContext={{
@@ -17,6 +17,7 @@ const LatestResultsPage = ({ data }) => {
 					})
 				)
 			}}
+			location={location}
 		/>
 	)
 }
@@ -50,6 +51,9 @@ export const query = graphql`
 						layout: FULL_WIDTH
 						placeholder: BLURRED
 					)
+					file {
+						url
+					}
 				}
 				track
 				time

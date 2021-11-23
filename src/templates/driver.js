@@ -1,14 +1,15 @@
 import * as React from "react"
 import { Helmet } from 'react-helmet'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
+import useSiteMetadata from '../hooks/use-site-metadata'
 import DriverChip from '../components/driverChip'
 import License from '../components/license'
 import Table from '../components/table'
 import * as styles from './driver.module.scss'
 
-const DriverTemplate = ({ pageContext: props }) => {
+const DriverTemplate = ({ pageContext: props, location }) => {
+	const { title, siteUrl } = useSiteMetadata()
 	const driver = props.driver
-	console.log(props.stats)
 	const columns = React.useMemo(
 		() => [
 			{
@@ -90,7 +91,21 @@ const DriverTemplate = ({ pageContext: props }) => {
 	return (
 		<>
 			<Helmet>
-				<title>Output Racing League | Drivers | { driver.nickname || driver.name }</title>
+				<title>{title} | Drivers | {driver.nickname || driver.name}</title>
+				{ driver.media &&
+					<meta property="og:image" content={`http:${driver.media[0].file.url}`} />
+				}
+				<meta property="og:description" content={`${driver.nickname || driver.name}'s driver profile and league statistics.`} />
+				<meta property="og:title" content={ `${title} | ${driver.nickname || driver.name}` } />
+				<meta property="og:type" content="website"/>
+				<meta property="og:url" content={ `${siteUrl}${location.pathname}` } />
+				<meta name="twitter:card" content="summary_large_image"/>
+				<meta name="twitter:title" content={ `${title} | ${driver.nickname || driver.name}` } />
+				<meta name="twitter:description" content={`${driver.nickname || driver.name}'s driver profile and league statistics.`} />
+				{ driver.media &&
+					<meta name="twitter:image" content={`http:${driver.media[0].file.url}`} />
+				}
+				<meta name="theme-color" content="#F4A913"/>
 			</Helmet>
 			
 			{ driver.media && 
