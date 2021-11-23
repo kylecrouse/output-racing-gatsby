@@ -153,3 +153,22 @@
 		margin-bottom: 0.2rem;
 	}
 }
+
+@media (max-width: 1280px) {
+	.container {
+		width: 35vw;
+	}	
+}
+
+
+@media (max-width: 840px) {
+	.container {
+		width: 50vw;
+	}	
+}
+
+@media (max-width: 480px) {
+	.container {
+		width: 80vw;
+	}	
+}

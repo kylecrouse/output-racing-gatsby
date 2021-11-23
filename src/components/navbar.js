@@ -8,7 +8,7 @@ const Navbar = (props) => {
 		<header>
 			<div className="container">
 				<div className="columns col-gapless">
-					<div className="navbar column col-8 col-md-12 col-mx-auto">
+					<div className="navbar column col-8 col-xl-10 col-lg-12 col-mx-auto">
 						<section className="navbar-section">
 							<a href="/" className="navbar-brand mr-2">
 								<img src={logo} alt="Output Racing" className="logo"/>

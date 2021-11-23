@@ -1,5 +1,4 @@
-.tagline {
-	background: black;
+.tagline > .columns {
 	margin: 0 -2.5rem;
 }
 
@@ -72,10 +71,6 @@
 		radial-gradient(circle at center, rgba(0,0,0,0.7), rgba(0,0,0,0.5)),
 		black url(../images/track.jpg) no-repeat center/cover;
 	padding: 2rem 0;
-}
-
-.schedule-container .columns {
-	position: relative;
 }
 
 .schedule-container .glide__arrow {
@@ -401,4 +396,69 @@
 	background-color: black;
 	border-color: black;
 	color: white;
+}
+
+@media (max-width: 1280px) {
+	.schedule-container .glide__arrow--left {
+		left: 25%;
+	}
+	
+	.schedule-container .glide__arrow--right {
+		right: 25%;
+	}	
+
+	.tab-body {
+		background-size: 130%, 100%, 100%, 8px;
+	}
+}
+
+@media (max-width: 840px) {
+	.tagline p {
+		margin: 0 20%;
+	}
+
+	.schedule-container .glide__arrow--left {
+		left: 3.25vw;
+	}
+	
+	.schedule-container .glide__arrow--right {
+		right: 3.25vw;
+	}
+
+	.tab-body {
+		background-size: 200%, 100%, 100%, 8px;
+	}
+}
+
+@media (max-width: 480px) {
+	.tagline p {
+		font-size: 1rem;
+		margin: 0 1rem;
+	}	
+
+	.tab .tab-item span {
+		padding-left: 1rem;
+		padding-right: 1rem;
+	}
+	
+	.tab .tab-item.react-tabs__tab--selected span {
+		padding-left: calc(1rem + 20px);
+		padding-right: calc(1rem + 20px);
+	}
+
+	.tab-body {
+		background-size: 300%, 100%, 100%, 8px;
+	}
+	
+	.tab-body h4 {
+		font-size: 1rem;
+	}
+	
+	.tab-body h5 {
+		font-size: 0.7rem;
+	}
+	
+	.tab-body tbody td {
+		font-size: 0.8rem;
+	}	
 }

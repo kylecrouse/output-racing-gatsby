@@ -9,12 +9,14 @@ import Results from '../components/results'
 import ScheduleCard from '../components/scheduleCard'
 import StandingsCard from '../components/standingsCard'
 import Standings from '../components/standings'
+import Video from '../components/video'
 import './index.css'
 import logo from '../images/logo.png'
 import img1 from '../images/header/Champ.png'
 import img2 from '../images/header/dega.png'
 import img3 from '../images/header/Chambliss.png'
 import img4 from '../images/header/Autoclub.png'
+import promo from '../images/ORL-Season-2-promo.mp4'
 
 const IndexPage = ({ data }) => {
   const { title, siteUrl } = useSiteMetadata()
@@ -37,7 +39,6 @@ const IndexPage = ({ data }) => {
         <meta name="twitter:player:height" content="480" />
         <meta name="twitter:image" content={`${siteUrl}${logo}`} />
         <meta name="theme-color" content="#F4A913"/>
-        <script async src="https://www.youtube.com/iframe_api"></script>
       </Helmet>
       
       <div className="tagline">
@@ -117,13 +118,13 @@ const IndexPage = ({ data }) => {
         
         <TabPanel className="tab-body">
           <h3>Standings</h3>
-          <div className="columns col-8 col-mx-auto">
+          <div className="columns col-8 col-xl-10 col-md-11 col-sm-12 col-mx-auto">
             { data.league.activeSeason.standings
                 .sort((a, b) => a.position - b.position)
                 .slice(0, 3)
-                .map(item => {
+                .map((item, index) => {
                   return (
-                    <div className="col-4">
+                    <div className={`col-4 ${index > 0 ? 'hide-sm' : 'col-sm-8 col-mx-auto'}`}>
                       <StandingsCard 
                         { ...item } 
                         driver={
@@ -136,7 +137,7 @@ const IndexPage = ({ data }) => {
             }
             <div class="container">
               <div class="columns">
-                <div className="table-container col-8 col-mx-auto">
+                <div className="table-container col-8 col-sm-10 col-mx-auto">
                   <Standings 
                     headers={false}
                     fields={['pos', 'driver', 'points']}
@@ -168,15 +169,10 @@ const IndexPage = ({ data }) => {
             <h4>{race.track}</h4>
             <h5>{race.name}</h5>
           </hgroup>
-          <div className="columns col-8 col-mx-auto">
+          <div className="columns col-8 col-xl-10 col-md-10 col-mx-auto">
             <div class="container">
               <div class="columns">
-                {/*<div className="col-6">
-                  { race.broadcast && 
-                    <Video src={race.broadcast} /> 
-                  }
-                </div>*/}
-                <div className="table-container col-8 col-mx-auto">
+                <div className="table-container col-8 col-md-10 col-sm-12 col-mx-auto">
                   { race.media && 
                     <GatsbyImage image={ getImage(race.media[0]) } alt="race screenshot" className="screenshot"/>
                   }
@@ -202,8 +198,8 @@ const IndexPage = ({ data }) => {
         </TabPanel>
       </Tabs>
 
-      <div className="promo">
-        <div id="embeddable"></div>
+      <div className="promo hide-md">
+        <Video src={{ mp4: promo }}/>
       </div>
             
     </>

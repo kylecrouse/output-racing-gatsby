@@ -146,7 +146,7 @@ const ResultsTemplate = ({ pageContext, location }) => {
 							</div>
 							<div className="column col-6 col-ml-auto">
 								{ pageContext.broadcast && 
-									<Video src={pageContext.broadcast} className={ styles.broadcast }/> 
+									<Video href={pageContext.broadcast} className={ styles.broadcast }/> 
 								}
 							</div>
 						</div>
