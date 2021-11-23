@@ -41,7 +41,7 @@ const RulesPage = ({ data }) => {
 			</Helmet>
 	
 			<div className="columns">
-				<div className="column col-8 col-xl-12 col-mx-auto content">
+				<div className="column col-8 col-xl-10 col-lg-12 col-mx-auto content">
 
 					<hgroup className="page-header">
 						<h2 className="page-title">Rulebook</h2>
@@ -53,7 +53,7 @@ const RulesPage = ({ data }) => {
 								title: 'Rules',
 								content: (
 									<div className="columns">
-										<div className="column col-4">
+										<div className="column col-4 hide-sm">
 											<ol className={ styles.toc }>
 												{ React.useMemo(
 														() => (
@@ -73,7 +73,7 @@ const RulesPage = ({ data }) => {
 												}
 											</ol>
 										</div>
-										<div className="column col-6 col-mx-auto">
+										<div className="column col-6 col-sm-12 col-mx-auto">
 											{ renderRichText(data.league.rules, options) }
 										</div>
 									</div>
@@ -83,29 +83,27 @@ const RulesPage = ({ data }) => {
 								title: 'Session Info',
 								content: (
 									<div className="columns">
-										<div className="column col-4">
-											<div className={ styles.toc }>
-												<ol className={ styles.toc }>
-													{ React.useMemo(
-															() => (
-																(JSON.parse(data.league.raceInfo.raw)).content
-																	.filter(({ nodeType }) => nodeType === 'heading-3')
-																	.map(({ content }) => content[0].value)
-																	.map(section => (
-																		<li>
-																			<a href={`#section-${section.replace(/\s/g,'-').toLowerCase()}`}>
-																				{ section }
-																			</a>
-																		</li>
-																	))
-															),
-															[data.league.raceInfo.raw]
-														)		
-													}
-												</ol>												
-											</div>
+										<div className="column col-4 hide-sm">
+											<ol className={ styles.toc }>
+												{ React.useMemo(
+														() => (
+															(JSON.parse(data.league.raceInfo.raw)).content
+																.filter(({ nodeType }) => nodeType === 'heading-3')
+																.map(({ content }) => content[0].value)
+																.map(section => (
+																	<li>
+																		<a href={`#section-${section.replace(/\s/g,'-').toLowerCase()}`}>
+																			{ section }
+																		</a>
+																	</li>
+																))
+														),
+														[data.league.raceInfo.raw]
+													)		
+												}
+											</ol>												
 										</div>
-										<div className="column col-6 col-mx-auto">
+										<div className="column col-6 col-sm-12 col-mx-auto">
 											{ renderRichText(data.league.raceInfo, options) }
 										</div>
 									</div>
@@ -115,7 +113,7 @@ const RulesPage = ({ data }) => {
 								title: 'Code of Conduct',
 								content: (
 									<div className="columns">
-										<div className="column col-6 col-mx-auto">
+										<div className="column col-6 col-sm-12 col-mx-auto">
 											{ renderRichText(data.league.codeOfConduct, options) }
 										</div>
 									</div>

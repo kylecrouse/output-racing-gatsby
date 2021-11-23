@@ -25,6 +25,7 @@ const Table = ({
 		useSortBy
 	)
 
+console.log(headerGroups)
 	return (
 		<table { ...getTableProps() }>
 			<thead>
@@ -33,7 +34,7 @@ const Table = ({
 						{ headerGroup.headers.map(column => (
 							// Add the sorting props to control sorting. For this example
 							// we can add them into the header props
-							<th { ...column.getHeaderProps(column.getSortByToggleProps()) }>
+							<th { ...column.getHeaderProps(column.getSortByToggleProps()) } className={column.className || ''}>
 								{column.render('Header')}
 								{/* Add a sort direction indicator */}
 								<span className="sort-indicator">

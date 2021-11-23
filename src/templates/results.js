@@ -68,17 +68,17 @@ const ResultsTemplate = ({ pageContext, location }) => {
 			<main className="container">
 			
 				<div className="columns">
-					<div className="column col-8 col-xl-12 col-mx-auto content">
+					<div className="column col-8 col-xl-10 col-lg-12 col-mx-auto content">
 
 						<hgroup className={`columns page-header ${styles.header}`}>
-							<div className="column col-8">
+							<div className="column col-8 col-sm-12">
 								<h4 className="page-title">Results</h4>
 								<h5 className="page-subtitle">
 									<span>{moment.parseZone(pageContext.date).format('DD MMM YYYY')}</span>
 									<span>{pageContext.track.name}</span>
 								</h5>
 							</div>
-							<div className="column col-2 col-ml-auto">
+							<div className="column col-2 col-ml-auto hide-sm">
 								{ pageContext.logo
 									? <img src={ pageContext.logo.file.url } alt={`${pageContext.name} logo`} className={ styles.logo }/>
 									: <img src={ pageContext.track.logo } alt={`${pageContext.track.name} logo`} className={ styles.logo } />
@@ -94,7 +94,7 @@ const ResultsTemplate = ({ pageContext, location }) => {
 						/>
 						
 						<div className="columns">
-							<div className="column col-6 col-mr-auto">
+							<div className="column col-6 col-sm-12 col-mr-auto">
 						
 								<div className={ styles.stats }>
 									<h3>Race Statistics</h3>
@@ -144,7 +144,7 @@ const ResultsTemplate = ({ pageContext, location }) => {
 									</dl>
 								</div>
 							</div>
-							<div className="column col-6 col-ml-auto">
+							<div className="column col-6 col-sm-12 col-ml-auto">
 								{ pageContext.broadcast && 
 									<Video href={pageContext.broadcast} className={ styles.broadcast }/> 
 								}

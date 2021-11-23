@@ -255,3 +255,18 @@ main {
 .page-header .car-caption {
 	display: none;
 }
+
+@media (max-width: 480px) {
+	.page-header .cars-container {
+		margin-top: 1rem;
+		margin-left: -0.4rem;
+	}
+	
+	.page-header .car-container {
+		margin-left: 0;
+	}
+
+	td .adjustments {
+		right: -0.2rem;
+	}
+}

@@ -60,22 +60,24 @@ const Results = (props) => {
 			{
 				Header: 'Bonus',
 				accessor: 'bonus',
-				className: 'cell-bonus',
+				className: 'cell-bonus hide-sm',
 				Cell: ({ value }) => value > 0 ? `+${value}` : ''
 			},
 			{
 				Header: 'Penalty',
 				accessor: 'penalty',
-				className: 'cell-penalty',
+				className: 'cell-penalty hide-sm',
 				Cell: ({ value }) => value > 0 ? `-${value}` : ''
 			},
 			{
 				Header: 'Laps',
 				accessor: 'completed',
+				className: 'hide-sm'
 			},
 			{
 				Header: 'Time',
 				accessor: 'interval',
+				className: 'hide-sm',
 				Cell: ({ value, row }) => {
 					const { finish, status } = row.values
 					return parseInt(finish) === 1
@@ -91,6 +93,7 @@ const Results = (props) => {
 			{
 				Header: 'Led',
 				accessor: 'led',
+				className: 'hide-sm',
 				Cell: ({ value, data }) => {
 					return parseInt(value) === Math.max(
 						...data.map(({ led }) => parseInt(led))
@@ -104,6 +107,7 @@ const Results = (props) => {
 			{
 				Header: 'Inc',
 				accessor: 'incidents',
+				className: 'hide-sm',
 				Cell: ({ value, data }) => {
 					return parseInt(value) === Math.max(
 						...data.map(({ incidents }) => parseInt(incidents))
@@ -119,6 +123,7 @@ const Results = (props) => {
 			{
 				Header: 'Fast Lap',
 				accessor: 'fastest',
+				className: 'hide-sm',
 				Cell: ({ value, data }) => {
 					return moment(value, ['m:s.S', 's.S']).isSame(
 						moment.min(
@@ -133,7 +138,8 @@ const Results = (props) => {
 			},
 			{
 				Header: 'Status',
-				accessor: 'status'
+				accessor: 'status',
+				className: 'hide-sm'
 			}
 		],
 		[props.duration, props.counts]

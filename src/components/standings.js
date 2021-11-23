@@ -44,30 +44,37 @@ const Standings = (props) => {
 			{
 				Header: 'Behind Next',
 				accessor: 'behindNext',
+				className: 'hide-sm',
 			},
 			{
 				Header: 'Behind Leader',
 				accessor: 'behindLeader',
+				className: 'hide-sm',
 			},
 			{
 				Header: 'Starts',
 				accessor: 'starts',
+				className: 'hide-sm',
 			},
 			{
 				Header: 'Wins',
 				accessor: 'wins',
+				className: 'hide-sm',
 			},
 			{
 				Header: 'Top 5',
 				accessor: 't5s',
+				className: 'hide-sm',
 			},
 			{
 				Header: 'Top 10',
 				accessor: 't10s',
+				className: 'hide-sm',
 			},
 			{
 				Header: 'Laps',
 				accessor: 'laps',
+				className: 'hide-sm',
 			},
 			// {
 			// 	id: 'incPerRace',
