@@ -123,7 +123,7 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 			<main className="container">
 				
 				<div className="columns">   
-					<div className="column col-8 col-xl-12 col-mx-auto content">
+					<div className="column col-8 col-xl-10 col-lg-12 col-mx-auto content">
 					
 						<hgroup className={`page-header ${styles.pageHeader}`}>
 							<DriverChip 

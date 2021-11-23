@@ -12,7 +12,7 @@ const DriversPage = ({ data }) => {
 			</Helmet>
 
 			<div className="columns">
-				<div className="column col-8 col-xl-12 col-mx-auto content">
+				<div className="column col-8 col-xl-10 col-lg-12 col-mx-auto content">
 				
 					<hgroup className="page-header columns">
 						<h2 className="page-title">Drivers</h2>
@@ -25,7 +25,7 @@ const DriversPage = ({ data }) => {
 									const stats = data.stats.nodes.find(({ driver }) => driver === props.name) ||
 										{ starts: 0, wins: 0, top5s: 0 }
 									return (
-										<div className="col-4">
+										<div className="col-4 col-sm-12">
 											<DriverCard 
 												{ ...stats } 
 												driver={props}
