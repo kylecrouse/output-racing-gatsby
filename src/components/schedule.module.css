@@ -97,3 +97,10 @@ a.details:focus .track h4 {
 	height: 2rem;
 	width: 100%;
 }
+
+@media (max-width: 480px) {
+	.chase {
+		font-size: 0.8rem;
+		line-height: 1.6;
+	}
+}

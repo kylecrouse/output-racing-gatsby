@@ -28,7 +28,7 @@ const ScheduleTemplate = ({ pageContext, location }) => {
 				</Helmet>
 	
 				<div className="columns">
-					<div className="column col-8 col-xl-12 col-mx-auto content">
+					<div className="column col-8 col-xl-10 col-lg-11 col-sm-12 col-mx-auto content">
 					
 						<hgroup className="page-header columns">
 							<div>
@@ -53,7 +53,7 @@ const ScheduleTemplate = ({ pageContext, location }) => {
 			</main>
 					
 			<div className="columns seasons-container">
-				<div className="column col-8 col-xl-12 col-mx-auto">
+				<div className="column col-8 col-xl-10 col-lg-11 col-mx-auto">
 				
 					<Seasons 
 						path="schedule" 

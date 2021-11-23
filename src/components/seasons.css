@@ -32,3 +32,32 @@
 .season-container {
 	padding: 0 0.5rem;
 }
+
+@media (max-width: 1280px) {
+	.seasons-container .glide__arrow--left {
+		left: -1.6rem;
+	}
+	
+	.seasons-container .glide__arrow--right {
+		right: -1.6rem;
+	}	
+}
+
+@media (max-width: 480px) {
+	.seasons-container .glide__arrow--left {
+		left: -0.4rem;
+	}
+	
+	.seasons-container .glide__arrow--right {
+		right: -0.4rem;
+	}	
+
+	.season-container {
+		margin-left: auto;
+		margin-right: auto;
+	}
+	
+	.season-container + .season-container {
+		margin-top: 1rem;
+	}
+}

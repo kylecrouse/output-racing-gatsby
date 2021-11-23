@@ -60,7 +60,7 @@
 
 @media (max-width: 840px) {
 	.footer .nav {
-		flex-direction: row;
+		/* flex-direction: row; */
 		margin-top: 2rem;
 	}	
 }

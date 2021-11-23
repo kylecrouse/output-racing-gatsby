@@ -35,7 +35,7 @@ const Schedule = (props) => {
 									: race.track && race.track.name &&
 											<div className={ styles.details }>
 												<RaceChip {...race}/>
-												<div className={ styles.info }>
+												<div className={ `${styles.info} hide-sm` }>
 													<div>
 														{ !race.counts && <span>non-points</span> }
 														{ config && config.toLowerCase() !== ' oval' &&

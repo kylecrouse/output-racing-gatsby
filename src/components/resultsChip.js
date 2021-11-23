@@ -4,7 +4,7 @@ import * as styles from './resultsChip.module.scss'
 
 const ResultsChip = (props) => {
 	return (
-		<div className={ styles.container }>
+		<div className={ `${styles.container} hide-sm` }>
 			{ props.results
 					.map((item, index) => {
 						return (

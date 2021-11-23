@@ -33,7 +33,7 @@ const Seasons = (props) => {
 											name => props.cars.find(car => car.name === name)
 										)
 										return (
-											<div className={`col-4 ${i === 0 ? 'col-ml-auto' : i === a.length - 1 ? 'col-mr-auto' : ''} season-container`}>
+											<div className={`col-4 col-sm-10 ${i === 0 ? 'col-ml-auto' : i === a.length - 1 ? 'col-mr-auto' : ''} season-container`}>
 												<SeasonCard {...season} path={props.path}/>
 											</div>
 										)
