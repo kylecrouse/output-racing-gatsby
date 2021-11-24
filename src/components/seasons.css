@@ -45,11 +45,11 @@
 
 @media (max-width: 480px) {
 	.seasons-container .glide__arrow--left {
-		left: -0.4rem;
+		left: 0;
 	}
 	
 	.seasons-container .glide__arrow--right {
-		right: -0.4rem;
+		right: 0;
 	}	
 
 	.season-container {

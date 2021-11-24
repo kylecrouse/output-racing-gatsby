@@ -136,8 +136,9 @@
 	transform: skew(20deg);
 }
 
-.tab .tab-item span:hover {
+.tab .tab-item:hover span {
 	color: #f4a913;
+	cursor: pointer;
 }
 
 .tab .tab-item.react-tabs__tab--selected span {
@@ -432,7 +433,7 @@
 
 @media (max-width: 480px) {
 	.tagline p {
-		font-size: 1rem;
+		font-size: 0.8rem;
 		margin: 0 1rem;
 	}	
 
@@ -447,7 +448,7 @@
 	}
 
 	.tab-body {
-		background-size: 300%, 100%, 100%, 8px;
+		background-size: 400%, 100%, 100%, 8px;
 	}
 	
 	.tab-body h4 {
@@ -459,6 +460,12 @@
 	}
 	
 	.tab-body tbody td {
-		font-size: 0.8rem;
+		font-size: 0.7rem;
 	}	
+	
+	.tab-body td .numberArtContainer + .driver-name {
+		position: relative;
+		top: 5.5px;
+		
+	}
 }

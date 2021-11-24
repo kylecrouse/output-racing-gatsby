@@ -20,7 +20,7 @@ const DriversPage = ({ data }) => {
 			
 					<div className="columns">
 						{ data.drivers.nodes
-								.sort((a, b) => !a.number ? 1 : parseInt(a.number) - parseInt(b.number))
+								.sort((a, b) => (a.number && typeof parseInt(a.number) === 'number' ? parseInt(a.number) : 1000) - (b.number && typeof parseInt(b.number) === 'number' ? parseInt(b.number): 1000))
 								.map(props => {
 									const stats = data.stats.nodes.find(({ driver }) => driver === props.name) ||
 										{ starts: 0, wins: 0, top5s: 0 }

@@ -30,6 +30,7 @@ const Schedule = (props) => {
 															})
 														})	
 												}
+												hideSm={true}
 											/>
 										</a>
 									: race.track && race.track.name &&

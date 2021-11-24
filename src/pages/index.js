@@ -124,7 +124,7 @@ const IndexPage = ({ data }) => {
                 .slice(0, 3)
                 .map((item, index) => {
                   return (
-                    <div className={`col-4 ${index > 0 ? 'hide-sm' : 'col-sm-8 col-mx-auto'}`}>
+                    <div className={`col-4 ${index > 0 ? 'hide-sm' : 'col-sm-10 col-mx-auto'}`}>
                       <StandingsCard 
                         { ...item } 
                         driver={
@@ -189,7 +189,7 @@ const IndexPage = ({ data }) => {
                     }
                   />
                   <p className="cta">
-                    <a href="/results/latest" className="btn btn btn-primary"><span>View Full Results</span></a>
+                    <a href="/results" className="btn btn btn-primary"><span>View Full Results</span></a>
                   </p>
                 </div>
               </div>
