@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import DriverChip from './driverChip'
 import * as styles from './driverCard.module.css'
 
@@ -9,18 +8,6 @@ const DriverCard = (props) => {
 			className={ styles.container } 
 			href={`/drivers/${props.driver.name.replace(/\s/g,'-').toLowerCase()}`}
 		>
-			{ props.driver.media 
-				? props.driver.media
-						.slice(0, 1)
-						.map(image => (
-							<GatsbyImage 
-								alt="car screenshot"
-								className={ styles.image }
-								image={ getImage(image) } 
-							/>
-						)) 
-				: <div className={`${styles.image}  ${styles.placeholder}`}/>
-			}
 			<div className={ styles.stats }>
 				<div className={ styles.driver }>
 					{ !props.driver.numberArt &&

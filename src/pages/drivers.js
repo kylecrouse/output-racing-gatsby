@@ -18,23 +18,19 @@ const DriversPage = ({ data }) => {
 						<h2 className="page-title">Drivers</h2>
 					</hgroup>
 			
-					<div className="columns">
-						{ data.drivers.nodes
-								.sort((a, b) => (a.number && typeof parseInt(a.number) === 'number' ? parseInt(a.number) : 1000) - (b.number && typeof parseInt(b.number) === 'number' ? parseInt(b.number): 1000))
-								.map(props => {
-									const stats = data.stats.nodes.find(({ driver }) => driver === props.name) ||
-										{ starts: 0, wins: 0, top5s: 0 }
-									return (
-										<div className="col-4 col-sm-12">
-											<DriverCard 
-												{ ...stats } 
-												driver={props}
-											/>
-										</div>
-									)
-								})
-						}
-					</div>
+					{ data.drivers.nodes
+							.sort((a, b) => (a.number && typeof parseInt(a.number) === 'number' ? parseInt(a.number) : 1000) - (b.number && typeof parseInt(b.number) === 'number' ? parseInt(b.number): 1000))
+							.map(props => {
+								const stats = data.stats.nodes.find(({ driver }) => driver === props.name) ||
+									{ starts: 0, wins: 0, top5s: 0 }
+								return (
+									<DriverCard 
+										{ ...stats } 
+										driver={props}
+									/>
+								)
+							})
+					}
 					
 				</div>
 			</div>

@@ -32,8 +32,10 @@ const IndexPage = ({ data }) => {
       const response = await axios.get(isStreamOnlineURL)
       const { status = false } = response.data
       setIsStreamOnline(!!status)
-    }
+    }    
+    const timer = setTimeout(fetchStream, 30000)
     fetchStream()
+    return () => clearTimeout(timer)
   }, [])
   
   React.useEffect(() => {

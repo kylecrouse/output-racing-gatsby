@@ -1,17 +1,7 @@
 .container {
-	background: 
-		linear-gradient(
-			110deg, 
-			rgba(0,0,0,0.10) 25%, 
-			rgba(0,0,0,0.05), 
-			rgba(0,0,0,0.10) 75%
-		);
-	border-radius: 10px;
+	border-top: 2px solid #f0f0f0;
 	box-shadow: 0 0 10px rgba(0,0,0,0);
-	color: #454545;
 	display: block;
-	margin: 0 0.5rem 1rem;
-	overflow: hidden;
 	position: relative;
 	text-transform: uppercase;
 	transition: 100ms ease-out;
@@ -31,47 +21,25 @@
 	transition-timing-function: ease-in;
 }
 
-.image {
-	display: block;
-	height: 100px;
-	position: relative;
-}
-
-.image::after {
-	background: 
-		radial-gradient(farthest-corner at 50% 45%, transparent 50%, rgba(0,0,0,0.5)),
-		linear-gradient(transparent 95%, rgba(0,0,0,0.5));
-	bottom: 0;
-	content: ' ';
-	left: 0;
-	right: 0;
-	position: absolute;
-	top: 0;
-	z-index: 1;
-}
-
-.placeholder {
-	background: url(../images/logo.png) no-repeat center/80%;
-	filter: grayscale(100%) opacity(20%);
-}
-
 .stats {
-	padding: 0 1rem;
+	align-items: center;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	padding: 0.5rem 1rem 0.4rem;
 }
 
 .stats [class*="driverChip"] {
 	align-items: center;
-	color: #454545;
 	font-family: museo-sans, sans-serif;
 	font-weight: 300;
 	line-height: 1;
 }
 
 .stats [class*="numberArtContainer"] {
-	height: 3.5rem;
-	width: 3.5rem;
-	margin-right: 0.8rem;
-	padding: 0.4rem 0;
+	height: 3rem;
+	width: 3rem;
+	margin-right: 1.5rem;
 }
 
 .stats [class*="numberArt"] {
@@ -88,23 +56,20 @@
 }
 
 .stats dl {
-	border-top: 1px solid #ccc;
-	color: #666;
 	display: grid;
 	grid-template-rows: auto auto;
 	grid-auto-columns: 1fr;
 	grid-auto-flow: column;
 	margin: 0;
-	padding: 0.5rem 0 0.75rem;
 	text-align: center;
 }
 
 .stats dt {
-	color: #999;
 	font-family: obvia, sans-serif;
 	font-size: 0.5rem;
 	font-weight: 300;
 	line-height: 1;
+	opacity: 0.5;
 	text-transform: uppercase;
 }
 
@@ -114,6 +79,7 @@
 	font-weight: 600;
 	line-height: 1;
 	margin: 0.2rem 0 0;
+	width: 4rem;
 }
 
 .driver {
@@ -128,7 +94,7 @@
 	font-size: 2rem;
 	font-weight: 900;
 	line-height: 3.5rem;
-	margin-right: 0.8rem;
+	margin-right: 1.5rem;
 	text-align: center;
-	width: 3.5rem;
+	width: 3rem;
 }
