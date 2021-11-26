@@ -32,7 +32,7 @@ export const Carousel = React.forwardRef(({ options, children }, ref) => {
 				</button>
 			</div>
 			{ options.showNav === true &&
-				<div class="glide__bullets" data-glide-el="controls[nav]">
+				<div className="glide__bullets" data-glide-el="controls[nav]">
 					{ children.map((el, i) => (
 							<button className="glide__bullet" data-glide-dir={`=${i}`}>slide {i+1}</button>
 						)) 

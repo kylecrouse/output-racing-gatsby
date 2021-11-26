@@ -65,6 +65,33 @@
 	z-index: 1;
 }
 
+#broadcast {
+	position: relative;
+	z-index: 0;
+}
+
+#broadcast::before {
+	background: linear-gradient(black, transparent);
+	content: ' ';
+	height: 1rem;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 1;
+}
+
+#broadcast::after {
+	background: linear-gradient(transparent, black);
+	bottom: 0;
+	content: ' ';
+	height: 1rem;
+	left: 0;
+	position: absolute;
+	right: 0;
+	z-index: 1;
+}
+
 .schedule-container {
 	background: 
 		linear-gradient(black, transparent 10%, transparent 90%, black),

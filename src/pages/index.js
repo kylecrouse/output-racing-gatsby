@@ -3,6 +3,7 @@ import { graphql } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import { Helmet } from 'react-helmet'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
+import axios from 'axios'
 import useSiteMetadata from '../hooks/use-site-metadata'
 import { Carousel, Slide } from '../components/carousel'
 import Results from '../components/results'
@@ -18,8 +19,28 @@ import img3 from '../images/header/Chambliss.png'
 import img4 from '../images/header/Autoclub.png'
 import promo from '../images/ORL-Season-2-promo.mp4'
 
+const channel = "aussie_sim_commentator"
+const isStreamOnlineURL = `https://rdkboffe10.execute-api.us-west-2.amazonaws.com/default/isStreamOnline?channel=${channel}`
+
 const IndexPage = ({ data }) => {
   const { title, siteUrl } = useSiteMetadata()
+  
+  const [ isStreamOnline, setIsStreamOnline ] = React.useState(false)
+  
+  React.useEffect(() => {
+    async function fetchStream() {
+      const response = await axios.get(isStreamOnlineURL)
+      const { status = false } = response.data
+      setIsStreamOnline(!!status)
+    }
+    fetchStream()
+  }, [])
+  
+  React.useEffect(() => {
+    if (!isStreamOnline) return
+    const player = new window.Twitch.Player("broadcast", { channel })
+  }, [isStreamOnline])
+  
   const race = data.race.nodes[0]
   return (
     <>
@@ -39,23 +60,31 @@ const IndexPage = ({ data }) => {
         <meta name="twitter:player:height" content="480" />
         <meta name="twitter:image" content={`${siteUrl}${logo}`} />
         <meta name="theme-color" content="#F4A913"/>
+        <script src= "https://player.twitch.tv/js/embed/v1.js"></script>
       </Helmet>
       
       <div className="tagline">
-        <div className="columns col-gapless hide-sm">
-          <figure className="column col-3 col-sm-12">
-            <img src={img1} className="thumbnail" alt="Champ"/>
-          </figure>
-          <figure className="column col-3 col-sm-12">
-            <img src={img2} className="thumbnail" alt="Dega"/>
-          </figure>
-          <figure className="column col-3 col-sm-12">
-            <img src={img3} className="thumbnail" alt="Chambliss"/>
-          </figure>
-          <figure className="column col-3 col-sm-12">
-            <img src={img4} className="thumbnail" alt="Auto Club"/>
-          </figure>
-        </div>
+        { isStreamOnline 
+            ? <div className="columns">
+                <div className="col-8 col-xl-10 col-lg-12 col-mx-auto">
+                  <div id="broadcast"></div>
+                </div>
+              </div>
+            : <div className="columns col-gapless hide-sm">
+                <figure className="column col-3 col-sm-12">
+                  <img src={img1} className="thumbnail" alt="Champ"/>
+                </figure>
+                <figure className="column col-3 col-sm-12">
+                  <img src={img2} className="thumbnail" alt="Dega"/>
+                </figure>
+                <figure className="column col-3 col-sm-12">
+                  <img src={img3} className="thumbnail" alt="Chambliss"/>
+                </figure>
+                <figure className="column col-3 col-sm-12">
+                  <img src={img4} className="thumbnail" alt="Auto Club"/>
+                </figure>
+              </div>
+        }
         <p>An Asphalt Oval League for the Late-Night Racer</p>
       </div>
       
@@ -135,8 +164,8 @@ const IndexPage = ({ data }) => {
                   )
                 })
             }
-            <div class="container">
-              <div class="columns">
+            <div className="container">
+              <div className="columns">
                 <div className="table-container col-8 col-sm-10 col-mx-auto">
                   <Standings 
                     headers={false}
@@ -170,8 +199,8 @@ const IndexPage = ({ data }) => {
             <h5>{race.name}</h5>
           </hgroup>
           <div className="columns col-8 col-xl-10 col-md-10 col-mx-auto">
-            <div class="container">
-              <div class="columns">
+            <div className="container">
+              <div className="columns">
                 <div className="table-container col-8 col-md-10 col-sm-12 col-mx-auto">
                   { race.media && 
                     <GatsbyImage image={ getImage(race.media[0]) } alt="race screenshot" className="screenshot"/>

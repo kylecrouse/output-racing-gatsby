@@ -7,8 +7,16 @@ import * as styles from './scheduleCard.module.scss'
 
 const ScheduleCard = (props) => {
 	const date = moment(props.date)
-	const diff = date.diff(moment())
-	const duration = moment.duration(diff)
+	const getDuration = () => {
+		return moment.duration(date.diff(moment()))
+	}
+	const [duration, setDuration] = React.useState(getDuration)
+	React.useEffect(() => {
+		const timer = setTimeout(() => {
+			setDuration(getDuration)
+		}, 1000)
+		return () => clearTimeout(timer)
+	})
 	return (
 		<div className={ styles.container }>
 			<div className={ styles.header }>
@@ -19,7 +27,7 @@ const ScheduleCard = (props) => {
 			{ props.cars &&
 				<Cars cars={props.cars} />
 			}
-			{ !props.uploaded &&
+			{ !props.uploaded && duration.asSeconds() > 0 &&
 					<div className={ styles.countdown }>
 						<h3>Countdown to Green</h3>
 						<div className="columns">
