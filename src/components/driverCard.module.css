@@ -1,5 +1,6 @@
 .container {
 	border-top: 2px solid #f0f0f0;
+	border-bottom: 2px solid transparent;
 	box-shadow: 0 0 10px rgba(0,0,0,0);
 	display: block;
 	position: relative;
@@ -14,11 +15,17 @@
 
 .container:hover,
 .container:focus {
+	border-bottom: 2px solid #f0f0f0;
 	color: inherit;
-	box-shadow: 0 0 10px rgba(0,0,0,0.4);
+	/* box-shadow: 0 0 10px rgba(0,0,0,0.4); */
 	text-decoration: none;
-	transform: scale(1.025);
+	transform: scale(1.05);
 	transition-timing-function: ease-in;
+}
+
+.container:hover + .container,
+.container:focus + .container {
+	border-top: 2px solid transparent;
 }
 
 .stats {
