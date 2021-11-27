@@ -17,7 +17,7 @@ const DriverCard = (props) => {
 					}
 					<DriverChip {...props.driver} />
 				</div>
-				<dl>
+				<dl className="hide-sm">
 					<dt>Starts</dt>
 					<dd>{ props.starts } </dd>
 					<dt>Wins</dt>
