@@ -3,18 +3,22 @@ import { graphql } from 'gatsby'
 import Results from '../templates/results'
 
 const LatestResultsPage = ({ data, location }) => {
+	const race = data.race.nodes[0]
 	return (
 		<Results 
 			pageContext={{
-				...data.race.nodes[0],
+				...race,
 				track: data.league.tracks.find(
-					({ name }) => data.race.nodes[0].track.includes(name)
+					({ name }) => race.track.includes(name)
 				),
-				results: data.race.nodes[0].results.map(
-					(item) => ({
-						...item,
-						driver: data.drivers.nodes.find(({ name }) => name === item.name)
-					})
+				results: race.results.map(
+					(item) => {
+						const driver = data.drivers.nodes.find(({ name }) => name === item.name)
+						const { rating = 0 } = race.fields
+							? race.fields.ratings.find(({ custid }) => custid === driver.custId)
+							: {}
+						return { ...item, driver, rating }
+					}
 				)
 			}}
 			location={location}
@@ -31,6 +35,7 @@ export const query = graphql`
 		) {
 			nodes {
 				raceId
+				subsessionId
 				broadcast
 				cautionLaps
 				cautions
@@ -71,7 +76,13 @@ export const query = graphql`
 					points
 					start
 					status
-				}				
+				}	
+				fields {
+					ratings {
+						custid
+						rating
+					}
+				}			
 			}
 		}
 		league: contentfulLeague(leagueId: {eq: 2732}) {

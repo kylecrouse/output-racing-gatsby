@@ -76,6 +76,12 @@ const Standings = (props) => {
 				accessor: 'laps',
 				className: 'hide-sm',
 			},
+			{
+				Header: 'Avg Rating',
+				accessor: 'rating',
+				className: 'hide-sm',
+				Cell: ({ value }) => value.toFixed(1)
+			},
 			// {
 			// 	id: 'incPerRace',
 			// 	Header: 'Incidents per Race',

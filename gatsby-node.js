@@ -46,7 +46,8 @@ exports.createPages = async function ({ actions, graphql }) {
 	const { data } = await graphql(`
 		query Pages {
 			drivers: allContentfulDriver {
-				nodes {					
+				nodes {			
+					custId		
 					name
 					nickname
 					active
@@ -106,6 +107,7 @@ exports.createPages = async function ({ actions, graphql }) {
 					}
 					results {
 						raceId
+						subsessionId
 						broadcast
 						cautionLaps
 						cautions
@@ -148,6 +150,12 @@ exports.createPages = async function ({ actions, graphql }) {
 							status
 						}
 						uploaded
+						fields {
+							ratings {
+								custid
+								rating
+							}
+						}
 					}
 					standings {
 						position
@@ -228,10 +236,13 @@ exports.createPages = async function ({ actions, graphql }) {
 							({ name }) => race.track.includes(name)
 						),
 						results: race.results.map(
-							(item) => ({
-								...item,
-								driver: data.drivers.nodes.find(({ name }) => name === item.name)
-							})
+							(item) => {
+								const driver = data.drivers.nodes.find(({ name }) => name === item.name)
+								const { rating = 0 } = race.fields
+									? race.fields.ratings.find(({ custid }) => custid === driver.custId)
+									: {}
+								return { ...item, driver, rating }
+							}
 						)
 					},
 				})

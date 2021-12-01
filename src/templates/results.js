@@ -90,7 +90,7 @@ const ResultsTemplate = ({ pageContext, location }) => {
 							results={pageContext.results}
 							duration={pageContext.duration}
 							counts={!!pageContext.counts}
-							fields={column => ['status', 'bonus', 'penalty', pageContext.counts !== true && 'points'].includes(column)}
+							fields={column => ['status', 'bonus', 'penalty', pageContext.counts !== true && 'points', (pageContext.counts !== true || !pageContext.subsessionId) && 'rating'].includes(column)}
 						/>
 						
 						<div className="columns">

@@ -1,3 +1,5 @@
+const dotenv = require('dotenv').config()
+
 module.exports = {
   siteMetadata: {
     siteUrl: "http://output-racing-gatsby.s3-website-us-west-2.amazonaws.com",
@@ -9,6 +11,13 @@ module.exports = {
       options: {
         accessToken: "hnJokTLzykmhsacKuzCdXre6Uf0LHDTMQ418DC2oZEc",
         spaceId: "38idy44jf6uy",
+      },
+    },
+    {
+      resolve: `gatsby-source-iracing`,
+      options: {
+       username: process.env.IRACING_USERNAME,
+       password:  process.env.IRACING_PASSWORD
       },
     },
     "gatsby-plugin-image",

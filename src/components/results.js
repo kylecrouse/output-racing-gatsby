@@ -137,6 +137,15 @@ const Results = (props) => {
 				}
 			},
 			{
+				Header: 'Rating',
+				accessor: 'rating',
+				Cell: ({ value, data }) => {
+					return value === Math.max(...data.map(({ rating }) => rating))
+						? <b>{ value.toFixed(1) }</b>
+						: value.toFixed(1)
+				}
+			},
+			{
 				Header: 'Status',
 				accessor: 'status',
 				className: 'hide-sm'
