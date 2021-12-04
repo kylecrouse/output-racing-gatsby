@@ -100,47 +100,71 @@ const ResultsTemplate = ({ pageContext, location }) => {
 									<h3>Race Statistics</h3>
 									<dl>
 										<dt>Cautions</dt>
-										<dd>{pageContext.cautions} cautions for {pageContext.cautionLaps} laps</dd>
+										<dd>{pageContext.cautions > 0 ? pageContext.cautions : 'none'} { pageContext.cautions > 0 && `${pageContext.cautions > 1 ? 'cautions' : 'caution'} for ${pageContext.cautionLaps} laps`}</dd>
 										<dt>Lead Changes</dt>
-										<dd>{pageContext.leadChanges} lead changes between {pageContext.leaders} drivers</dd>
-										{/*
-										<dt>Best Average Position</dt>
-										<dd>
-											<DriverChip {...data.drivers.nodes.find(({ name }) => name === "Christian Budd")}>(1.29)</DriverChip>
-										</dd>
-										<dt>Hard Charger</dt>
-										<dd>
-											<DriverChip {...data.drivers.nodes.find(({ name }) => name === "Thomas Harmon2")}>(8)</DriverChip>
-										</dd>
-										<dt>Most Passes</dt>
-										<dd>
-											<DriverChip {...data.drivers.nodes.find(({ name }) => name === "Thomas Harmon2")}>(10)</DriverChip>
-										</dd>
-										<dt>Most Quality Passes</dt>
-										<dd>
-											<DriverChip {...data.drivers.nodes.find(({ name }) => name === "Thomas Harmon2")}>(7)</DriverChip>
-										</dd>
-										<dt>Most Closing Passes</dt>
-										<dd>
-											<DriverChip {...data.drivers.nodes.find(({ name }) => name === "Thomas Harmon2")}>(3)</DriverChip>
-										</dd>
-										<dt>Fastest Lap</dt>
-										<dd>
-											<DriverChip {...data.drivers.nodes.find(({ name }) => name === "Brian Chambliss")}>(32.563)</DriverChip>
-										</dd>
-										<dt>Most Fast Laps</dt>
-										<dd>
-											<DriverChip {...data.drivers.nodes.find(({ name }) => name === "Brian Chambliss")}>(5)</DriverChip>
-										</dd>
-										<dt>Fastest 3 Laps Average</dt>
-										<dd>
-											<DriverChip {...data.drivers.nodes.find(({ name }) => name === "Christian Budd")}>(32.650)</DriverChip>
-										</dd>
-										<dt>Fastest on Restarts</dt>
-										<dd>
-											<DriverChip {...data.drivers.nodes.find(({ name }) => name === "Chris Champeau")}>(32.650)</DriverChip>
-										</dd>
-										*/}
+										<dd>{pageContext.leadChanges > 0 ? pageContext.leadChanges : 'none'} { pageContext.leadChanges > 0 && `lead changes between ${pageContext.leaders} drivers`}</dd>
+										{	Object.keys(pageContext.stats).length > 0 &&
+											<>
+												<dt>Best Average Position</dt>
+												<dd>
+													<DriverChip {...pageContext.stats.bestAvgPos.driver}>
+														({ (pageContext.stats.bestAvgPos.arp + 1).toFixed(1) })
+													</DriverChip>
+												</dd>
+												<dt>Hard Charger</dt>
+												<dd>
+													<DriverChip {...pageContext.stats.hardCharger.driver}>
+														({ pageContext.stats.hardCharger.gain })
+													</DriverChip>
+												</dd>
+												<dt>Most Passes</dt>
+												<dd>
+													<DriverChip {...pageContext.stats.bestPasses.driver}>
+														({ pageContext.stats.bestPasses.passes })
+													</DriverChip>
+												</dd>
+												<dt>Most Quality Passes</dt>
+												<dd>
+													<DriverChip {...pageContext.stats.bestQualityPasses.driver}>
+														({ pageContext.stats.bestQualityPasses.qualityPasses })
+													</DriverChip>
+												</dd>
+												<dt>Most Closing Passes</dt>
+												<dd>
+													<DriverChip {...pageContext.stats.bestClosingPasses.driver}>
+														({ pageContext.stats.bestClosingPasses.closingPasses })
+													</DriverChip>
+												</dd>
+												<dt>Fastest Lap</dt>
+												<dd>
+													<DriverChip {...pageContext.stats.bestFastLap.driver}>
+														({ getTimeFromMilliseconds(pageContext.stats.bestFastLap.time) })
+													</DriverChip>
+												</dd>
+												<dt>Fastest 3-lap Average</dt>
+												<dd>
+													<DriverChip {...pageContext.stats.bestAvgFastLap.driver}>
+														({ getTimeFromMilliseconds(pageContext.stats.bestAvgFastLap.avgFastLap) })
+													</DriverChip>
+												</dd>
+												{	pageContext.cautions > 0 &&
+													<>
+														<dt>Fastest Restarts</dt>
+														<dd>
+															<DriverChip {...pageContext.stats.bestRestarts.driver}>
+																({ getTimeFromMilliseconds(pageContext.stats.bestRestarts.time) })
+															</DriverChip>
+														</dd>
+													</>											
+												}
+												<dt>Most Fast Laps</dt>
+												<dd>
+													<DriverChip {...pageContext.stats.bestNumFastLap.driver}>
+														({ pageContext.stats.bestNumFastLap.numFastLap })
+													</DriverChip>
+												</dd>
+											</>											
+										}
 									</dl>
 								</div>
 							</div>
@@ -159,6 +183,29 @@ const ResultsTemplate = ({ pageContext, location }) => {
 
 		</>
 	)
+}
+
+const getTimeFromMilliseconds = (time) => {
+	let hours = Math.floor(time / (3600 * 10000))
+	time = time - hours * 3600 * 10000
+	let min = Math.floor(time / (60 * 10000))
+	time = time - min * 60 * 10000
+	let secs = Math.floor(time / 10000)
+	time = time - secs * 10000
+	const tenths = Math.floor(time / 1000)
+	time = time - tenths * 1000
+	const hun = Math.floor(time / 100)
+	time = time - hun * 100
+	const thous = Math.floor(time / 10)
+	if (hours) 
+		hours += ":"
+	else 
+		hours = ""
+	if (min < 10)
+		min = "0" + min
+	if (secs < 10)
+		secs = "0" + secs
+	return hours + min + ":" + secs + "." + tenths + hun + thous
 }
 
 export default ResultsTemplate

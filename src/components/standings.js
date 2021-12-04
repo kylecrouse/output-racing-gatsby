@@ -80,7 +80,7 @@ const Standings = (props) => {
 				Header: 'Avg Rating',
 				accessor: 'rating',
 				className: 'hide-sm',
-				Cell: ({ value }) => value.toFixed(1)
+				Cell: ({ value }) => value ? value.toFixed(1) : 0
 			},
 			// {
 			// 	id: 'incPerRace',
