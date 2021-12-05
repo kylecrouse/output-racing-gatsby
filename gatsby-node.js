@@ -157,7 +157,7 @@ exports.createPages = async function ({ actions, graphql }) {
 							}
 							bestAvgPos {
 								custid
-								arp
+								avgPos
 							}
 							bestFastLap {
 								custid

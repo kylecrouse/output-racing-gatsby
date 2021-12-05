@@ -234,13 +234,34 @@ exports.sourceNodes = async ({
           // Get number green flag laps in lead position
           const greenFlagLapsLed = greenFlagLaps
             .filter(({ pos }) => pos === 0).length
+
+          // Get sum of positions on all laps
+          // Build an array of all laps, repeating the last item
+          // for every lap not completed by the driver
+          const totalPosition = laps.length > 0 
+            ? Array.from(
+                { length: totalLaps }, 
+                (v, i) => {
+                  return i < laps.length
+                    ? laps[i]
+                    : laps[laps.length - 1]
+                }
+              ).reduce((total, { pos }) => total + pos, 0)
+            : 0
             
+          // Calculate average position for entire race
+          // Use -1 when no laps completed so it doesn't appear like
+          // this driver led the entire race
+          const averagePosition = laps.length > 0 
+            ? (totalPosition / totalLaps)
+            : -1 
+          
           // Get sum of running positions on green flag laps
-          const totalPosition = greenFlagLeadLaps
+          const totalGreenPosition = greenFlagLeadLaps
             .reduce((total, { pos }) => total + pos, 0)
             
-          // Calculate average running position under green
-          const averagePos = (totalPosition / greenFlagLeadLaps.length) 
+          // Calculate average running position under green laps completed
+          const averageRunningPosition = (totalGreenPosition / greenFlagLeadLaps.length) 
             || driver.startPos
           
           // Get sum of green flag lap times
@@ -272,7 +293,8 @@ exports.sourceNodes = async ({
             ...driver,
             laps,
             lapsLed,
-            averagePos,
+            averagePosition,
+            averageRunningPosition,
             averageLapTime,
             averageFastLapTime,
             passes: laps.reduce((a, { passes }) => a + passes, 0),
@@ -298,9 +320,9 @@ exports.sourceNodes = async ({
               (driver.finishPos === 0 ? 20 : 0)       // Win
                 + (driver.finishPos < 10 ? 10 : 0)    // Top 10
                 + (laps.length === totalLaps ? 5 : 0) // Lead lap
-                + (averagePos < 9 ? 5 : 0)            // ARP < 10
-                + (averagePos < 5 ? 5 : 0)            // ARP < 6
-                + (averagePos < 1 ? 5 : 0),           // ARP < 2
+                + (averageRunningPosition < 9 ? 5 : 0)            // ARP < 10
+                + (averageRunningPosition < 5 ? 5 : 0)            // ARP < 6
+                + (averageRunningPosition < 1 ? 5 : 0),           // ARP < 2
             
             // Variable Bonus Points
             // ---------------------
@@ -316,7 +338,7 @@ exports.sourceNodes = async ({
               : 0,
           }
         })
-        .sort((a, b) => a.averagePos - b.averagePos)
+        .sort((a, b) => a.averageRunningPosition - b.averageRunningPosition)
         .map((driver, index) => ({
           ...driver,
           // Primary statistics: add points * 2 for average running position rank
@@ -368,7 +390,8 @@ exports.sourceNodes = async ({
         .sort((a, b) => a.finishPos - b.finishPos)
         .map((driver, index) => ({
           custid: driver.custid,
-          arp: driver.averagePos,
+          avgPos: driver.averagePosition,
+          arp: driver.averageRunningPosition,
           avgFastLap: driver.averageFastLapTime,
           numFastLap: driver.laps.filter(({ fastest }) => fastest).length,
           passes: driver.passes,
@@ -387,16 +410,20 @@ exports.sourceNodes = async ({
           value: drivers.map(({ custid, rating }) => ({ custid, rating }))
         })
         
+        console.log(drivers.map(
+          ({ custid, avgPos }) => ({ sessId: node.subsessionId, custid, avgPos })
+        ))
+        
         createNodeField({
           node,
           name: 'bestAvgPos',
           value: drivers.reduce(
-            (best, { custid, arp }) => {
-              if (!best) 
-                return { custid, arp }
+            (best, { custid, avgPos }) => {
+              if (!best && avgPos >= 0) 
+                return { custid, avgPos }
               else
-                return (arp < best.arp)
-                  ? { custid, arp }
+                return (avgPos >= 0 && avgPos < best.avgPos )
+                  ? { custid, avgPos }
                   : best
             },
             null

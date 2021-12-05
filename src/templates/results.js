@@ -108,7 +108,7 @@ const ResultsTemplate = ({ pageContext, location }) => {
 												<dt>Best Average Position</dt>
 												<dd>
 													<DriverChip {...pageContext.stats.bestAvgPos.driver}>
-														({ (pageContext.stats.bestAvgPos.arp + 1).toFixed(1) })
+														({ (pageContext.stats.bestAvgPos.avgPos + 1).toFixed(1) })
 													</DriverChip>
 												</dd>
 												<dt>Hard Charger</dt>

@@ -94,7 +94,7 @@ export const query = graphql`
 					}
 					bestAvgPos {
 						custid
-						arp
+						avgPos
 					}
 					bestFastLap {
 						custid
