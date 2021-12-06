@@ -15,17 +15,16 @@
 
 .container:hover,
 .container:focus {
-	border-bottom: 2px solid #f0f0f0;
+	border-bottom-color: #f0f0f0;
 	color: inherit;
-	/* box-shadow: 0 0 10px rgba(0,0,0,0.4); */
 	text-decoration: none;
-	transform: scale(1.05);
+	transform: scale(1.02);
 	transition-timing-function: ease-in;
 }
 
 .container:hover + .container,
 .container:focus + .container {
-	border-top: 2px solid transparent;
+	border-top-color: transparent;
 }
 
 .stats {

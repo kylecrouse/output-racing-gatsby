@@ -1,7 +1,7 @@
 import * as React from "react"
+import { Helmet } from 'react-helmet'
 import { graphql } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
-import { Helmet } from 'react-helmet'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import axios from 'axios'
 import useSiteMetadata from '../hooks/use-site-metadata'
@@ -40,7 +40,14 @@ const IndexPage = ({ data }) => {
   
   React.useEffect(() => {
     if (!isStreamOnline) return
-    const player = new window.Twitch.Player("broadcast", { channel })
+    const player = new window.Twitch.Player("broadcast", { 
+      channel,
+      parent: [
+        "outputracing.com", 
+        "beta.outputracing.com",
+        "output-racing-gatsby.s3-website-us-west-2.amazonaws.com"
+      ]
+    })
   }, [isStreamOnline])
   
   const race = data.race.nodes[0]
@@ -143,7 +150,7 @@ const IndexPage = ({ data }) => {
       <Tabs>
         <TabList className="tab">
           <Tab className="tab-item"><span>Standings</span></Tab>
-          <Tab className="tab-item"><span>Rankings</span></Tab>
+          <Tab className="tab-item"><span>Ratings</span></Tab>
           <Tab className="tab-item"><span>Last Race</span></Tab>
         </TabList>      
         
@@ -151,6 +158,10 @@ const IndexPage = ({ data }) => {
           <h3>Standings</h3>
           <div className="columns col-8 col-xl-10 col-md-11 col-sm-12 col-mx-auto">
             { data.league.activeSeason.standings
+                .map(item => {
+                  const driver = data.drivers.nodes.find(({ name }) => name === item.driver)
+                  return { ...item, driver }
+                })
                 .sort((a, b) => a.position - b.position)
                 .slice(0, 3)
                 .map((item, index) => {
@@ -158,9 +169,11 @@ const IndexPage = ({ data }) => {
                     <div className={`col-4 ${index > 0 ? 'hide-sm' : 'col-sm-10 col-mx-auto'}`}>
                       <StandingsCard 
                         { ...item } 
-                        driver={
-                          data.drivers.nodes.find(({ name }) => name === item.driver)
-                        } 
+                        fields={[
+                          { name: 'Wins', value: item.wins }, 
+                          { name: 'Top 5s', value: item.t5s },
+                          { name: 'Points', value: item.points },
+                        ]} 
                       />
                     </div>
                   )
@@ -171,7 +184,7 @@ const IndexPage = ({ data }) => {
                 <div className="table-container col-8 col-sm-10 col-mx-auto">
                   <Standings 
                     headers={false}
-                    fields={['pos', 'driver', 'points']}
+                    fields={['driver', 'points']}
                     standings={
                       data.league.activeSeason.standings
                         .sort((a, b) => a.position - b.position)
@@ -192,7 +205,71 @@ const IndexPage = ({ data }) => {
         </TabPanel>
         
         <TabPanel className="tab-body">
-          <h3>Rankings</h3>
+          <h3>Ratings</h3>
+          <div className="columns col-8 col-xl-10 col-md-11 col-sm-12 col-mx-auto">
+            { data.league.activeSeason.standings
+                .map(item => {
+                  const driver = data.drivers.nodes.find(({ name }) => name === item.driver)
+                  const rating = data.league.activeSeason.results.reduce((total, { fields }) => {
+                    if (!fields || !fields.ratings) return total
+                    return total + fields.ratings
+                      .filter(({ custid }) => custid === driver.custId)
+                      .reduce((total, { rating }) => total + rating, 0)
+                  }, 0) / item.starts
+                  const arp = data.league.activeSeason.results.reduce((total, { fields }) => {
+                    if (!fields || !fields.ratings) return total
+                    return total + fields.ratings
+                      .filter(({ custid }) => custid === driver.custId)
+                      .reduce((total, { arp }) => total + arp, 0)
+                  }, 0) / item.starts
+                  return { ...item, driver, rating, arp }
+                })
+                .sort((a, b) => b.rating - a.rating)
+                .slice(0, 3)
+                .map((item, index) => {
+                  return (
+                    <div className={`col-4 ${index > 0 ? 'hide-sm' : 'col-sm-10 col-mx-auto'}`}>
+                      <StandingsCard 
+                        { ...item } 
+                        fields={[
+                          { name: 'Starts', value: item.starts }, 
+                          { name: 'ARP', value: (item.arp + 1).toFixed(1) },
+                          { name: 'Avg Rating', value: item.rating.toFixed(1) },
+                        ]} 
+                      />
+                    </div>
+                  )
+                })
+            }
+            <div className="container">
+              <div className="columns">
+                <div className="table-container col-8 col-sm-10 col-mx-auto">
+                  <Standings 
+                    headers={false}
+                    fields={['driver', 'rating']}
+                    standings={
+                      data.league.activeSeason.standings
+                        .map(item => {
+                          const driver = data.drivers.nodes.find(({ name }) => name === item.driver)
+                          const rating = data.league.activeSeason.results.reduce((total, { fields }) => {
+                            if (!fields || !fields.ratings) return total
+                            return total + fields.ratings
+                              .filter(({ custid }) => custid === driver.custId)
+                              .reduce((total, { rating }) => total + rating, 0)
+                          }, 0) / item.starts
+                          return { ...item, driver, rating }
+                        })
+                        .sort((a, b) => b.rating - a.rating)
+                        .slice(0, 10)
+                    }
+                  />
+                  <p className="cta">
+                    <a href="/standings" className="btn btn btn-primary"><span>View Full Standings</span></a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </TabPanel>
 
         <TabPanel className="tab-body">
@@ -209,7 +286,7 @@ const IndexPage = ({ data }) => {
                   }
                   <Results 
                     headers={false}
-                    fields={['finish', 'driver', 'points']}
+                    fields={['driver', 'points']}
                     results={
                       race.results
                         .slice(0,10)
@@ -261,6 +338,13 @@ export const query = graphql`
             bonus
             penalty
           }
+          fields {
+            ratings {
+              custid
+              arp
+              rating
+            }
+          }
         }
         standings {
           position
@@ -291,6 +375,7 @@ export const query = graphql`
     drivers: allContentfulDriver {
       nodes {
         name
+        custId
         nickname
         active
         number
@@ -337,7 +422,13 @@ export const query = graphql`
           penalty
           points
           start
-        }				
+        }		
+        fields {
+          ratings {
+            custid
+            rating
+          }
+        }		
       }
     }
   }

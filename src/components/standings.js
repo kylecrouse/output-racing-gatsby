@@ -40,6 +40,7 @@ const Standings = (props) => {
 			{
 				Header: 'Points',
 				accessor: 'points',
+				className: 'cell-totalPoints',
 			},
 			{
 				Header: 'Behind Next',

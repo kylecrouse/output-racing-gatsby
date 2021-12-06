@@ -19,7 +19,7 @@ const authenticate = async (username, password) => {
 
 		const response = await client.post(url, params.toString())
 
-		// TODO: Check to make sure this wasn't a failure/redirect
+		// @todo Check to make sure this wasn't a failure/redirect
 		// console.log('Authenticated!')
 		// console.log(response)
 		return
@@ -53,9 +53,9 @@ const serialize = (data) => {
 }
 
 exports.getLaps = async (subsessionid, options) => {
-	// TODO: Constants
+	// @TODO Constants
 	const url = `${baseURL}/membersite/member/GetLapChart`
-	// TODO: Allow class and session as params
+	// @TODO Allow class and session as params
 	const payload = { subsessionid, carclassid: -1, simsesnum: 0 }
 	
 	const { data } = await request(url, payload, options)
@@ -63,7 +63,7 @@ exports.getLaps = async (subsessionid, options) => {
 }
 
 exports.getSessionEvents = async (subsessionid, options) => {
-	// TODO: Constants
+	// @TODO Constants
 	const url = `${baseURL}/membersite/member/EventResult.do?&subsessionid=${subsessionid}`
 	
 	const { data } = await client.get(url)

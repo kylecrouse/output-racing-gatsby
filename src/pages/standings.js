@@ -3,10 +3,24 @@ import { graphql } from 'gatsby'
 import Standings from '../templates/standings'
 
 const CurrentStandingsPage = ({ data, location }) => {
+	const season = data.league.activeSeason
+// console.log({ season })
 	return (
 		<Standings 
 			pageContext={{
-				season: data.league.activeSeason,
+				season: {
+					...season,
+					standings: season.standings.map(item => {
+						const driver = data.drivers.nodes.find(({ name }) => name === item.driver)
+						const rating = season.results.reduce((total, { raceId, fields }) => {
+							if (!fields || !fields.ratings) return total 
+							return total + fields.ratings
+								.filter(({ custid }) => custid === driver.custId)
+								.reduce((total, { rating }) => total + rating, 0)
+						}, 0) / item.starts
+						return { ...item, driver, rating }
+					})
+				}, 
 				cars: data.league.cars,
 				seasons: data.league.seasons,
 				drivers: data.drivers.nodes
@@ -29,6 +43,14 @@ export const query = graphql`
 				}
 				results {
 					raceId
+					fields {
+						ratings {
+							custid
+							rating
+						}
+					}
+					counts
+					uploaded
 				}
 				standings {
 					position
@@ -64,6 +86,7 @@ export const query = graphql`
 			nodes {
 				name
 				nickname
+				custId
 				active
 				number
 				numberArt {

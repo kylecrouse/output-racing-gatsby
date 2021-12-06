@@ -325,7 +325,19 @@ exports.createPages = async function ({ actions, graphql }) {
 			path: `/standings/${season.id}`,
 			component: require.resolve(`./src/templates/standings.js`),
 			context: {
-				season, 
+				season: {
+					...season,
+					standings: season.standings.map(item => {
+						const driver = data.drivers.nodes.find(({ name }) => name === item.driver)
+						const rating = season.results.reduce((total, { fields }) => {
+							if (!fields || !fields.ratings) return total
+							return total + fields.ratings
+								.filter(({ custid }) => custid === driver.custId)
+								.reduce((total, { rating }) => total + rating, 0)
+						}, 0) / item.starts
+						return { ...item, driver, rating }
+					})
+				}, 
 				seasons: data.league.seasons, 
 				cars: data.league.cars, 
 				drivers: data.drivers.nodes, 

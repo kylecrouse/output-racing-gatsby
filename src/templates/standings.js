@@ -56,13 +56,8 @@ const StandingsTemplate = ({ pageContext, location }) => {
 						</hgroup>
 	
 						<Standings 
-							standings={
-								season.standings.map(row => ({
-									...row, 
-									driver: drivers.find(({ name }) => name === row.driver)
-								}))
-							}
-							fields={column => column === 'laps'}
+							standings={ season.standings }
+							fields={ column => ['laps'].includes(column) }
 						/>
 							
 					</div>

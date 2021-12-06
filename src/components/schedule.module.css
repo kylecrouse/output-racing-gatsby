@@ -5,11 +5,13 @@
 .details {
 	align-items: stretch;
 	border-top: 2px solid #f0f0f0;
+	border-bottom: 2px solid transparent;
 	display: flex;
 	flex-direction: row;
 	overflow: hidden;
-	padding: 1rem 1rem 0.9rem;
+	padding: 1rem 1rem 0.7rem;
 	position: relative;
+	transition: 100ms ease-out;
 	z-index: 1;
 }
 
@@ -17,6 +19,20 @@ a.details:link,
 a.details:visited {
 	color: inherit;
 	text-decoration: none;
+}
+
+a.details:hover,
+a.details:focus {
+	border-bottom-color: #f0f0f0;
+	color: inherit;
+	text-decoration: none;
+	transform: scale(1.02);
+	transition-timing-function: ease-in;
+}
+
+a.details:hover + .details,
+a.details:focus + .details {
+	border-top-color: transparent;
 }
 
 .details > * {

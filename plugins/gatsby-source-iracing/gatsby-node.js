@@ -7,18 +7,11 @@
 const iRacing = require('./iracing')
 const util = require('util')
 
-/**
- * You can uncomment the following line to verify that
- * your plugin is being loaded in your site.
- *
- * See: https://www.gatsbyjs.com/docs/creating-a-local-plugin/#developing-a-local-plugin-that-is-outside-your-project
- */
-exports.onPreInit = () => console.log("Loaded gatsby-source-iracing")
-
 exports.sourceNodes = async ({
   actions,
   cache,
   getNodesByType,
+  reporter
 }, pluginOptions) => {
   const { createNodeField } = actions
   
@@ -399,7 +392,9 @@ exports.sourceNodes = async ({
           closingPasses: driver.closingPasses,
           start: driver.startPos,
           finish: driver.finishPos,
-          rating: (driver.primaryPoints + driver.fixedPoints + driver.variablePoints) / 6
+          rating: driver.laps.length > 0
+            ? (driver.primaryPoints + driver.fixedPoints + driver.variablePoints) / 6
+            : 0
         }))
       
         // console.log(util.inspect(drivers, false, null, true))
@@ -407,12 +402,8 @@ exports.sourceNodes = async ({
         createNodeField({
           node,
           name: 'ratings',
-          value: drivers.map(({ custid, rating }) => ({ custid, rating }))
+          value: drivers.map(({ custid, arp, rating }) => ({ custid, arp, rating }))
         })
-        
-        console.log(drivers.map(
-          ({ custid, avgPos }) => ({ sessId: node.subsessionId, custid, avgPos })
-        ))
         
         createNodeField({
           node,
@@ -570,11 +561,6 @@ exports.sourceNodes = async ({
   return
 }
 
-const groupBy = (array, key) => array.reduce(
-  (entryMap, e) => entryMap.set(e[key], [...entryMap.get(e[key]) || [], e]),
-  new Map()
-)
-
 const getTimeFromMilliseconds = (time) => {
   let hours = Math.floor(time / (3600 * 10000))
   time = time - hours * 3600 * 10000
@@ -610,5 +596,9 @@ const range = (start, stop, step) => Array.from(
   { length: (stop - start) / step + 1}, (_, i) => start + (i * step)
 )
 
+const groupBy = (array, key) => array.reduce(
+  (entryMap, e) => entryMap.set(e[key], [...entryMap.get(e[key]) || [], e]),
+  new Map()
+)
 
 const POINTS = [180, 170, 165, 160, 155, 150, 146, 142, 138, 134, 130, 127, 124, 121, 118, 115, 112, 109, 106, 103, 100, 97, 94, 91, 88, 85, 82, 79, 76, 73, 70, 67, 64, 61, 58, 55, 52, 49, 46, 43, 40, 37, 34]
