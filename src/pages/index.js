@@ -20,7 +20,7 @@ import img4 from '../images/header/Autoclub.png'
 import promo from '../images/ORL-Season-2-promo.mp4'
 
 const channel = "aussie_sim_commentator"
-const isStreamOnlineURL = `https://rdkboffe10.execute-api.us-west-2.amazonaws.com/default/isStreamOnline?channel=${channel}`
+const isStreamOnlineURL = `https://api.outputracing.com/isStreamOnline?channel=${channel}`
 
 const IndexPage = ({ data }) => {
   const { title, siteUrl } = useSiteMetadata()
