@@ -139,6 +139,7 @@ const Results = (props) => {
 			{
 				Header: 'Rating',
 				accessor: 'rating',
+				className: 'hide-sm',
 				Cell: ({ value, data }) => {
 					if (!value) return 0
 					return value === Math.max(...data.map(({ rating }) => rating))
