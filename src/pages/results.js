@@ -141,6 +141,7 @@ export const query = graphql`
 			nodes {
 				name
 				nickname
+				custId
 				active
 				number
 				numberArt {
