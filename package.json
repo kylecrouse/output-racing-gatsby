@@ -13,7 +13,7 @@
     "build": "gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "deploy": "gatsby-plugin-s3 deploy --yes"
+    "deploy": "gatsby-plugin-s3 deploy --yes && aws cloudfront create-invalidation --distribution-id E1YRNDCEAMXU8B --paths \"/*\""
   },
   "dependencies": {
     "@glidejs/glide": "^3.4.1",
