@@ -16,8 +16,6 @@
   "dependencies": {
     "axios": "^0.24.0",
     "axios-cookiejar-support": "^2.0.3",
-    "fetch-cookie": "^1.0.0",
-    "form-data": "^4.0.0",
-    "node-fetch": "^2.6.6"
+    "fetch-cookie": "^1.0.0"
   }
 }
