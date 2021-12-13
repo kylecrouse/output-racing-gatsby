@@ -20,6 +20,7 @@ module.exports = {
        password:  process.env.IRACING_PASSWORD
       },
     },
+    "gatsby-source-simracerhub",
     "gatsby-plugin-image",
     "gatsby-plugin-sharp",
     "gatsby-transformer-sharp",
