@@ -7,6 +7,7 @@ const Table = ({
 	data, 
 	initialState = {},
 	disableSortBy = false,
+	scrolling = false,
 	getRowProps = () => ({}),
 }) => {
 	const {
@@ -26,7 +27,7 @@ const Table = ({
 	)
 
 	return (
-		<div className="table-wrapper">
+		<div className={`table-wrapper ${scrolling ? 'scrolling' : ''}`}>
 			<table { ...getTableProps() }>
 				<thead>
 					{ headerGroups.map(headerGroup => (

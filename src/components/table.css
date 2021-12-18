@@ -1,5 +1,11 @@
-.table-wrapper {
+.table-wrapper.scrolling {
 	overflow: auto;
+}
+
+.scrolling .cell-trackName,
+.scrolling .cell-typeName {
+	left: 0;
+	position: sticky;
 }
 
 hgroup + table {

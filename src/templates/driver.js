@@ -13,7 +13,7 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 	const { title, siteUrl } = useSiteMetadata()
 	const driver = props.driver
 	const typeStats = React.useMemo(
-		() => [
+		() => props.typeStats && [
 			{ typeName: 'Overall', ...props.stats },
 			...props.typeStats
 		].sort((a, b) => TYPE_ORDER.indexOf(a.typeName) - TYPE_ORDER.indexOf(b.typeName)),
@@ -234,6 +234,7 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 								columns={typeColumns} 
 								data={typeStats}
 								disableSortBy={true} 
+								scrolling={true}
 							/>							
 						}
 						
@@ -247,6 +248,7 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 								initialState={{
 									sortBy: [{ id: 'trackName', desc: false }]
 								}}
+								scrolling={true}
 							/>							
 						}
 

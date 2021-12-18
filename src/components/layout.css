@@ -71,6 +71,7 @@ tbody tr.inactive .driverChip.inactive {
 }
 
 th {
+	background-color: #fff;
 	border-top: 2px solid #f0f0f0;
 	font-family: obvia, sans-serif;
 	font-size: 0.6rem;
@@ -161,10 +162,8 @@ td .adjustments {
 td.cell-trackName,
 td.cell-typeName {
 	font-weight: 400;
-	left: 0;
 	max-width: 14rem;
 	overflow: hidden;
-	position: sticky;
 	text-align: left;
 	text-overflow: ellipsis;
 }

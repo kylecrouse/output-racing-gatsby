@@ -339,10 +339,10 @@ exports.createPages = async function ({ actions, graphql }) {
 		.filter(({ active }) => !!active)
 		.map(async (driver) => {
 			const { 
-				races,
-				stats, 
-				trackStats, 
-				typeStats 
+				races = [],
+				stats = {}, 
+				trackStats = [], 
+				typeStats = []
 			} = data.allSimRacerHubDriver.nodes.find(
 				({ custid }) => custid === driver.custId
 			) || {}
