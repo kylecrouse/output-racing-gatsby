@@ -7,26 +7,40 @@ import License from '../components/license'
 import Table from '../components/table'
 import * as styles from './driver.module.scss'
 
+const TYPE_ORDER = ['Overall', 'Short Track', '1-mile', 'Intermediate', '2-mile', 'Superspeedway', 'Road Course', 'Dirt Oval', 'Rallycross']
+
 const DriverTemplate = ({ pageContext: props, location }) => {
 	const { title, siteUrl } = useSiteMetadata()
 	const driver = props.driver
-	const columns = React.useMemo(
+	const typeStats = React.useMemo(
 		() => [
+			{ typeName: 'Overall', ...props.stats },
+			...props.typeStats
+		].sort((a, b) => TYPE_ORDER.indexOf(a.typeName) - TYPE_ORDER.indexOf(b.typeName)),
+		[props.stats, props.typeStats]
+	)
+	const typeColumns = React.useMemo(
+		() => [
+			{
+				Header: '',
+				accessor: 'typeName',
+				className: 'cell-typeName'
+			},
 			{
 				Header: 'Starts',
 				accessor: 'starts'
 			},
 			{
 				Header: 'Avg Start',
-				accessor: 'avgStart'
+				accessor: 'avgStartPos'
 			},
 			{
 				Header: 'Avg Finish',
-				accessor: 'avgFinish'
+				accessor: 'avgFinishPos'
 			},
 			{
 				Header: 'Laps',
-				accessor: 'laps'
+				accessor: 'lapsCompleted'
 			},
 			{
 				Header: 'Led',
@@ -34,12 +48,7 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 			},
 			{
 				Header: 'Led\u00A0%',
-				id: 'ledPercentage',
-				Cell: ({ row, value }) => {
-					return (
-						`${((parseInt(row.original.lapsLed.replace(',','')) / parseInt((row.original.laps || '0').replace(',',''))) * 100).toFixed(0)}%`
-					)
-				}
+				accessor: 'lapsLedPct',
 			},
 			{
 				Header: 'Inc',
@@ -47,11 +56,11 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 			},
 			{
 				Header: 'Inc/Race',
-				accessor: 'incidentsRace'
+				accessor: 'incidentsPerRace'
 			},
 			{
 				Header: 'Inc/Lap',
-				accessor: 'incidentsLap'
+				accessor: 'incidentsPerLap'
 			},
 			{
 				Header: 'Wins',
@@ -59,7 +68,7 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 			},
 			{
 				Header: 'W%',
-				accessor: 'winPercentage'
+				accessor: 'winPct'
 			},
 			{
 				Header: 'T5',
@@ -67,7 +76,7 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 			},
 			{
 				Header: 'T5%',
-				accessor: 'top5Percentage'
+				accessor: 'top5Pct'
 			},
 			{
 				Header: 'T10',
@@ -75,7 +84,7 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 			},
 			{
 				Header: 'T10%',
-				accessor: 'top10Percentage'
+				accessor: 'top10Pct'
 			},
 			{
 				Header: 'Poles',
@@ -83,11 +92,94 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 			},
 			{
 				Header: `Pole\u00A0%`,
-				accessor: 'polePercentage'
+				accessor: 'polePct'
 			},
 		],
 		[]
 	)
+	const trackColumns = React.useMemo(
+		() => [
+			{
+				Header: 'Track',
+				accessor: 'trackName',
+				className: 'cell-trackName'
+			},
+			{
+				Header: 'Type',
+				accessor: 'typeName',
+			},
+			{
+				Header: 'Starts',
+				accessor: 'starts'
+			},
+			{
+				Header: 'Avg Start',
+				accessor: 'avgStartPos'
+			},
+			{
+				Header: 'Avg Finish',
+				accessor: 'avgFinishPos'
+			},
+			{
+				Header: 'Laps',
+				accessor: 'lapsCompleted'
+			},
+			{
+				Header: 'Led',
+				accessor: 'lapsLed',
+			},
+			{
+				Header: 'Led\u00A0%',
+				accessor: 'lapsLedPct',
+			},
+			{
+				Header: 'Inc',
+				accessor: 'incidents'
+			},
+			{
+				Header: 'Inc/Race',
+				accessor: 'incidentsPerRace'
+			},
+			{
+				Header: 'Inc/Lap',
+				accessor: 'incidentsPerLap'
+			},
+			{
+				Header: 'Wins',
+				accessor: 'wins'
+			},
+			{
+				Header: 'W%',
+				accessor: 'winPct'
+			},
+			{
+				Header: 'T5',
+				accessor: 'top5s'
+			},
+			{
+				Header: 'T5%',
+				accessor: 'top5Pct'
+			},
+			{
+				Header: 'T10',
+				accessor: 'top10s'
+			},
+			{
+				Header: 'T10%',
+				accessor: 'top10Pct'
+			},
+			{
+				Header: 'Poles',
+				accessor: 'poles'
+			},
+			{
+				Header: `Pole\u00A0%`,
+				accessor: 'polePct'
+			},
+		],
+		[]
+	)
+	
 	return (
 		<>
 			<Helmet>
@@ -137,11 +229,24 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 							}
 						</hgroup>
 
-						{ props.stats && 
+						{ typeStats && 
 							<Table 
-								columns={columns} 
-								data={[props.stats]}
+								columns={typeColumns} 
+								data={typeStats}
 								disableSortBy={true} 
+							/>							
+						}
+						
+						<br/>
+
+						{ props.trackStats && 
+							<Table 
+								columns={trackColumns} 
+								data={props.trackStats}
+								disableSortBy={true} 
+								initialState={{
+									sortBy: [{ id: 'trackName', desc: false }]
+								}}
 							/>							
 						}
 

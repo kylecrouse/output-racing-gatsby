@@ -597,8 +597,8 @@ const range = (start, stop, step) => Array.from(
 )
 
 const groupBy = (array, key) => array.reduce(
-  (entryMap, e) => entryMap.set(e[key], [...entryMap.get(e[key]) || [], e]),
-  new Map()
+  (a, e) => ({ ...a, [e[key]]: [...a[e[key]] || [], e] }),
+  {}
 )
 
 const POINTS = [180, 170, 165, 160, 155, 150, 146, 142, 138, 134, 130, 127, 124, 121, 118, 115, 112, 109, 106, 103, 100, 97, 94, 91, 88, 85, 82, 79, 76, 73, 70, 67, 64, 61, 58, 55, 52, 49, 46, 43, 40, 37, 34]

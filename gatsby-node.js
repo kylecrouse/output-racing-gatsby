@@ -78,6 +78,100 @@ exports.createPages = async function ({ actions, graphql }) {
 					}
 				}
 			}
+			allSimRacerHubDriver {
+				nodes {
+					custid
+					stats {
+						starts
+						avgStartPos
+						avgFinishPos
+						wins
+						podiums
+						top5s
+						top10s
+						lapsCompleted
+						lapsLed
+						poles
+						incidents
+						incidentsPerRace
+						winPct
+						podiumPct
+						top5Pct
+						top10Pct
+						lapsLedPct
+						polePct
+						incidentsPerLap
+					}
+					trackStats {
+						trackName
+						typeName
+						starts
+						avgStartPos
+						avgFinishPos
+						wins
+						podiums
+						top5s
+						top10s
+						lapsCompleted
+						lapsLed
+						poles
+						incidents
+						incidentsPerRace
+						winPct
+						podiumPct
+						top5Pct
+						top10Pct
+						lapsLedPct
+						polePct
+						incidentsPerLap
+					}
+					typeStats {
+						typeName
+						starts
+						avgStartPos
+						avgFinishPos
+						wins
+						podiums
+						top5s
+						top10s
+						lapsCompleted
+						lapsLed
+						poles
+						incidents
+						incidentsPerRace
+						winPct
+						podiumPct
+						top5Pct
+						top10Pct
+						lapsLedPct
+						polePct
+						incidentsPerLap
+					}
+					races {
+						carId
+						finishPos
+						incidents
+						lapsLed
+						numLaps
+						qualifyPos
+						scheduleId
+						seasonId
+						seriesId
+						trackConfigId
+					}
+				}
+			}
+			allSimRacerHubTrack {
+				nodes {
+					trackId
+					trackName
+					configs {
+						trackConfigId
+						trackConfigName
+						typeName	
+					}	
+				}	
+			}
 			league: contentfulLeague(leagueId: {eq: 2732}) {
 				name
 				cars {
@@ -244,13 +338,24 @@ exports.createPages = async function ({ actions, graphql }) {
 	await Promise.all(data.drivers.nodes
 		.filter(({ active }) => !!active)
 		.map(async (driver) => {
+			const { 
+				races,
+				stats, 
+				trackStats, 
+				typeStats 
+			} = data.allSimRacerHubDriver.nodes.find(
+				({ custid }) => custid === driver.custId
+			) || {}
+			
 			// Create page
 			actions.createPage({
 				path: `/drivers/${driver.name.replace(/\s/gi, '-').toLowerCase()}`,
 				component: require.resolve(`./src/templates/driver.js`),
 				context: {
 					driver,
-					stats: data.league.stats.find(obj => obj.driver === driver.name)
+					stats,
+					trackStats,
+					typeStats,
 				},
 			})
 		})
