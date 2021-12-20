@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTable, useSortBy } from 'react-table'
-import './table.css'
+import './table.scss'
 
 const Table = ({ 
 	columns, 
