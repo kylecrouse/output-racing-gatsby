@@ -1,11 +1,45 @@
+.table-container {
+	position: relative;
+}
+
 .table-wrapper.scrolling {
 	overflow: auto;
+}
+
+.overflow-left::before {
+	background: linear-gradient(-90deg, transparent, rgba(0,0,0,0.2));
+	bottom: 0.6rem;
+	content: '';
+	left: var(--left, 0);
+	position: absolute;
+	top: 0.6rem;
+	width: 1rem;
+	z-index: 2;
+}
+
+.overflow-right::after {
+	background: linear-gradient(90deg, transparent, rgba(0,0,0,0.2));
+	bottom: 0.6rem;
+	content: '';
+	right: 0;
+	position: absolute;
+	top: 0.6rem;
+	width: 1rem;
+	z-index: 2;
 }
 
 .scrolling .cell-trackName,
 .scrolling .cell-typeName {
 	left: 0;
 	position: sticky;
+}
+
+.scrolling .cell-trackName + .cell-typeName {
+	left: 14rem;
+}
+
+.scrolling td.cell-trackName + .cell-typeName {
+	font-weight: inherit;
 }
 
 hgroup + table {

@@ -52,6 +52,28 @@ exports.sourceNodes = async ({
       })
     )
   
+  const racesUrl = `${BASE_URL}/races?${querystring.encode(qs)}`
+  let races = await cache.get(racesUrl)
+  if (!races) {
+    ({ data: races } = await axios.get(racesUrl))
+    await cache.set(racesUrl, races)
+  }
+  
+  if (Array.isArray(races))
+    races.forEach(race =>
+      createNode({
+        ...race,
+        id: createNodeId(`SimRacerHubRace-${race.raceId}`),
+        parent: null,
+        children: [],
+        internal: {
+          type: 'SimRacerHubRace',
+          content: JSON.stringify(race),
+          contentDigest: createContentDigest(race),
+        },
+      })
+    )
+  
   const tracksUrl = `${BASE_URL}/tracks`
   let tracks = await cache.get(tracksUrl)
   if (!tracks) {

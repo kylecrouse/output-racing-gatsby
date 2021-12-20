@@ -32,7 +32,8 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 			},
 			{
 				Header: 'Avg Start',
-				accessor: 'avgStartPos'
+				accessor: 'avgStartPos',
+				Cell: ({ value }) => parseFloat(value) > 0 ? value : '-'
 			},
 			{
 				Header: 'Avg Finish',
@@ -107,6 +108,7 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 			{
 				Header: 'Type',
 				accessor: 'typeName',
+				className: 'cell-typeName'
 			},
 			{
 				Header: 'Starts',
@@ -114,7 +116,8 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 			},
 			{
 				Header: 'Avg Start',
-				accessor: 'avgStartPos'
+				accessor: 'avgStartPos',
+				Cell: ({ value }) => parseFloat(value) > 0 ? value : '-'
 			},
 			{
 				Header: 'Avg Finish',
