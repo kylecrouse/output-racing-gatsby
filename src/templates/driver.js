@@ -200,7 +200,7 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 				{ driver.media &&
 					<meta name="twitter:image" content={`http:${driver.media[0].file.url}`} />
 				}
-				<meta name="theme-color" content="#F4A913"/>
+				<meta name="theme-color" content="#000000"/>
 			</Helmet>
 			
 			{ driver.media && 

@@ -34,7 +34,7 @@ const ResultsTemplate = ({ pageContext, location }) => {
 						? <meta name="twitter:image" content={`http:${pageContext.media[0].file.url}`} />
 						: <meta name="twitter:image" content={`http:${pageContext.track.logo}`} />
 				}
-				<meta name="theme-color" content="#F4A913"/>
+				<meta name="theme-color" content="#000000"/>
 			</Helmet>
 			
 			{ pageContext.media && 

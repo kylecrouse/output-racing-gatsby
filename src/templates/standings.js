@@ -27,7 +27,7 @@ const StandingsTemplate = ({ pageContext, location }) => {
 					<meta name="twitter:title" content={ `${title} | ${name[2]} ${name[3]} Standings` } />
 					<meta name="twitter:description" content={`An asphalt oval league for the late-night racer.`} />
 					<meta name="twitter:image" content={`${siteUrl}${logo}`} />
-					<meta name="theme-color" content="#F4A913"/>
+					<meta name="theme-color" content="#000000"/>
 				</Helmet>
 				
 				<div className="columns">

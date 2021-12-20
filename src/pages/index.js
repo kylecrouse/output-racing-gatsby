@@ -68,7 +68,7 @@ const IndexPage = ({ data }) => {
         <meta name="twitter:player:width" content="640" />
         <meta name="twitter:player:height" content="480" />
         <meta name="twitter:image" content={`${siteUrl}${logo}`} />
-        <meta name="theme-color" content="#F4A913"/>
+        <meta name="theme-color" content="#000000"/>
         <script src= "https://player.twitch.tv/js/embed/v1.js"></script>
       </Helmet>
       
