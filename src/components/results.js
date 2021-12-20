@@ -86,6 +86,7 @@ const Results = (props) => {
 								.replace(/\s/g,':') // replace space with :
 						: (status.toLowerCase() === 'running')
 							? value.replace('-', '+')
+									.replace(/(\.\d\d)$/, '$10') // add trailing 0
 									.replace('L', parseInt(value) < -1 ? ' laps': ' lap')
 							: 'DNF'
 				}
@@ -108,16 +109,22 @@ const Results = (props) => {
 				Header: 'Inc',
 				accessor: 'incidents',
 				className: 'hide-sm',
-				Cell: ({ value, data }) => {
+				Cell: ({ value, data, row }) => {
+					const laps = data.reduce((max, { completed }) => Math.max(max, parseInt(completed)), 0)
+					const { completed } = row.values
 					return parseInt(value) === Math.max(
 						...data.map(({ incidents }) => parseInt(incidents))
 					)
 						? parseInt(value) >= 8 
 							? <b className={ props.counts ? 'negative' : '' }>{ value }</b>
-							: <b>{ value }</b>
+							: parseInt(value) === 0 && parseInt(completed) === laps && props.counts 
+								? <b className="positive">{ value }</b>
+								: <b>{ value }</b>
 						: parseInt(value) >= 8 
 							? <span className={ props.counts ? 'negative' : '' }>{value}</span>
-							: value
+							: parseInt(value) === 0 && parseInt(completed) === laps && props.counts 
+								? <span className="positive">{ value }</span>
+								: value
 				}
 			},
 			{

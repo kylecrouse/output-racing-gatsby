@@ -70,7 +70,7 @@ const Table = ({
 		) 
 			setOverflowRight(true)
 		
-	}, [])
+	}, [scrolling])
 	
 	React.useEffect(() => {
 		wrapperRef.current.style.setProperty('--left', `${left}px`)
