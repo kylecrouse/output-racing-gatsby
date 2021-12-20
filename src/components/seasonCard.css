@@ -31,7 +31,7 @@
 
 .season-details {
 	align-items: center;
-	background: linear-gradient(120deg, transparent 20%, white 60%, transparent);
+	/* background: linear-gradient(120deg, transparent 20%, white 60%, transparent); */
 	display: flex;
 	flex-direction: row;
 	padding: 1rem;
