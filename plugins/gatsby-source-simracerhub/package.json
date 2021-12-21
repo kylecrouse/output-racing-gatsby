@@ -14,6 +14,7 @@
   "author": "Kyle Gill <kyle.robert.gill@gmail.com>",
   "license": "0BSD",
   "dependencies": {
-    "axios": "^0.24.0"
+    "axios": "^0.24.0",
+    "bluebird": "^3.7.2"
   }
 }

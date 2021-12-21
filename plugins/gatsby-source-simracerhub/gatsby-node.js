@@ -4,6 +4,7 @@
  * See: https://www.gatsbyjs.com/docs/node-apis/
  */
 const axios = require('axios')
+const Promise = require('bluebird')
 const querystring = require('querystring')
 
 const LEAGUE_ID = 1710
@@ -51,28 +52,44 @@ exports.sourceNodes = async ({
         },
       })
     )
-  
-  const racesUrl = `${BASE_URL}/races?${querystring.encode(qs)}`
-  let races = await cache.get(racesUrl)
-  if (!races) {
-    ({ data: races } = await axios.get(racesUrl))
-    await cache.set(racesUrl, races)
+    
+  const seasonUrl = `${BASE_URL}/seasons/14454`
+  let season = await cache.get(seasonUrl)
+  if (!season) {
+    ({ data: season } = await axios.get(seasonUrl))
+    await cache.set(seasonUrl, season)
   }
   
-  if (Array.isArray(races))
-    races.forEach(race =>
-      createNode({
-        ...race,
-        id: createNodeId(`SimRacerHubRace-${race.raceId}`),
-        parent: null,
-        children: [],
-        internal: {
-          type: 'SimRacerHubRace',
-          content: JSON.stringify(race),
-          contentDigest: createContentDigest(race),
-        },
-      })
-    )
+  await Promise.map(
+    season.events,
+    async (event) => {
+      if (!event.raceId || event.chase === 'Y') 
+        return
+        
+      const raceUrl = `${BASE_URL}/races/${event.raceId}`
+      let race = await cache.get(raceUrl)
+      if (!race) {
+        ({ data: race } = await axios.get(raceUrl))
+        await cache.set(raceUrl, race)
+      }
+      
+      if (race)
+        createNode({
+          ...race,
+          id: createNodeId(`SimRacerHubRace-${race.raceId}`),
+          parent: null,
+          children: [],
+          internal: {
+            type: 'SimRacerHubRace',
+            content: JSON.stringify(race),
+            contentDigest: createContentDigest(race),
+          },
+        })
+        
+      return
+    },
+    { concurrency: 3 }
+  )
   
   const tracksUrl = `${BASE_URL}/tracks`
   let tracks = await cache.get(tracksUrl)
