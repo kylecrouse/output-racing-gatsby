@@ -1,14 +1,14 @@
 .media {
 	display: block;
 	filter: saturate(110%) contrast(115%) brightness(110%);
-	max-height: calc(75vh - 4.5rem);
+	max-height: 50vh;
 	width: 100%;
 }
 
 .media::after {
 	background: 
-		radial-gradient(farthest-corner at 50% 45%, transparent 50%, rgba(0,0,0,0.5)),
-		linear-gradient(black, transparent 10%, transparent 90%, black);
+		radial-gradient(farthest-corner at 50% 45%, transparent 50%, rgba(0,0,0,0.5));
+		// linear-gradient(black, transparent 5%, transparent 90%, rgba(0,0,0,0.5));
 	bottom: 0;
 	content: ' ';
 	left: 0;
@@ -29,7 +29,7 @@
 }
 
 .broadcast::before {
-	background: linear-gradient(110deg, 
+	background: linear-gradient(112deg, 
 		#d0d0d0 10%, 
 		#f0f0f0 10%, 
 		#f0f0f0 calc(10% + 5px), 
@@ -64,11 +64,10 @@
 }
 
 .logo {
-	max-height: 4.8rem;
-	max-width: 100%;
-	position: absolute;
-	top: -0.2rem;
-	right: 1rem;
+	display: block;
+	max-height: 2.9525rem;
+	max-width: 95%;
+	margin: -0.4rem 0.4rem 0 auto;
 }
 
 .header {

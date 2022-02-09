@@ -53,14 +53,12 @@ a.details:focus .track h4 {
 	font-size: 0.6rem;
 	font-weight: 100;
 	margin-left: auto;
+	text-align: right;
 	text-transform: uppercase;
 }
 
-.info span + span {
-	border-left: 1px solid rgba(0,0,0,0.4);
-	display: inline-block;
-	margin-left: 0.5rem;
-	padding-left: 0.5rem;
+.info span {
+	display: block;
 }
 
 .container [class*="cars-container"] {
@@ -93,7 +91,7 @@ a.details:focus .track h4 {
 }
 
 .chase::after {
-	background: linear-gradient(110deg, 
+	background: linear-gradient(112deg, 
 		transparent 10%, 
 		#f0f0f0 10%, 
 		#f0f0f0 calc(10% + 5px), 

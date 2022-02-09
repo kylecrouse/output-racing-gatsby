@@ -338,13 +338,6 @@ export const query = graphql`
             bonus
             penalty
           }
-          fields {
-            ratings {
-              custid
-              arp
-              rating
-            }
-          }
         }
         standings {
           position
@@ -422,12 +415,6 @@ export const query = graphql`
           penalty
           points
           start
-        }		
-        fields {
-          ratings {
-            custid
-            rating
-          }
         }		
       }
     }

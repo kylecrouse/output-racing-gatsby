@@ -8,140 +8,73 @@ const Results = (props) => {
 		() => [
 			{
 				Header: () => null,
-				accessor: 'finish',
+				accessor: 'finishPos',
 				className: 'cell-position'
 			},
 			{
 				Header: () => null,
-				accessor: 'start',
+				accessor: 'qualifyPos',
 				className: 'cell-change',
 				Cell: ({ row, value }) => {
-					const change = value - row.values.finish
-					return (
-						<span className={ 
-							change > 0 
-								? 'positive' 
-								: change < 0 
-									? 'negative' 
-									: 'neutral'
-							}>
-							{ Math.abs(change) || '\u00a0' }
-						</span>
-					)
+					const change = value - row.original.finishPos
+					const className = change > 0
+						? 'positive'
+						: change < 0
+							? 'negative'
+							: 'neutral'
+					return props.hardCharger.driverId === row.original.driverId
+						? <b className={className}>
+								{Math.abs(change) || '\u00a0'}
+							</b>
+						: <span className={className}>
+								{Math.abs(change) || '\u00a0'}
+							</span>
 				}
 			},
 			{
 				Header: 'Driver',
-				accessor: 'driver',
+				accessor: 'driverName',
 				className: 'cell-driver',
-				Cell: ({ value }) => (
-					<DriverChip { ...value } />
+				Cell: ({ row, value }) => (
+					row.original.member
+						? <DriverChip { ...row.original.member } />
+						: <DriverChip 
+								active={false}
+								driverName={ row.original.driverName }
+							/>
+				)
+			},
+			{
+				Header: '',
+				accessor: 'carImage',
+				className: 'cell-carLogo',
+				Cell: ({ value, row }) => (
+					<img 
+						src={ value.publicURL }
+						alt={ row.original.carName }
+					/>
 				)
 			},
 			{
 				Header: 'Points',
-				accessor: 'points',
+				accessor: 'racePoints',
 				className: 'cell-totalPoints',
 				Cell: ({ value, row }) => {
-					const { bonus, penalty } = row.values
+					const { bonus, penalty } = row.original
+					const bonusPoints = bonus.reduce((a, { bonusPoints = 0 }) => a + bonusPoints, 0)
+					const penaltyPoints = penalty.reduce((a, { penaltyPoints = 0 }) => a + penaltyPoints, 0)
 					return (
 						<div>
 							<span>
-								{ parseInt(value, 10) + parseInt(bonus, 10) + parseInt(penalty, 10) }
+								{ value + bonusPoints + penaltyPoints }
 							</span>
 							<span className="adjustments">
-								{ bonus > 0 && <span className="positive">{ `+${bonus}` }</span> }
-								{ penalty > 0 && <span className="negative">{ `-${penalty}` }</span> }
+								{ bonusPoints > 0 && <span className="positive">{ `+${bonusPoints}` }</span> }
+								{ penaltyPoints > 0 && <span className="negative">{ `-${penaltyPoints}` }</span> }
 							</span>
 						</div>
 					)
 				},
-			},
-			{
-				Header: 'Bonus',
-				accessor: 'bonus',
-				className: 'cell-bonus hide-sm',
-				Cell: ({ value }) => value > 0 ? `+${value}` : ''
-			},
-			{
-				Header: 'Penalty',
-				accessor: 'penalty',
-				className: 'cell-penalty hide-sm',
-				Cell: ({ value }) => value > 0 ? `-${value}` : ''
-			},
-			{
-				Header: 'Laps',
-				accessor: 'completed',
-				className: 'hide-sm'
-			},
-			{
-				Header: 'Time',
-				accessor: 'interval',
-				className: 'hide-sm',
-				Cell: ({ value, row }) => {
-					const { finish, status } = row.values
-					return parseInt(finish) === 1
-						? props.duration.replace(/\s(\d[ms])/g, ' 0$1') // add 0 to m and s < 10
-								.replace(/[hms]/g,'') // remove m, h, s
-								.replace(/\s/g,':') // replace space with :
-						: (status.toLowerCase() === 'running')
-							? value.replace('-', '+')
-									.replace(/(\.\d\d)$/, '$10') // add trailing 0
-									.replace('L', parseInt(value) < -1 ? ' laps': ' lap')
-							: 'DNF'
-				}
-			},
-			{
-				Header: 'Led',
-				accessor: 'led',
-				className: 'hide-sm',
-				Cell: ({ value, data }) => {
-					return parseInt(value) === Math.max(
-						...data.map(({ led }) => parseInt(led))
-					)
-						? <b className={ props.counts ? 'positive' : '' }>{ value }</b>
-						: parseInt(value) >= 1 
-							? <span className={ props.counts ? 'positive' : '' }>{value}</span>
-							: value
-				}
-			},
-			{
-				Header: 'Inc',
-				accessor: 'incidents',
-				className: 'hide-sm',
-				Cell: ({ value, data, row }) => {
-					const laps = data.reduce((max, { completed }) => Math.max(max, parseInt(completed)), 0)
-					const { completed } = row.values
-					return parseInt(value) === Math.max(
-						...data.map(({ incidents }) => parseInt(incidents))
-					)
-						? parseInt(value) >= 8 
-							? <b className={ props.counts ? 'negative' : '' }>{ value }</b>
-							: parseInt(value) === 0 && parseInt(completed) === laps && props.counts 
-								? <b className="positive">{ value }</b>
-								: <b>{ value }</b>
-						: parseInt(value) >= 8 
-							? <span className={ props.counts ? 'negative' : '' }>{value}</span>
-							: parseInt(value) === 0 && parseInt(completed) === laps && props.counts 
-								? <span className="positive">{ value }</span>
-								: value
-				}
-			},
-			{
-				Header: 'Fast Lap',
-				accessor: 'fastest',
-				className: 'hide-sm',
-				Cell: ({ value, data }) => {
-					return moment(value, ['m:s.S', 's.S']).isSame(
-						moment.min(
-							...data
-								.filter(({ fastest }) => parseFloat(fastest) > 0)
-								.map(({ fastest }) => moment(fastest, ['m:s.S', 's.S']))
-						)
-					)
-						? <b>{ value }</b>
-						: parseFloat(value) > 0 ? value : '-'
-				}
 			},
 			{
 				Header: 'Rating',
@@ -155,23 +88,170 @@ const Results = (props) => {
 				}
 			},
 			{
-				Header: 'Status',
-				accessor: 'status',
+				Header: 'Time',
+				accessor: 'intv',
+				className: 'hide-sm',
+				Cell: ({ value, row }) => {
+					const { finishPos, numLaps, status } = row.original
+					return (value > 0)
+						? `+${value.toFixed(3)}`
+						: (finishPos === 1)
+							? moment.utc(moment.duration(props.duration, 's').as('milliseconds'))
+									.format('HH:mm:ss')
+							: (status.toLowerCase() === 'running')
+								? `+${props.raceLaps - numLaps} lap${props.raceLaps - numLaps > 1 ? 's' : ''}`
+								: 'DNF'
+				}
+			},
+			{
+				Header: 'Laps',
+				accessor: 'numLaps',
 				className: 'hide-sm'
-			}
+			},
+			{
+				Header: 'Led',
+				accessor: 'lapsLed',
+				className: 'hide-sm',
+				Cell: ({ value, data }) => {
+					return value === Math.max(
+						...data.map(({ lapsLed }) => lapsLed)
+					)
+						? <b className={ props.pointsCount ? 'positive' : '' }>{ value }</b>
+						: value >= 1 
+							? <span className={ props.pointsCount ? 'positive' : '' }>{value}</span>
+							: value
+				}
+			},
+			{
+				Header: 'Average Position',
+				accessor: 'avgPos',
+				className: 'hide-sm',
+				Cell: ({ value, data }) => {
+					return value === Math.min(
+						...data.map(({ avgPos }) => avgPos)
+					)
+						? <b>{ (value + 1).toFixed(1) }</b>
+						: (value + 1).toFixed(1)
+				}
+			},
+			{
+				Header: 'Total Passes',
+				accessor: 'passes',
+				className: 'hide-sm',
+				Cell: ({ value, data }) => {
+					return value === Math.max(
+						...data.map(({ passes }) => passes)
+					)
+						? <b>{ value }</b>
+						: value
+				}
+			},
+			{
+				Header: 'Quality Passes',
+				accessor: 'qualityPasses',
+				className: 'hide-sm',
+				Cell: ({ value, data }) => {
+					return value === Math.max(
+						...data.map(({ qualityPasses }) => qualityPasses)
+					)
+						? <b>{ value }</b>
+						: value
+				}
+			},
+			{
+				Header: 'Closing Passes',
+				accessor: 'closingPasses',
+				className: 'hide-sm',
+				Cell: ({ value, data }) => {
+					return value === Math.max(
+						...data.map(({ closingPasses }) => closingPasses)
+					)
+						? <b>{ value }</b>
+						: value
+				}
+			},
+			{
+				Header: 'Inc',
+				accessor: 'incidents',
+				className: 'hide-sm',
+				Cell: ({ value, data, row }) => {
+					const { numLaps } = row.original
+					return value === Math.max(
+						...data.map(({ incidents }) => incidents)
+					)
+						? value >= 8 
+							? <b className={ props.pointsCount ? 'negative' : '' }>{ value }</b>
+							: value === 0 && numLaps === props.raceLaps && props.pointsCount 
+								? <b className="positive">{ value }</b>
+								: <b>{ value }</b>
+						: value >= 8 
+							? <span className={ props.pointsCount ? 'negative' : '' }>{value}</span>
+							: value === 0 && numLaps === props.raceLaps && props.pointsCount
+								? <span className="positive">{ value }</span>
+								: value
+				}
+			},
+			{
+				Header: 'Fast Laps',
+				accessor: 'numFastLap',
+				className: 'hide-sm',
+				Cell: ({ value, data }) => {
+					return value === Math.max(
+						...data.map(({ numFastLap }) => numFastLap)
+					)
+						? <b>{ value }</b>
+						: value
+				}
+			},
+			{
+				Header: 'Fast Lap',
+				accessor: 'fastestLapTime',
+				className: 'hide-sm',
+				Cell: ({ value, data }) => {
+					return moment(value, ['m:s.S', 's.S']).isSame(
+						moment.min(
+							...data
+								.filter(({ fastestLapTime }) => fastestLapTime > 0)
+								.map(({ fastestLapTime }) => moment(fastestLapTime, ['m:s.S', 's.S']))
+						)
+					)
+						? <b>{ value.toFixed(3) }</b>
+						: value > 0 ? value.toFixed(3) : '-'
+				}
+			},
+			{
+				Header: 'Qual Lap',
+				accessor: 'qualifyTime',
+				className: 'hide-sm',
+				Cell: ({ value, data }) => {
+					return moment(value, ['m:s.S', 's.S']).isSame(
+						moment.min(
+							...data
+								.filter(({ qualifyTime }) => qualifyTime > 0)
+								.map(({ qualifyTime }) => moment(qualifyTime, ['m:s.S', 's.S']))
+						)
+					)
+						? <b>{ value.toFixed(3) }</b>
+						: value > 0 ? value.toFixed(3) : '-'
+				}
+			},
 		],
-		[props.duration, props.counts]
+		[props.duration, props.pointsCount, props.raceLaps, props.hardCharger.driverId]
 	)
 	
 	return (
 		<Table 
 			columns={columns} 
-			data={props.results}
+			data={props.participants}
 			disableSortBy={true} 
+			scrolling={true}
 			getRowProps={row => ({
-				className: row.values.driver.active ? '' : 'inactive'
+				className: row.original.member && row.original.member.active 
+					? '' 
+					: 'inactive'
 			})}
 			initialState={{
+				sortBy: [{ id: 'finishPos', desc: false }],
 				hiddenColumns: columns
 					.map(({ id, accessor }) => id || accessor)
 					.filter(

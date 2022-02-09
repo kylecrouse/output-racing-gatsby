@@ -7,24 +7,24 @@ import Standings from '../components/standings'
 import logo from '../images/logo.png'
 
 const StandingsTemplate = ({ pageContext, location }) => {
-	const { season, seasons, drivers, cars } = pageContext
+	const { season } = pageContext
+	const seasons = React.useMemo(() => pageContext.seasons.edges.map(({ node }) => node), [pageContext.seasons])
 	const { title, siteUrl } = useSiteMetadata()
-	const name = season.name.match(/Output Racing (\d+) (Season \d)?(.*)/)	
-	const roundsCompleted = season.schedule.filter(({ counts, uploaded }) => counts && uploaded).length || 0
-	const totalRounds = season.schedule.filter(({ counts }) => counts).length
+	const totalRounds = season.events.filter(({ pointsCount, chase, offWeek }) => pointsCount && !chase && !offWeek)?.length ?? 0
+	const roundsCompleted = season.events.filter(({ pointsCount, chase, offWeek, race }) => pointsCount && !chase && !offWeek && race)?.length ?? 0
 	return (
 		<>
 			<main className="container">
 	
 				<Helmet>
-					<title>Output Racing League | Standings | {season.name.replace('Output Racing ', '')}</title>
+					<title>Output Racing League | {season.seriesName} | {season.seasonName} Standings</title>
 					<meta property="og:image" content={`${siteUrl}${logo}`} />
 					<meta property="og:description" content={`An asphalt oval league for the late-night racer.`} />
-					<meta property="og:title" content={ `${title} | ${name[2]} ${name[3]} Standings` } />
+					<meta property="og:title" content={ `${title} | ${season.seasonName} Standings` } />
 					<meta property="og:type" content="website"/>
 					<meta property="og:url" content={ `${siteUrl}${location.pathname}` } />
 					<meta name="twitter:card" content="summary_large_image"/>
-					<meta name="twitter:title" content={ `${title} | ${name[2]} ${name[3]} Standings` } />
+					<meta name="twitter:title" content={ `${title} | ${season.seasonName} Standings` } />
 					<meta name="twitter:description" content={`An asphalt oval league for the late-night racer.`} />
 					<meta name="twitter:image" content={`${siteUrl}${logo}`} />
 					<meta name="theme-color" content="#000000"/>
@@ -37,21 +37,15 @@ const StandingsTemplate = ({ pageContext, location }) => {
 							<div>
 								<h2 className="page-title">Standings</h2>
 								<h3 className="page-subtitle">
-									<span>{ `${name[2]} ${name[3]}` }</span>
+									<span>{ season.seasonName }</span>
 									<span>{	roundsCompleted < totalRounds
 											? `Round ${roundsCompleted} of ${totalRounds}`
 											: 'Final'
 									}</span>
 								</h3>
 							</div>
-							{ season.cars &&
-								<Cars 
-									cars={
-										cars.filter(
-											({ name }) => season.cars.includes(name)
-										)
-									} 
-								/>
+							{ season.seasonClass?.length > 0 &&
+								<Cars cars={season.seasonClass[0]?.seasonClassCars} />
 							}
 						</hgroup>
 	
@@ -67,14 +61,7 @@ const StandingsTemplate = ({ pageContext, location }) => {
 	
 			<div className="columns seasons-container">
 				<div className="column col-8 col-xl-12 col-mx-auto">
-				
-					<Seasons 
-						path="standings" 
-						seasons={seasons.filter(({ id }) => id !== season.id)} 
-						cars={cars}
-						drivers={drivers}
-					/>
-				
+					<Seasons path="standings" seasons={seasons} />
 				</div>
 			</div>
 			

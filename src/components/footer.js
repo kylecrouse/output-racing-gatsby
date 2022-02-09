@@ -18,7 +18,7 @@ const Footer = (props) => {
 				</div>
 			</div>
 			<div className="columns">
-				<div className="col-6">
+				<div className="col-6 text-left">
 					<a href="/">
 						<img src={logo} alt="Output Racing" className="logo"/>
 					</a>

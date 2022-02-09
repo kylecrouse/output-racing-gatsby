@@ -12,7 +12,7 @@
 	display: inline-block;
 	margin-bottom: 0.4rem;
 	text-transform: uppercase;
-	transform: skew(-20deg);
+	transform: skew(-12deg);
 }
 
 .container li:last-child {
@@ -23,7 +23,7 @@
 .container li > span {
 	display: inline-block;
 	padding: 0.2rem 1rem;
-	transform: skew(20deg);
+	transform: skew(12deg);
 }
 
 .container li > span span {

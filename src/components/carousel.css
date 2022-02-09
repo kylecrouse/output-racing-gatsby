@@ -6,14 +6,14 @@
 .glide__arrow {
 	border: 0 !important;
 	box-shadow: none !important;
-	color: #fa9104 !important;
+	color: var(--highlight-color) !important;
 	text-shadow: none !important;
 	transition: 200ms ease-out !important;
 }
 
 .glide__arrow:hover,
 .glide__arrow:focus {
-	background: #fa9104;
+	background: var(--highlight-color);
 	color: black !important;
 }
 

@@ -1,0 +1,125 @@
+html,
+body {
+	background-color: black;
+	padding: 0;
+	margin: 0;
+	font-family: museo-sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+		Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+body {
+	padding-top: 6.5rem;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+a {
+	transition: color 150ms ease-out;
+}
+
+iframe {
+	width: 100%;
+	height: 85vh;
+}
+
+ul, ol {
+	list-style-position: outside !important;
+	margin-bottom: 1.2rem;
+}
+
+li p {
+	margin-bottom: 0;
+}
+
+ul li, ol li {
+	margin-top: .2rem;
+}
+
+h2, h3, h4, h5, h6 {
+	font-family: obvia, sans-serif;
+	font-weight: 600;
+	text-transform: uppercase;
+	margin-bottom: 1.2rem;
+}
+
+p + :is(h2, h3, h4, h5, h6) {
+	margin-top: 2.4rem;
+}
+
+main {
+	background: 
+		linear-gradient(
+			rgba(255,255,255,0),
+			rgba(255,255,255,1) 15rem,
+			rgba(255,255,255,1) calc(100% - 15rem), 
+			rgba(255,255,255,0)
+		), 
+		linear-gradient(
+			112deg, 
+			rgba(255,255,255,0.8), 
+			rgba(255,255,255,0.4) 70%, 
+			rgba(255,255,255,0.9)), 
+		#fff url(../images/plus-x2.png) repeat center/8px;
+	padding: 3.5rem 0;
+}
+
+.content {
+	background: #fff;
+	border-radius: 10px;
+	padding: 0.5rem;
+}
+
+.page-header {
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
+	padding: 0.5rem 0 1.5rem 0.5rem;
+}
+
+.page-title {
+	color: #454545;
+	display: inline-block;
+	font-family: obvia-expanded, sans-serif;
+	font-size: 2rem;
+	font-style: italic;
+	font-weight: 900;
+	letter-spacing: 3px;
+	line-height: 0.7;
+	margin: 0;
+	text-transform: uppercase;
+}
+
+.page-subtitle {
+	font-family: museo-sans, sans-serif;
+	font-size: 0.7rem;
+	font-weight: 300;
+	margin: 0.2rem 0 0;
+	text-transform: uppercase;
+}
+
+.page-subtitle > span:not(:last-child) {
+	border-right: 1px solid rgba(0,0,0,0.4);
+	display: inline-block;
+	margin-right: 0.5rem;
+	padding-right: 0.5rem;
+}
+
+.page-header .cars-container {
+	margin: 0 1.5rem 0 0;
+}
+
+.page-header .car-caption {
+	display: none;
+}
+
+@media (max-width: 480px) {
+	.page-header .cars-container {
+		margin-top: 1rem;
+	}
+	
+	td .adjustments {
+		right: -0.2rem;
+	}
+}

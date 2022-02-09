@@ -1,24 +1,26 @@
-import * as React from 'react'
-import { Helmet } from 'react-helmet'
-import 'spectre.css/dist/spectre.min.css'
-import 'spectre.css/dist/spectre-icons.min.css'
-import 'spectre.css/dist/spectre-exp.min.css'
-import './layout.css'
-import Navbar from './navbar'
-import Footer from './footer'
+import * as React from 'React'
 
-const Layout = (props) => {
-	const path = props.uri.split('/');
+const OutputLaytout = React.lazy(
+	() => import('../layouts/output')
+)
+const NightOwlLayout = React.lazy(
+	() => import('../layouts/nightowl')
+)
+
+const Layout = props => {
+	const { seriesName = null } = props.params
 	return (
-		<React.Fragment>
-			<Helmet>
-				<link rel="stylesheet" href="https://use.typekit.net/ovc0kir.css"/>
-			</Helmet>
-			<Navbar page={ path[1] }/>
-			{ props.children }
-			<Footer/>
-		</React.Fragment>
+		<React.Suspense fallback={<></>}>
+			{	seriesName === 'output-series' && 
+					<OutputLayout {...props}>
+						{ props.children }
+					</OutputLayout>
+			}
+			{	seriesName === 'night-owl-series' && 
+					<NightOwlLayout {...props}>
+						{ props.children }
+					</NightOwlLayout>
+			}
+		</React.Suspense>
 	)
 }
-
-export default Layout

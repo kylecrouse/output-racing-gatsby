@@ -15,42 +15,47 @@ const Standings = (props) => {
 				accessor: 'change',
 				className: 'cell-change',
 				Cell: ({ value }) => {
-					const change = parseInt(value, 10)
 					return (
 						<span className={ 
-							change > 0 
+							value > 0 
 								? 'positive' 
-								: change < 0 
+								: value < 0 
 									? 'negative' 
 									: 'neutral'
 							}>
-							{ value.substr(1) || '\u00a0' }
+							{ value !== 0 ? Math.abs(value) : '\u00a0' }
 						</span>
 					)
 				}
 			},
 			{
 				Header: 'Driver',
-				accessor: 'driver',
+				accessor: 'driverName',
 				className: 'cell-driver',
-				Cell: ({ value }) => (
-					<DriverChip { ...value } />
-				)
+				Cell: ({ value, row }) => row.original.member
+					? <DriverChip { ...row.original.member } link={false} />
+					: <DriverChip 
+							active={false}
+							driverName={ value }
+							link={false}
+						/>
 			},
 			{
 				Header: 'Points',
-				accessor: 'points',
+				accessor: 'totalPoints',
 				className: 'cell-totalPoints',
 			},
 			{
 				Header: 'Behind Next',
 				accessor: 'behindNext',
 				className: 'hide-sm',
+				Cell: ({ value }) => value ?? '–',
 			},
 			{
 				Header: 'Behind Leader',
 				accessor: 'behindLeader',
 				className: 'hide-sm',
+				Cell: ({ value }) => value ?? '–',
 			},
 			{
 				Header: 'Starts',
@@ -64,17 +69,17 @@ const Standings = (props) => {
 			},
 			{
 				Header: 'Top 5',
-				accessor: 't5s',
+				accessor: 'top5s',
 				className: 'hide-sm',
 			},
 			{
 				Header: 'Top 10',
-				accessor: 't10s',
+				accessor: 'top10s',
 				className: 'hide-sm',
 			},
 			{
 				Header: 'Laps',
-				accessor: 'laps',
+				accessor: 'lapsCompleted',
 				className: 'hide-sm',
 			},
 			{
@@ -103,7 +108,7 @@ const Standings = (props) => {
 			data={props.standings}
 			disableSortBy={true} 
 			getRowProps={row => ({
-				className: row.values.driver.active ? '' : 'inactive'
+				className: row.original.member?.active ? '' : 'inactive'
 			})}
 			initialState={{
 				hiddenColumns: columns

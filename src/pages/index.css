@@ -129,7 +129,7 @@
 }
 
 .tab {
-	background: linear-gradient(110deg, black, #333 15%, #454545, #333 85%, black);
+	background: linear-gradient(112deg, black, #333 15%, #454545, #333 85%, black);
 	border-bottom: 2px solid black;
 	justify-content: center;	
 	margin: 2rem -20px 0;
@@ -188,7 +188,7 @@
 			rgba(255,255,255,0)
 		), 
 		linear-gradient(
-			110deg, 
+			112deg, 
 			rgba(255,255,255,0.8), 
 			rgba(255,255,255,0.4) 70%, 
 			rgba(255,255,255,0.9)), 

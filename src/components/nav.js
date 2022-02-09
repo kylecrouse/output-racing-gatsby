@@ -1,32 +1,22 @@
 import * as React from 'react';
-import './nav.css'
-
+import './nav.scss'
+import logo from '../images/logo.png'
+import outputLogo from '../images/output-logo.svg'
+import nightowlLogo from '../images/nightowl-logo.svg'
 
 const Nav = (props) => {
 	return (
-		<nav className="nav">
-			<a href="/drivers" className={props.page === 'drivers' ? 'active' : ''}>
-				<span>Drivers</span>
+		<section className="navbar-section">
+			<a href="/" className="navbar-brand mr-2">
+				<img src={logo} alt="Output Racing" className="logo"/>
 			</a>
-			<a href="/schedule" className={props.page === 'schedule' ? 'active' : ''}>
-				<span>Schedule</span>
+			<a href="/output-series/schedule" className="output-logo">
+				<img src={outputLogo} alt="Output Series"/>
 			</a>
-			<a href="/standings" className={props.page === 'standings' ? 'active' : ''}>
-				<span>Standings</span>
+			<a href="/night-owl-series/schedule" className="nightowl-logo">
+				<img src={nightowlLogo} alt="Night Owl Series"/>
 			</a>
-			<a href="/rules" className={props.page === 'rules' ? 'active' : ''}>
-				<span>Rules</span>
-			</a>
-			<a href="/protest" className={props.page === 'protest' ? 'active' : ''}>
-				<span>Protest</span>
-			</a>
-			<a href="/apply" className={props.page === 'apply' ? 'active' : ''}>
-				<span>Apply</span>
-			</a>
-			<a href="https://shop.champsspeedshop.com/collections/t-shirts/products/output-racing-league-t-shirt" target="_blank" rel="noreferrer">
-				<span>Merch</span>
-			</a>
-		</nav>
+		</section>
 	)
 }
 

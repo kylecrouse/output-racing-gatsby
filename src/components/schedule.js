@@ -7,48 +7,39 @@ import * as styles from './schedule.module.css'
 const Schedule = (props) => {
 	return (
 		<div className={ styles.container }>
-			{ props.schedule.map((race) => {
-					const config = race.track.config.replace(`${race.track.name}`, '')
-					const { results = [] } = race.results || {}
-					return race.chase
-							? <div className={ styles.chase }>
-									{ race.name }
+			{ props.events.filter(event => !event.offWeek).map(event => {
+					return event.chase
+						? <div className={ styles.chase }>
+								{ event.eventName || 'Chase for the Championship' }
+							</div>
+						: event.race
+							?	<a href={ `/results/${event.race.raceId}` } className={ styles.details }>
+									<RaceChip {...event}/>
+									<ResultsChip
+										counts={event.pointsCount}
+										results={
+											event.race.participants
+												.sort((a, b) => a.finishPos - b.finishPos)
+												.slice(0, 3)
+										}
+										hideSm={true}
+									/>
+								</a>
+							: <div className={ styles.details }>
+									<RaceChip {...event}/>
+									<div className={ `${styles.info} hide-sm` }>
+										<div>
+											{ !event.pointsCount && <span>non-points</span> }
+											{ event.trackConfigName && event.trackConfigName.toLowerCase() !== 'oval' &&
+													<span>{ event.trackConfigName }</span>
+											}
+											<span>{`${event.raceLength}\u00A0${event.raceLengthUnit}`}</span>
+										</div>
+										{ false &&
+											<Cars cars={event.cars} />
+										}
+									</div>
 								</div>
-							: results.length > 0
-									?	<a href={ `/results/${race.raceId}` } className={ styles.details }>
-											<RaceChip {...race}/>
-											<ResultsChip
-												counts={race.counts}
-												results={
-													results
-														.slice(0, 3)
-														.sort((a, b) => a.finish - b.finish)
-														.map((item, index) => {
-															return ({
-																...item,
-																driver: props.drivers.find(({ name }) => name === item.name)
-															})
-														})	
-												}
-												hideSm={true}
-											/>
-										</a>
-									: race.track && race.track.name &&
-											<div className={ styles.details }>
-												<RaceChip {...race}/>
-												<div className={ `${styles.info} hide-sm` }>
-													<div>
-														{ !race.counts && <span>non-points</span> }
-														{ config && config.toLowerCase() !== ' oval' &&
-																<span>{ config }</span>
-														}
-														<span>{race.laps ? `${race.laps}\u00A0laps` : race.time}</span>
-													</div>
-													{ props.cars &&
-														<Cars cars={props.cars} />
-													}
-												</div>
-											</div>
 				}) 
 			}
 		</div>

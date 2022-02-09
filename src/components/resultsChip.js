@@ -7,12 +7,15 @@ const ResultsChip = (props) => {
 		<div className={ `${styles.container} ${props.hideSm && 'hide-sm'}` }>
 			{ props.results
 					.map((item, index) => {
+						const { bonus, penalty } = item
+						const bonusPoints = bonus.reduce((a, { bonusPoints = 0 }) => a + bonusPoints, 0)
+						const penaltyPoints = penalty.reduce((a, { penaltyPoints = 0 }) => a + penaltyPoints, 0)
 						return (
 							<ResultItem
-								driver={item.driver}
+								driver={item.member ? item.member : item.driverName}
 								result={
 									props.counts
-										? <><b>{ parseInt(item.points) + parseInt(item.bonus) + parseInt(item.penalty) }</b> pts</>
+										? <><b>{ item.racePoints + bonusPoints + penaltyPoints }</b> pts</>
 										: <b>{`P${index+1}`}</b>
 								}
 							/>
@@ -28,7 +31,14 @@ const ResultItem = (props) => {
 		<div className={ styles.item }>
 			<div className="columns">
 				<div className="col-8">
-					<DriverChip { ...props.driver } link={false}/>
+					{	props.driver.hasOwnProperty('driverName')
+							? <DriverChip { ...props.driver } link={false} />
+							: <DriverChip 
+									active={false}
+									driverName={ props.driver }
+									link={false}
+								/>
+					}
 				</div>
 				<div className="col-4">
 					{ props.result }

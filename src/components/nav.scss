@@ -1,0 +1,49 @@
+.nav {
+	display: flex;
+	align-items: center;
+	flex: 1 0;
+	justify-content: inherit;
+	flex-direction: row;
+	position: relative;
+	right: -0.5rem;
+}
+
+.nav a:link,
+.nav a:visited {
+	display: inline-block;
+	font-family: obvia, sans-serif;
+	font-size: 0.6rem;
+	font-weight: 300;
+	color: #666;
+	padding: 0.2rem 0.5rem;
+	text-transform: uppercase;
+	text-decoration: none;
+}
+
+.nav a.active,
+.nav a:hover,
+.nav a:active {
+	background-color: #f4a913;
+	color: #000;
+	transform: skew(-12deg);
+}
+
+.nav a.active span,
+.nav a:hover span,
+.nav a:active span {
+	display: inline-block;
+	transform: skew(12deg);
+}
+
+@media (max-width: 600px) {
+	.nav a:link,
+	.nav a:visited {
+		font-size: 0.4rem;
+	}
+}
+
+@media (max-width: 480px) {
+	.nav {
+		margin-top: 1rem;
+	}
+}

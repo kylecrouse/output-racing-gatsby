@@ -54,16 +54,28 @@ const Table = ({
 		wrapperClassName.push('overflow-right')
 		
 	React.useEffect(() => {
-		const cells = Array.from(tableRef.current.querySelectorAll('tbody tr:first-child td'))
+		const stickyCells = Array.from(tableRef.current.querySelectorAll('tbody tr:first-child td'))
+		const stickyCols = stickyCells.reduce((n, cell) => {
+			return (window.getComputedStyle(cell).getPropertyValue("position") === "sticky") 
+				? ++n
+				: n
+		}, 0)
+		
 		setLeft(
-			cells.reduce((a, cell) => {
+			stickyCells.reduce((a, cell) => {
 				const style = window.getComputedStyle(cell)
 				if (style.getPropertyValue("position") === "sticky")
 					a += parseFloat(style.getPropertyValue("width"))
 				return a
 			}, 0)
 		)
-		
+
+		tableRef.current
+			.querySelectorAll(`th:nth-child(-n+${stickyCols}), td:nth-child(-n+${stickyCols})`)
+			.forEach(cell => {
+				cell.style.setProperty('left', `${cell.offsetLeft}px`)
+			})
+
 		if (scrolling &&
 			parseFloat(window.getComputedStyle(tableRef.current).getPropertyValue('width'))
 				> parseFloat(window.getComputedStyle(wrapperRef.current).getPropertyValue('width'))

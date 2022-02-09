@@ -48,7 +48,7 @@
 
 .season-day {
 	display: block;
-	color: #f4a913;
+	color: var(--highlight-color);
 	font-family: obvia-expanded, sans-serif;
 	font-size: 1.6rem;
 	font-weight: 900;
@@ -81,7 +81,6 @@
 
 .season-card .cars-container {
 	margin: 1rem 0;
-	padding: 0 1rem;
 }
 
 .season-card .car-container {
@@ -90,10 +89,6 @@
 
 .season-card .car-container figcaption {
 	display: none;
-}
-
-.season-card .car-image {
-	max-height: 1.8rem;
 }
 
 .season-results {
@@ -116,17 +111,17 @@
 }
 
 .season-result-item:nth-child(1) {
-	background: linear-gradient(110deg, transparent 67%, rgba(249,166,2,0.6));
+	background: linear-gradient(112deg, transparent 67%, rgba(249,166,2,0.6));
 	border-color: rgb(249,166,2);
 }
 
 .season-result-item:nth-child(2) {
-	background: linear-gradient(110deg, transparent 67%, rgba(195,199,199,0.6));
+	background: linear-gradient(112deg, transparent 67%, rgba(195,199,199,0.6));
 	border-color: rgb(195,199,199);
 }
 
 .season-result-item:nth-child(3) {
-	background: linear-gradient(110deg, transparent 67%, rgba(177,86,15,0.6));
+	background: linear-gradient(112deg, transparent 67%, rgba(177,86,15,0.6));
 	border-color: rgb(177,86,15);
 }
 

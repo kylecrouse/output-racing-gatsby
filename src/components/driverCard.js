@@ -3,27 +3,28 @@ import DriverChip from './driverChip'
 import * as styles from './driverCard.module.css'
 
 const DriverCard = (props) => {
+	console.log(props)
 	return (
 		<a 
 			className={ styles.container } 
-			href={`/drivers/${props.driver.name.replace(/\s/g,'-').toLowerCase()}`}
+			href={`/drivers/${props.driverName.replace(/\s/g,'-').toLowerCase()}`}
 		>
 			<div className={ styles.stats }>
 				<div className={ styles.driver }>
-					{ !props.driver.numberArt &&
+					{ !props.driverNumberArt &&
 						<div className={ styles.numberText }>
-							{ props.driver.number || '-' }
+							{ props.driverNumber || '-' }
 						</div>	
 					}
-					<DriverChip {...props.driver} />
+					<DriverChip {...props} />
 				</div>
 				<dl className="hide-sm">
 					<dt>Starts</dt>
-					<dd>{ props.starts } </dd>
+					<dd>{ props.stats?.starts ?? 0 } </dd>
 					<dt>Wins</dt>
-					<dd>{ props.wins }</dd>
+					<dd>{ props.stats?.wins ?? 0 }</dd>
 					<dt>Top 5</dt>
-					<dd>{ props.top5s }</dd>
+					<dd>{ props.stats?.top5s ?? 0 }</dd>
 				</dl>
 			</div>
 		</a>		

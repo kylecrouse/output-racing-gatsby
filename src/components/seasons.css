@@ -2,7 +2,7 @@
 	background: 
 		radial-gradient(farthest-corner at 50% 45%, transparent 60%, rgba(0,0,0,0.2)),
 		linear-gradient(rgba(0,0,0,0.1), transparent 10%, transparent 90%, rgba(0,0,0,0.1)),
-		linear-gradient(110deg, #e0e0e0, #f0f0f0, #e0e0e0);
+		linear-gradient(112deg, #e0e0e0, #f0f0f0, #e0e0e0);
 	padding: 3rem 0 3.5rem;
 }
 
@@ -17,7 +17,7 @@
 .seasons-container .glide__arrow {
 	border: 0;
 	box-shadow: none;
-	color: #fa9104;
+	color: var(--highlight-color);
 	text-shadow: none;
 }
 

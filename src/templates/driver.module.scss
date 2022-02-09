@@ -6,8 +6,8 @@
 
 .driverImage::after {
 	background: 
-		radial-gradient(farthest-corner at 50% 45%, transparent 50%, rgba(0,0,0,0.5)),
-		linear-gradient(black, transparent 10%, transparent 90%, black);
+		radial-gradient(farthest-corner at 50% 45%, transparent 50%, rgba(0,0,0,0.5));
+		// linear-gradient(black, transparent 10%, transparent 90%, black);
 	bottom: 0;
 	content: ' ';
 	left: 0;

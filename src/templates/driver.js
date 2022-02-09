@@ -9,15 +9,14 @@ import * as styles from './driver.module.scss'
 
 const TYPE_ORDER = ['Overall', 'Short Track', '1-mile', 'Intermediate', '2-mile', 'Superspeedway', 'Road Course', 'Dirt Oval', 'Rallycross']
 
-const DriverTemplate = ({ pageContext: props, location }) => {
+const DriverTemplate = ({ pageContext, location }) => {
 	const { title, siteUrl } = useSiteMetadata()
-	const driver = props.driver
 	const typeStats = React.useMemo(
-		() => props.typeStats && [
-			{ typeName: 'Overall', ...props.stats },
-			...props.typeStats
+		() => pageContext.typeStats && [
+			{ typeName: 'Overall', ...pageContext.stats },
+			...pageContext.typeStats
 		].sort((a, b) => TYPE_ORDER.indexOf(a.typeName) - TYPE_ORDER.indexOf(b.typeName)),
-		[props.stats, props.typeStats]
+		[pageContext.stats, pageContext.typeStats]
 	)
 	const typeColumns = React.useMemo(
 		() => [
@@ -186,33 +185,29 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 	return (
 		<>
 			<Helmet>
-				<title>{title} | Drivers | {driver.nickname || driver.name}</title>
-				{ driver.media &&
-					<meta property="og:image" content={`http:${driver.media[0].file.url}`} />
+				<title>{title} | Drivers | {pageContext.driverNickname || pageContext.driverName}</title>
+				{ pageContext.driverMedia &&
+					<meta property="og:image" content={`http:${pageContext.driverMedia.file.url}`} />
 				}
-				<meta property="og:description" content={`${driver.nickname || driver.name}'s driver profile and league statistics.`} />
-				<meta property="og:title" content={ `${title} | ${driver.nickname || driver.name}` } />
+				<meta property="og:description" content={`${pageContext.driverNickname || pageContext.driverName}'s driver profile and league statistics.`} />
+				<meta property="og:title" content={ `${title} | ${pageContext.driverNickname || pageContext.driverName}` } />
 				<meta property="og:type" content="website"/>
 				<meta property="og:url" content={ `${siteUrl}${location.pathname}` } />
 				<meta name="twitter:card" content="summary_large_image"/>
-				<meta name="twitter:title" content={ `${title} | ${driver.nickname || driver.name}` } />
-				<meta name="twitter:description" content={`${driver.nickname || driver.name}'s driver profile and league statistics.`} />
-				{ driver.media &&
-					<meta name="twitter:image" content={`http:${driver.media[0].file.url}`} />
+				<meta name="twitter:title" content={ `${title} | ${pageContext.driverNickname || pageContext.driverName}` } />
+				<meta name="twitter:description" content={`${pageContext.driverNickname || pageContext.driverName}'s driver profile and league statistics.`} />
+				{ pageContext.driverMedia &&
+					<meta name="twitter:image" content={`http:${pageContext.driverMedia.file.url}`} />
 				}
 				<meta name="theme-color" content="#000000"/>
 			</Helmet>
 			
-			{ driver.media && 
-				driver.media
-					.slice(0, 1)
-					.map(image => (
-						<GatsbyImage 
-							alt="car screenshot"
-							className={ styles.driverImage }
-							image={ getImage(image) } 
-						/>
-					)) 
+			{ pageContext.driverMedia && 
+					<GatsbyImage 
+						alt="car screenshot"
+						className={ styles.driverImage }
+						image={ getImage(pageContext.driverMedia) } 
+					/>
 			}
 
 			<main className="container">
@@ -222,13 +217,13 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 					
 						<hgroup className={`page-header ${styles.pageHeader}`}>
 							<DriverChip 
-								{...driver } 
+								{...pageContext} 
 								active={true}
 								license={true}
 								link={false}
 							/>
-							{ driver.license && 
-								<License {...driver.license}/>
+							{ pageContext.driverLicense && 
+								<License {...pageContext.driverLicense}/>
 							}
 						</hgroup>
 
@@ -243,10 +238,10 @@ const DriverTemplate = ({ pageContext: props, location }) => {
 						
 						<br/>
 
-						{ props.trackStats && 
+						{ pageContext.trackStats && 
 							<Table 
 								columns={trackColumns} 
-								data={props.trackStats}
+								data={pageContext.trackStats}
 								disableSortBy={true} 
 								initialState={{
 									sortBy: [{ id: 'trackName', desc: false }]

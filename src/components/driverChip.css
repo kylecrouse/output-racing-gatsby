@@ -6,19 +6,19 @@
 	white-space: nowrap;
 }
 
-a.driverChip:link,
-a.driverChip:visited {
+.driverChip a:link,
+.driverChip a:visited {
 	color: inherit;
 	opacity: 1;
 }
 
-a.driverChip:hover,
-a.driverChip:focus {
+.driverChip a:hover,
+.driverChip a:focus {
 	color: #f4a913;
 }
 
-a.driverChip:hover .driver-name::after,
-a.driverChip:focus .driver-name::after {
+.driverChip a:hover .driver-name::after,
+.driverChip a:focus .driver-name::after {
 	/* display: inline-block; */
 	/* content: "\2192"; */
 	/* padding-left: 0.4rem; */

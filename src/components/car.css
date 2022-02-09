@@ -1,14 +1,12 @@
 .car-container {
 	margin: 0;
-	overflow: hidden;
-	text-align: center;
 }
 
 .car-image {
 	display: block;
-	max-height: 150px;
-	max-width: 102%; 
-	margin-left: -1%;
+	margin: 0 -1rem;
+	position: relative;
+	/* filter: saturate(0); */
 }
 
 .car-caption {

@@ -13,13 +13,13 @@ module.exports = {
         spaceId: "38idy44jf6uy",
       },
     },
-    {
-      resolve: `gatsby-source-iracing`,
-      options: {
-       username: process.env.IRACING_USERNAME,
-       password:  process.env.IRACING_PASSWORD
-      },
-    },
+    // {
+    //   resolve: `gatsby-source-iracing`,
+    //   options: {
+    //    username: process.env.IRACING_USERNAME,
+    //    password:  process.env.IRACING_PASSWORD
+    //   },
+    // },
     "gatsby-source-simracerhub",
     "gatsby-plugin-image",
     "gatsby-plugin-sharp",
@@ -30,7 +30,6 @@ module.exports = {
         name: "images",
         path: "./src/images/",
       },
-      __key: "images",
     },
     `gatsby-plugin-react-helmet`,
     'gatsby-plugin-sass',

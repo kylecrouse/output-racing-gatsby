@@ -1,0 +1,135 @@
+header {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 10;
+	
+	.container {
+		padding-left: 0;
+		padding-right: 0;
+	}
+}
+
+.navbar {
+	background: black;
+	padding: 0.25rem 0 1.5rem;
+	
+	> .column {
+		display: flex;
+	}
+	
+	.logo {
+		border-right: 1px solid #666;
+		height: 1.5rem;
+		padding-right: 1rem;
+		position: relative;
+		top: 2px;
+	}
+	
+	img {
+		display: block;
+		filter: saturate(0) brightness(0.5);
+		height: 1rem;
+		margin: 0 1rem 0 0;
+	}
+	
+	.output-logo, .nightowl-logo {
+		position: relative;
+		top: 2px;
+		
+		img {
+			filter: brightness(0) saturate(1) invert(0.4);
+		}
+	}
+	
+	
+}
+
+.navbar-section {
+	&:not(:first-child):last-child {
+		align-items: flex-end;
+		justify-content: flex-end;
+	}
+}
+
+.subnav {
+	// margin-top: -1rem;
+	position: relative;
+	
+	> .column {
+		align-items: center;
+		display: flex;
+		justify-content: space-between;
+		
+		&::before {
+			background: var(--secondary-color);
+			clip-path: polygon(0 0, 0 88%, 13% 80%, 15% 3%);
+			bottom: -1rem;
+			content: " ";
+			display: block;
+			left: 0;
+			position: absolute;
+			top: -1.5rem;
+			width: 100%;
+		}
+	}
+
+	&::before {
+		background: var(--primary-color);
+		clip-path: polygon(0 20%, 0 100%, 100% 80%, 100% 0);
+		bottom: -1rem;
+		content: ' ';
+		display: block;
+		left: 0;
+		position: absolute;
+		top: -1.5rem;
+		width: 100%;
+	}
+	
+	&::after {
+		background: var(--secondary-color);
+		clip-path: polygon(45% 25%, 43% 90%, 100% 100%, 100% 0.6rem);
+		bottom: -1.5rem;
+		content: ' ';
+		display: block;
+		right: 0;
+		position: absolute;
+		top: -1.5rem;
+		width: 100%;
+	}
+}
+
+.subnav-section {
+	position: relative;
+	z-index: 1;
+	
+	.nav {
+		margin: 0;
+		
+		a:link,
+		a:visited {
+			color: var(--highlight-color);
+		}
+		
+		a.active,
+		a:hover,
+		a:active {
+			background-color: var(--highlight-color);
+			color: var(--secondary-color);
+		}
+		
+	}
+	
+	img {
+		display: block;
+		filter: brightness(0) saturate(1) invert(1);
+		height: 2.5rem;
+	}
+	
+}
+
+@media (max-width: 480px) {
+	.navbar-section {
+		justify-content: center !important;
+	}
+}

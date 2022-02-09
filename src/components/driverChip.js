@@ -2,25 +2,17 @@ import * as React from 'react'
 import './driverChip.css'
 
 const DriverChip = (props) => {
-	return props.active && props.link !== false ? (
-		<a 
-			href={`/drivers/${props.name.replace(/\s/g, '-').toLowerCase()}/`} 
-			className={`driverChip ${props.className}`}
-		>
-			{ props.numberArt &&
-				<NumberArt number={props.number} image={props.numberArt.file.url}/>
-			}
-			{ renderName(props) }
-			{ props.children &&  
-					<div className="driver-children">{ props.children }</div>
-			}
-		</a>    
-	) : (
+	return (
 		<div className={`driverChip ${props.className} ${!props.active ? 'inactive' : ''}`}>
-			{ props.numberArt &&
-				<NumberArt number={props.number} image={props.numberArt.file.url}/>
+			{ props.driverNumberArt &&
+				<NumberArt number={props.driverNumber} image={props.driverNumberArt.file.url}/>
 			}
-			{ renderName(props) }
+			{ props.active && props.link !== false
+				? <a href={`/drivers/${props.driverName.replace(/\s/g, '-').toLowerCase()}/`}>
+						{ renderName(props) }
+					</a>
+				: renderName(props)
+			}
 			{ props.children &&  
 				<div className="driver-children">{ props.children }</div>
 			}
@@ -37,7 +29,7 @@ const NumberArt = (props) => {
 }
 
 const renderName = (props) => {
-	const name = props.nickname || props.name || ''
+	const name = props.driverNickname || props.driverName || ''
 	const parts = name.split(' ')
 	const last = parts.pop()
 	return (

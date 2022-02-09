@@ -1,32 +1,23 @@
 import * as React from 'react'
-import { Helmet } from 'react-helmet'
-import useSiteMetadata from '../hooks/use-site-metadata'
+import { graphql } from 'gatsby'
+import Cars from '../components/cars'
+import Layout from '../components/layout'
+import Meta from '../components/meta'
 import Schedule from '../components/schedule'
 import Seasons from '../components/seasons'
-import logo from '../images/logo.png'
 
-const ScheduleTemplate = ({ pageContext, location }) => {
-	const { title, siteUrl } = useSiteMetadata()
-	const { season, seasons, cars, drivers } = pageContext
-	const name = season.name.match(/Output Racing (\d+) (Season \d)?(.*)/)	
+const ScheduleTemplate = props => {
+	const { season } = props.data
+	const seasons = React.useMemo(
+		() => props.data.seasons.edges.map(({ node }) => node), 
+		[props.data.seasons]
+	)
 	return (
-		<>
+		<Layout {...props}>
 			<main className="container">
 	
-				<Helmet>
-					<title>Output Racing League | Schedule | { `${name[2]} ${name[3]}` }</title>
-					<meta property="og:image" content={`${siteUrl}${logo}`} />
-					<meta property="og:description" content={`An asphalt oval league for the late-night racer.`} />
-					<meta property="og:title" content={ `${title} | ${name[2]} ${name[3]} Schedule` } />
-					<meta property="og:type" content="website"/>
-					<meta property="og:url" content={ `${siteUrl}${location.pathname}` } />
-					<meta name="twitter:card" content="summary_large_image"/>
-					<meta name="twitter:title" content={ `${title} | ${name[2]} ${name[3]} Schedule` } />
-					<meta name="twitter:description" content={`An asphalt oval league for the late-night racer.`} />
-					<meta name="twitter:image" content={`${siteUrl}${logo}`} />
-					<meta name="theme-color" content="#000000"/>
-				</Helmet>
-	
+				<Meta {...season} page="Schedule"/>
+
 				<div className="columns">
 					<div className="column col-8 col-xl-10 col-lg-11 col-sm-12 col-mx-auto content">
 					
@@ -34,18 +25,15 @@ const ScheduleTemplate = ({ pageContext, location }) => {
 							<div>
 								<h2 className="page-title">Schedule</h2>
 								<h3 className="page-subtitle">
-									{ `${name[2]} ${name[3]}` }
+									{ season.seasonName }
 								</h3>
 							</div>
+							{ season.seasonClass?.length > 0 &&
+								<Cars cars={season.seasonClass[0]?.seasonClassCars} />
+							}
 						</hgroup>
 	
-						<Schedule 
-							schedule={ season.schedule }
-							drivers={ drivers }
-							cars={cars.filter(
-								({ name }) => season.cars.includes(name)
-							)}
-						/>
+						<Schedule events={season.events} />
 	
 					</div>
 				</div>
@@ -54,18 +42,66 @@ const ScheduleTemplate = ({ pageContext, location }) => {
 					
 			<div className="columns seasons-container">
 				<div className="column col-8 col-xl-10 col-lg-11 col-mx-auto">
-				
-					<Seasons 
-						path="schedule" 
-						seasons={seasons.filter(({ id }) => id !== season.id)} 
-						cars={cars}
-						drivers={drivers}
-					/>
-					
+					<Seasons path="schedule" seasons={seasons} />
 				</div>
 			</div>
-		</>
+		</Layout>
 	)
 }
+
+export const query = graphql`
+	query ScheduleQuery($seasonId: Int) {
+		season: simRacerHubSeason(seasonId: {eq: $seasonId}) {
+			leagueName
+			seriesName
+			seasonName
+			seasonClass {
+				seasonClassCars {
+					carId
+					carName
+				}
+			}
+			events {
+				...eventData
+			}	
+		}
+		seasons: allSimRacerHubSeason(
+			sort: {fields: events___raceDate, order: DESC}
+			filter: {seasonId: {ne: $seasonId}}
+		) {
+			edges {
+				node {
+					seasonName
+					seasonId
+					seriesName
+					seasonClass {
+						seasonClassCars {
+							carId
+							carName
+						}
+					}
+					standings {
+						driverId
+						driverName
+						member {
+							active
+							driverName
+							driverNickname
+							driverNumber
+							driverNumberArt {
+								gatsbyImageData	
+								file {
+									url
+								}
+							}
+						}
+						position
+						totalPoints
+					}	
+				}
+			}
+		}
+	}
+`
 
 export default ScheduleTemplate

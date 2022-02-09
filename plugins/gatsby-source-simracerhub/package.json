@@ -15,6 +15,6 @@
   "license": "0BSD",
   "dependencies": {
     "axios": "^0.24.0",
-    "bluebird": "^3.7.2"
+    "axios-retry": "^3.2.4"
   }
 }

@@ -5,7 +5,7 @@ import moment from 'moment'
 import useSiteMetadata from '../hooks/use-site-metadata'
 import { Carousel, Slide } from '../components/carousel'
 import DriverChip from '../components/driverChip'
-import Results from '../components/results'
+import ResultsTable from '../components/results'
 import Video from '../components/video'
 import * as styles from './results.module.scss'
 
@@ -14,34 +14,34 @@ const ResultsTemplate = ({ pageContext, location }) => {
 	return (
 		<>
 			<Helmet>
-				<title>{ title } | Results | { pageContext.name }</title>
+				<title>{ title } | Results | { pageContext.eventName }</title>
 				{ pageContext.logo
-					? <meta property="og:image" content={`http:${pageContext.logo.file.url}`} />
+					? <meta property="og:image" content={`http:${pageContext.eventLogo.file.url}`} />
 					: pageContext.media
 						? <meta property="og:image" content={`http:${pageContext.media[0].file.url}`} />
-						: <meta property="og:image" content={`http:${pageContext.track.logo}`} />
+						: <meta property="og:image" content={`http:${pageContext.trackLogo}`} />
 				}
-				<meta property="og:description" content={`Race results from ${pageContext.track.name}.`} />
-				<meta property="og:title" content={ `${title} | ${pageContext.name}` } />
+				<meta property="og:description" content={`Race results from ${pageContext.trackName}.`} />
+				<meta property="og:title" content={ `${title} | ${pageContext.eventName}` } />
 				<meta property="og:type" content="website"/>
 				<meta property="og:url" content={ `${siteUrl}${location.pathname}` } />
 				<meta name="twitter:card" content="summary_large_image"/>
-				<meta name="twitter:title" content={ `${title} | ${pageContext.name}` } />
-				<meta name="twitter:description" content={`Race results from ${pageContext.track.name}.`} />
+				<meta name="twitter:title" content={ `${title} | ${pageContext.eventName}` } />
+				<meta name="twitter:description" content={`Race results from ${pageContext.trackName}.`} />
 				{ pageContext.logo
-					? <meta name="twitter:image" content={`http:${pageContext.logo.file.url}`} />
+					? <meta name="twitter:image" content={`http:${pageContext.eventLogo.file.url}`} />
 					: pageContext.media
 						? <meta name="twitter:image" content={`http:${pageContext.media[0].file.url}`} />
-						: <meta name="twitter:image" content={`http:${pageContext.track.logo}`} />
+						: <meta name="twitter:image" content={`http:${pageContext.trackLogo}`} />
 				}
 				<meta name="theme-color" content="#000000"/>
 			</Helmet>
 			
-			{ pageContext.media && 
-				(pageContext.media.length > 1 
+			{ pageContext.eventMedia && 
+				(pageContext.eventMedia.length > 1 
 					? (
 							<Carousel options={{ type: "carousel", showNav: true }}>
-								{ pageContext.media.map((image) => {
+								{ pageContext.eventMedia.map((image) => {
 										return (
 											<Slide>
 												<GatsbyImage 
@@ -55,7 +55,7 @@ const ResultsTemplate = ({ pageContext, location }) => {
 								}
 							</Carousel>
 						)
-					: pageContext.media.slice(0,1).map((image) => (
+					: pageContext.eventMedia.slice(0,1).map((image) => (
 							<GatsbyImage 
 								alt="screenshot"
 								className={ styles.media }
@@ -74,23 +74,26 @@ const ResultsTemplate = ({ pageContext, location }) => {
 							<div className="column col-8 col-sm-12">
 								<h4 className="page-title">Results</h4>
 								<h5 className="page-subtitle">
-									<span>{moment.parseZone(pageContext.date).format('DD MMM YYYY')}</span>
-									<span>{pageContext.track.name}</span>
+									<span>{moment.parseZone(pageContext.raceDate).format('DD MMM YYYY')}</span>
+									<span>{pageContext.trackName}</span>
 								</h5>
 							</div>
-							<div className="column col-2 col-ml-auto hide-sm">
-								{ pageContext.logo
-									? <img src={ pageContext.logo.file.url } alt={`${pageContext.name} logo`} className={ styles.logo }/>
-									: <img src={ pageContext.track.logo } alt={`${pageContext.track.name} logo`} className={ styles.logo } />
-								}
+							<div className="column col-4 text-right hide-sm">
+								<img 
+									alt={`${pageContext.trackName} logo`} 
+									className={ styles.logo } 
+									src={ `https://images-static.iracing.com${pageContext.trackLogo}` } 
+								/>
 							</div>
 						</hgroup>
 			
-						<Results 
-							results={pageContext.results}
-							duration={pageContext.duration}
-							counts={!!pageContext.counts}
-							fields={column => ['status', 'bonus', 'penalty', pageContext.counts !== true && 'points', (pageContext.counts !== true || !pageContext.subsessionId) && 'rating'].includes(column)}
+						<ResultsTable 
+							{...pageContext}
+							duration={pageContext.raceAvgTime * pageContext.raceLaps}
+							fields={
+								(column) => pageContext.pointsCount !== true 
+									&& ['racePoints', 'rating'].includes(column)
+							}
 						/>
 						
 						<div className="columns">
@@ -99,78 +102,96 @@ const ResultsTemplate = ({ pageContext, location }) => {
 								<div className={ styles.stats }>
 									<h3>Race Statistics</h3>
 									<dl>
+										<dt>Weather ({pageContext.weatherType})</dt>
+										<dd>
+											{pageContext.weatherSkies}<br/>
+											Temperature: {pageContext.weatherTemp}°{pageContext.weatherTempunit}<br/>
+											Humidity: {pageContext.weatherRh}%<br/>
+											Fog: {pageContext.weatherFog}%<br/>
+											Wind: {pageContext.weatherWinddir} @ {pageContext.weatherWind}{pageContext.weatherWindunit.toLowerCase()}
+										</dd>
 										<dt>Cautions</dt>
-										<dd>{pageContext.cautions > 0 ? pageContext.cautions : 'none'} { pageContext.cautions > 0 && `${pageContext.cautions > 1 ? 'cautions' : 'caution'} for ${pageContext.cautionLaps} laps`}</dd>
+										<dd>
+											{
+												getCautionsText(pageContext.raceCautions, pageContext.raceCautionLaps)
+											}
+										</dd>
 										<dt>Lead Changes</dt>
-										<dd>{pageContext.leadChanges > 0 ? pageContext.leadChanges : 'none'} { pageContext.leadChanges > 0 && `lead changes between ${pageContext.leaders} drivers`}</dd>
-										{	Object.keys(pageContext.stats).length > 0 &&
+										<dd>
+											{
+												getLeadersText(
+													pageContext.raceLeadChanges, 
+													pageContext.participants.reduce(
+														(a, { lapsLed }) => lapsLed > 0 ? ++a : a, 
+														0
+													)
+												)
+											}
+										</dd>
+										<dt>Best Average Position</dt>
+										<dd>
+											<DriverChip {...pageContext.bestAvgPos.driver}>
+												({ (pageContext.bestAvgPos.avgPos + 1).toFixed(1) })
+											</DriverChip>
+										</dd>
+										<dt>Hard Charger</dt>
+										<dd>
+											<DriverChip {...pageContext.hardCharger.driver}>
+												({ pageContext.hardCharger.gain })
+											</DriverChip>
+										</dd>
+										<dt>Most Passes</dt>
+										<dd>
+											<DriverChip {...pageContext.bestPasses.driver}>
+												({ pageContext.bestPasses.passes })
+											</DriverChip>
+										</dd>
+										<dt>Most Quality Passes</dt>
+										<dd>
+											<DriverChip {...pageContext.bestQualityPasses.driver}>
+												({ pageContext.bestQualityPasses.qualityPasses })
+											</DriverChip>
+										</dd>
+										<dt>Most Closing Passes</dt>
+										<dd>
+											<DriverChip {...pageContext.bestClosingPasses.driver}>
+												({ pageContext.bestClosingPasses.closingPasses })
+											</DriverChip>
+										</dd>
+										<dt>Fastest Lap</dt>
+										<dd>
+											<DriverChip {...pageContext.bestFastLap.driver}>
+												({ getTimeFromMilliseconds(pageContext.bestFastLap.fastestLapTime * 10000) })
+											</DriverChip>
+										</dd>
+										<dt>Fastest 3-lap Average</dt>
+										<dd>
+											<DriverChip {...pageContext.bestAvgFastLap.driver}>
+												({ getTimeFromMilliseconds(pageContext.bestAvgFastLap.avgFastLap) })
+											</DriverChip>
+										</dd>
+										{	pageContext.cautions > 0 &&
 											<>
-												<dt>Best Average Position</dt>
+												<dt>Fastest Restarts</dt>
 												<dd>
-													<DriverChip {...pageContext.stats.bestAvgPos.driver}>
-														({ (pageContext.stats.bestAvgPos.avgPos + 1).toFixed(1) })
-													</DriverChip>
-												</dd>
-												<dt>Hard Charger</dt>
-												<dd>
-													<DriverChip {...pageContext.stats.hardCharger.driver}>
-														({ pageContext.stats.hardCharger.gain })
-													</DriverChip>
-												</dd>
-												<dt>Most Passes</dt>
-												<dd>
-													<DriverChip {...pageContext.stats.bestPasses.driver}>
-														({ pageContext.stats.bestPasses.passes })
-													</DriverChip>
-												</dd>
-												<dt>Most Quality Passes</dt>
-												<dd>
-													<DriverChip {...pageContext.stats.bestQualityPasses.driver}>
-														({ pageContext.stats.bestQualityPasses.qualityPasses })
-													</DriverChip>
-												</dd>
-												<dt>Most Closing Passes</dt>
-												<dd>
-													<DriverChip {...pageContext.stats.bestClosingPasses.driver}>
-														({ pageContext.stats.bestClosingPasses.closingPasses })
-													</DriverChip>
-												</dd>
-												<dt>Fastest Lap</dt>
-												<dd>
-													<DriverChip {...pageContext.stats.bestFastLap.driver}>
-														({ getTimeFromMilliseconds(pageContext.stats.bestFastLap.time) })
-													</DriverChip>
-												</dd>
-												<dt>Fastest 3-lap Average</dt>
-												<dd>
-													<DriverChip {...pageContext.stats.bestAvgFastLap.driver}>
-														({ getTimeFromMilliseconds(pageContext.stats.bestAvgFastLap.avgFastLap) })
-													</DriverChip>
-												</dd>
-												{	pageContext.cautions > 0 &&
-													<>
-														<dt>Fastest Restarts</dt>
-														<dd>
-															<DriverChip {...pageContext.stats.bestRestarts.driver}>
-																({ getTimeFromMilliseconds(pageContext.stats.bestRestarts.time) })
-															</DriverChip>
-														</dd>
-													</>											
-												}
-												<dt>Most Fast Laps</dt>
-												<dd>
-													<DriverChip {...pageContext.stats.bestNumFastLap.driver}>
-														({ pageContext.stats.bestNumFastLap.numFastLap })
+													<DriverChip {...pageContext.bestRestarts.driver}>
+														({ getTimeFromMilliseconds(pageContext.bestRestarts.time) })
 													</DriverChip>
 												</dd>
 											</>											
 										}
+										<dt>Most Fast Laps</dt>
+										<dd>
+											<DriverChip {...pageContext.bestNumFastLap.driver}>
+												({ pageContext.bestNumFastLap.numFastLap })
+											</DriverChip>
+										</dd>
 									</dl>
 								</div>
 							</div>
 							<div className="column col-6 col-sm-12 col-ml-auto">
-								{ pageContext.broadcast && 
-									<Video href={pageContext.broadcast} className={ styles.broadcast }/> 
+								{ pageContext.eventBroadcast && 
+									<Video href={pageContext.eventBroadcast} className={ styles.broadcast }/> 
 								}
 							</div>
 						</div>
@@ -206,6 +227,22 @@ const getTimeFromMilliseconds = (time) => {
 	if (secs < 10)
 		secs = "0" + secs
 	return hours + min + ":" + secs + "." + tenths + hun + thous
+}
+
+const getCautionsText = (raceCautions, raceCautionLaps) => {
+	return raceCautions > 0 
+		? `${pluralize(raceCautions, 'caution')} for ${pluralize(raceCautionLaps, 'lap')}`
+		: 'none'
+}
+
+const getLeadersText = (raceLeadChanges, raceLeaders) => {
+	return raceLeadChanges > 0
+		? `${pluralize(raceLeadChanges, 'lead change')} among ${pluralize(raceLeaders, 'driver')}`
+		: 'none'
+}
+
+const pluralize = (count, noun, suffix = 's') => {
+	return `${count} ${noun}${count !== 1 ? suffix : ''}`
 }
 
 export default ResultsTemplate

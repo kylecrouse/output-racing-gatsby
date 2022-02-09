@@ -5,20 +5,20 @@ import * as styles from './raceChip.module.scss'
 const RaceChip = (props) => {
 	return (
 		<div className={ styles.container }>
-			{ props.track && props.track.logo &&
+			{ props.trackLogo &&
 					<div className={ styles.logo }>
 						<img 
-							src={ props.track.logo }
-							alt={ `${props.track.name} logo` }
+							src={`https://images-static.iracing.com${props.trackLogo}`}
+							alt={ `${props.trackName} logo` }
 						/>
 					</div>
 			}
-			<RaceDate date={ props.date }/>
+			<RaceDate date={ props.raceDate }/>
 			<div className={ styles.track }>
-				{ props.track && props.track.name &&
-					<h4>{ props.track.name }</h4>
+				{ props.trackName &&
+					<h4>{ props.trackName }</h4>
 				}
-				<h5>{ props.name }</h5>
+				<h5>{ props.eventName }</h5>
 			</div>
 		</div>
 	)

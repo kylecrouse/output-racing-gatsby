@@ -10,7 +10,7 @@
 
 .day {
 	display: block;
-	color: #f4a913;
+	color: var(--highlight-color);
 	font-family: obvia-expanded, sans-serif;
 	font-size: 1.6rem;
 	font-weight: 900;

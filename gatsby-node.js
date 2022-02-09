@@ -1,453 +1,224 @@
-const { createRemoteFileNode } = require("gatsby-source-filesystem")
+// const { createRemoteFileNode } = require("gatsby-source-filesystem")
+const path = require('path')
+const fs = require('fs-extra')
+const { graphql } = require('gatsby')
 
-exports.onCreateNode = async ({
-	node,
-	actions: { createNode },
-	store,
-	cache,
-	createNodeId,
-}) => {
-	// if (
-	// 	node.internal.type === "contentfulLeagueCarsJsonNode"
-	// ) {
-	// 	let fileNode = await createRemoteFileNode({
-	// 		url: node.image, // string that points to the URL of the image
-	// 		parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
-	// 		createNode, // helper function in gatsby-node to generate the node
-	// 		createNodeId, // helper function in gatsby-node to generate the node id
-	// 		cache, // Gatsby's cache
-	// 		store, // Gatsby's Redux store
-	// 	})
-	// 	// if the file was created, attach the new node to the parent node
-	// 	if (fileNode) {
-	// 		node.image___NODE = fileNode.id
-	// 	}
-	// }
+exports.createResolvers = ({ createResolvers }) => {
+	let ContentfulDrivers = {},
+			ContentfulRaces = {}
 
-	// if (
-	// 	node.internal.type === "contentfulLeagueTracksJsonNode"
-	// ) {
-	// 	let fileNode = await createRemoteFileNode({
-	// 		url: node.logo, // string that points to the URL of the image
-	// 		parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
-	// 		createNode, // helper function in gatsby-node to generate the node
-	// 		createNodeId, // helper function in gatsby-node to generate the node id
-	// 		cache, // Gatsby's cache
-	// 		store, // Gatsby's Redux store
-	// 	})
-	// 	// if the file was created, attach the new node to the parent node
-	// 	if (fileNode) {
-	// 		node.logo___NODE = fileNode.id
-	// 	}
-	// }
+	const publicStaticDir = path.join(
+		process.cwd(),
+		'public',
+		'static'
+	)
+			
+	const getContentfulDriver = async (source, args, context, info) => {
+		if (!ContentfulDrivers.hasOwnProperty(source.custid))			
+			ContentfulDrivers[source.custid] = await context.nodeModel.findOne({
+				query: {
+					filter: {
+						custId: { eq: source.custid }
+					},
+				},
+				type: "ContentfulDriver",
+			})
+					
+		return ContentfulDrivers[source.custid]
+	}
+	
+	const getContentfulRace = async (source, args, context, info) => {
+		if (!ContentfulRaces.hasOwnProperty(source.raceId))			
+			ContentfulRaces[source.raceId] = await context.nodeModel.findOne({
+				query: {
+					filter: {
+						raceId: { eq: source.raceId }
+					},
+				},
+				type: "ContentfulRace",
+			})
+					
+		return ContentfulRaces[source.raceId]
+	}
+	
+	const resolvers = {
+		SimRacerHubDriver: {
+			active: {
+				type: "Boolean",
+				resolve: async (source, args, context, info) => {
+					// @TODO: Pull this from iRacing roster presence?
+					const { active = false } = await getContentfulDriver(source, args, context, info)
+					return active
+				}
+			},
+			driverLicense: {
+				type: "DriverLicense",
+				resolve: async (source, args, context, info) => {
+					const { license___NODE = null } = await getContentfulDriver(source, args, context, info)
+					if (!license___NODE) 
+						return null				
+							
+					return context.nodeModel.getNodeById({ id: license___NODE })
+				}
+			},
+			driverMedia: {
+				type: "ContentfulAsset",
+				resolve: async (source, args, context, info) => {
+					const { media___NODE = null } = await getContentfulDriver(source, args, context, info)
+					if (!media___NODE) 
+						return null				
+							
+					return context.nodeModel.getNodeById({ id: media___NODE })
+				}
+			},
+			driverNickname: {
+				type: "String",
+				resolve: async (source, args, context, info) => {
+					const { nickname = null } = await getContentfulDriver(source, args, context, info)
+					return nickname
+				}
+			},
+			driverNumber: {
+				type: "String",
+				resolve: async (source, args, context, info) => {
+					const { number = null } = await getContentfulDriver(source, args, context, info)
+					return number
+				}
+			},
+			driverNumberArt: {
+				type: "ContentfulAsset",
+				resolve: async (source, args, context, info) => {
+					const { numberArt___NODE = null } = await getContentfulDriver(source, args, context, info)
+					if (!numberArt___NODE) 
+						return null
+					
+					return context.nodeModel.getNodeById({ id: numberArt___NODE })
+				}
+			},
+		},
+		SimRacerHubRace: {
+			eventBroadcast: {
+				type: "String",
+				resolve: async (source, args, context, info) => {
+					const { broadcast = null } = await getContentfulRace(source, args, context, info)
+					return broadcast
+				}
+			},
+			eventLogo: {
+				type: "ContentfulAsset",
+				resolve: async (source, args, context, info) => {
+					const { logo___NODE = null } = await getContentfulRace(source, args, context, info)
+					if (!logo___NODE)
+						return null
+						
+					return context.nodeModel.getNodeById({ id: logo___NODE })
+				}
+			},
+			eventMedia: {
+				type: ["ContentfulAsset"],
+				resolve: async (source, args, context, info) => {
+					const { media___NODE = [] } = await getContentfulRace(source, args, context, info)
+					return Promise.all(
+						media___NODE.map(
+							id => context.nodeModel.getNodeById({ id })
+						)
+					)
+				}
+			}
+		},
+		SimRacerHubParticipant: {
+			carImage: {
+				type: "File",
+				resolve: async (source, args, context, info) => {
+					const file = await context.nodeModel.findOne({
+						query: {
+							filter: {
+								relativePath: { eq: `cars/${source.carId}.svg` }
+							},
+						},
+						type: "File",
+					}).catch(err => console.log(err))
+					return file
+				}
+			}
+		}
+	}
+	createResolvers(resolvers)
 }
 
-exports.createPages = async function ({ actions, graphql }) {
+exports.createSchemaCustomization = ({ actions }) => {
+	const { createTypes } = actions
+	const typeDefs = `
+		type SimRacerHubSeason implements Node {
+			events: [SimRacerHubEvent]
+		}
+		
+		type SimRacerHubSeasonStandings {
+			member: SimRacerHubDriver @link(by: "driverId", from: "driverId")
+		}
+		
+		type SimRacerHubEvent {
+			race: SimRacerHubRace @link(by: "raceId", from: "raceId")
+		}
+		
+		type SimRacerHubRace implements Node {
+			participants: [SimRacerHubParticipant]
+			bestAvgPos: DriverSuperlative
+			bestFastLap: DriverSuperlative
+			bestNumFastLap: DriverSuperlative
+			bestAvgFastLap: DriverSuperlative
+			bestRestart: DriverSuperlative
+			bestPasses: DriverSuperlative
+			bestQualityPasses: DriverSuperlative
+			bestClosingPasses: DriverSuperlative
+			hardCharger: DriverSuperlative
+		}
+		
+		type SimRacerHubParticipant implements Node {
+			member: SimRacerHubDriver @link(by: "driverId", from: "driverId")  
+		}
+		
+		type DriverLicense {
+			iRating: Int
+			licColor: String
+			licGroup: Int
+			licGroupDisplayName: String
+			licLevel: Int
+			licLevelDisplayName: String
+			srPrime: String
+			srSub: String
+		}
+		
+		type DriverSuperlative {
+			driverId: Int!
+			driver: SimRacerHubDriver @link(by: "driverId", from:"driverId")
+		}
+	`
+	createTypes(typeDefs)
+}
+
+exports.createPages = async ({ graphql, actions }) => {
+	const { createPage } = actions
 	const { data } = await graphql(`
-		query Pages {
-			drivers: allContentfulDriver {
-				nodes {			
-					custId		
-					name
-					nickname
-					active
-					number
-					numberArt {
-						file {
-							url
-						}
-					}
-					media {
-						gatsbyImageData(
-							layout: FULL_WIDTH
-							placeholder: BLURRED
-						)
-						file {
-							url
-						}
-					}
-					license {
-						iRating
-						licColor
-						licGroup
-						licGroupDisplayName
-						licLevel
-						licLevelDisplayName
-						srPrime
-						srSub
-					}
-				}
-			}
-			allSimRacerHubDriver {
-				nodes {
-					custid
-					stats {
-						starts
-						avgStartPos
-						avgFinishPos
-						wins
-						podiums
-						top5s
-						top10s
-						lapsCompleted
-						lapsLed
-						poles
-						incidents
-						incidentsPerRace
-						winPct
-						podiumPct
-						top5Pct
-						top10Pct
-						lapsLedPct
-						polePct
-						incidentsPerLap
-					}
-					trackStats {
-						trackName
-						typeName
-						starts
-						avgStartPos
-						avgFinishPos
-						wins
-						podiums
-						top5s
-						top10s
-						lapsCompleted
-						lapsLed
-						poles
-						incidents
-						incidentsPerRace
-						winPct
-						podiumPct
-						top5Pct
-						top10Pct
-						lapsLedPct
-						polePct
-						incidentsPerLap
-					}
-					typeStats {
-						typeName
-						starts
-						avgStartPos
-						avgFinishPos
-						wins
-						podiums
-						top5s
-						top10s
-						lapsCompleted
-						lapsLed
-						poles
-						incidents
-						incidentsPerRace
-						winPct
-						podiumPct
-						top5Pct
-						top10Pct
-						lapsLedPct
-						polePct
-						incidentsPerLap
-					}
-					races {
-						carId
-						finishPos
-						incidents
-						lapsLed
-						numLaps
-						qualifyPos
-						scheduleId
+		query {
+			seasons: allSimRacerHubSeason {
+				edges {
+					node {
+						seriesName
+						seasonName
 						seasonId
-						seriesId
-						trackConfigId
 					}
-				}
-			}
-			allSimRacerHubTrack {
-				nodes {
-					trackId
-					trackName
-					configs {
-						trackConfigId
-						trackConfigName
-						typeName	
-					}	
-				}	
-			}
-			league: contentfulLeague(leagueId: {eq: 2732}) {
-				name
-				cars {
-					name
-					image
-				}
-				tracks {
-					name
-					logo
-				}
-				seasons {
-					name
-					id: contentful_id
-					cars
-					schedule {
-						counts
-						name
-						raceNo
-						raceId
-						offWeek
-						track
-						time
-						laps
-						date
-						chase
-						uploaded
-					}
-					results {
-						raceId
-						subsessionId
-						broadcast
-						cautionLaps
-						cautions
-						counts
-						date
-						duration
-						name
-						laps
-						leadChanges
-						leaders
-						logo {
-							file {
-								url
-							}
-						}
-						media {
-							gatsbyImageData(
-								layout: FULL_WIDTH
-								placeholder: BLURRED
-							)
-							file {
-								url
-							}
-						}
-						track
-						time
-						results {
-							average
-							bonus
-							completed
-							fastest
-							finish
-							incidents
-							interval
-							led
-							name
-							penalty
-							points
-							start
-							status
-						}
-						uploaded
-						fields {
-							ratings {
-								custid
-								rating
-							}
-							bestAvgPos {
-								custid
-								avgPos
-							}
-							bestFastLap {
-								custid
-								time
-							}
-							bestNumFastLap {
-								custid
-								numFastLap
-							}
-							bestAvgFastLap {
-								custid
-								avgFastLap
-							}
-							bestRestarts {
-								custid
-								time
-							}
-							bestPasses {
-								custid
-								passes
-							}
-							bestQualityPasses {
-								custid
-								qualityPasses	
-							}
-							bestClosingPasses {
-								custid
-								closingPasses
-							}
-							hardCharger {
-								custid
-								gain
-							}
-						}
-					}
-					standings {
-						position
-						driver
-						change
-						starts
-						points
-						behindNext
-						behindLeader
-						wins
-						t5s
-						t10s
-						laps
-						incidents
-					}
-				}
-				stats {
-					avgFinish
-					avgStart
-					driver
-					incidents
-					incidentsLap
-					incidentsRace
-					laps
-					lapsLed
-					miles
-					polePercentage
-					poles
-					provisionals
-					races
-					starts
-					top10Percentage
-					top10s
-					top5Percentage
-					top5s
-					winPercentage
-					wins
-				}
-			}	
-			site {
-				siteMetadata {
-					title
-					siteUrl
 				}
 			}
 		}
 	`)
-	
-	// Build driver pages
-	await Promise.all(data.drivers.nodes
-		.filter(({ active }) => !!active)
-		.map(async (driver) => {
-			const { 
-				races = [],
-				stats = {}, 
-				trackStats = [], 
-				typeStats = []
-			} = data.allSimRacerHubDriver.nodes.find(
-				({ custid }) => custid === driver.custId
-			) || {}
-			
-			// Create page
-			actions.createPage({
-				path: `/drivers/${driver.name.replace(/\s/gi, '-').toLowerCase()}`,
-				component: require.resolve(`./src/templates/driver.js`),
-				context: {
-					driver,
-					stats,
-					trackStats,
-					typeStats,
-				},
-			})
-		})
-	)
-		
-	// Build schedule, standings and results pages
-	data.league.seasons.forEach(season => {
-		
-		// Results
-		season.results
-			.filter(({ uploaded }) => !!uploaded)
-			.forEach(race => {
-				const { ratings = [], ...stats } = race.fields || {}
-				actions.createPage({
-					path: `/results/${race.raceId}`,
-					component: require.resolve(`./src/templates/results.js`),
-					context: {
-						...race,
-						track: data.league.tracks.find(
-							({ name }) => race.track.includes(name)
-						),
-						results: race.results.map(
-							(item) => {
-								const driver = data.drivers.nodes.find(({ name }) => name === item.name)
-								const { rating = 0 } = ratings.find(({ custid }) => custid === driver.custId) || {}
-								return { ...item, driver, rating }
-							}
-						),
-						stats: Object.fromEntries(
-							Object.entries(stats).map(
-								([key, value]) => {
-									if (!value) return [key, null]
-									const driver = data.drivers.nodes.find(
-										({ custId }) => custId === value.custid
-									)
-									return [key, { ...value, driver }]
-								}
-							)
-						)
-					},
-				})
-			})
-		
-		// Schedule
-		actions.createPage({
-			path: `/schedule/${season.id}`,
-			component: require.resolve(`./src/templates/schedule.js`),
+	data.seasons.edges.forEach(({ node }) => {
+		createPage({
+			path: `${node.seriesName}/schedule/${node.seasonName}`,
+			component: path.resolve(`src/templates/schedule.js`),
 			context: {
-				season: {
-					...season,
-					schedule: season.schedule.map(item => ({
-						...item,
-						track: {
-							...data.league.tracks.find(
-								({ name }) => item.track.includes(name)
-							),
-							config: item.track
-						},
-						results: season.results.find(
-							({ raceId }) => parseInt(raceId) === parseInt(item.raceId)
-						)
-					}))
-				}, 
-				seasons: data.league.seasons, 
-				cars: data.league.cars, 
-				drivers: data.drivers.nodes, 
+				seasonId: node.seasonId
 			},
 		})
-		
-		// Standings
-		actions.createPage({
-			path: `/standings/${season.id}`,
-			component: require.resolve(`./src/templates/standings.js`),
-			context: {
-				season: {
-					...season,
-					standings: season.standings.map(item => {
-						const driver = data.drivers.nodes.find(({ name }) => name === item.driver)
-						const rating = season.results.reduce((total, { fields }) => {
-							if (!fields || !fields.ratings) return total
-							return total + fields.ratings
-								.filter(({ custid }) => custid === driver.custId)
-								.reduce((total, { rating }) => total + rating, 0)
-						}, 0) / item.starts
-						return { ...item, driver, rating }
-					})
-				}, 
-				seasons: data.league.seasons, 
-				cars: data.league.cars, 
-				drivers: data.drivers.nodes, 
-			},
-		})
-
 	})
 }
