@@ -71,8 +71,14 @@
 	}
 }
 
+@media (max-width: 960px) {
+	.logo {
+		right: 42%;
+	}
+}
+
 @media (max-width: 480px) {
 	.logo {
-		right: -30%;
+		right: 8%;
 	}
 }

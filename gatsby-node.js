@@ -3,6 +3,8 @@ const path = require('path')
 const fs = require('fs-extra')
 const { graphql } = require('gatsby')
 
+const pathify = (string) => string.replace(/[:-]/g, '').replace(/\s+/g, '-').toLowerCase()
+
 exports.createResolvers = ({ createResolvers }) => {
 	let ContentfulDrivers = {},
 			ContentfulRaces = {}
@@ -58,7 +60,11 @@ exports.createResolvers = ({ createResolvers }) => {
 					if (!license___NODE) 
 						return null				
 							
-					return context.nodeModel.getNodeById({ id: license___NODE })
+					const node = context.nodeModel.getNodeById({ id: license___NODE })
+					return {
+						...node,
+						iRating: node.iRating === '---' ? 0 : node.iRating
+					}
 				}
 			},
 			driverMedia: {
@@ -201,24 +207,74 @@ exports.createPages = async ({ graphql, actions }) => {
 	const { createPage } = actions
 	const { data } = await graphql(`
 		query {
-			seasons: allSimRacerHubSeason {
+			seasons: allSimRacerHubSeason(
+				sort: { 
+					fields: events___race___raceDate, 
+					order: DESC
+				}
+			) {
 				edges {
 					node {
 						seriesName
 						seasonName
 						seasonId
+						active
+						events {
+							race {
+								raceId
+							}
+						}
 					}
 				}
 			}
 		}
 	`)
 	data.seasons.edges.forEach(({ node }) => {
+		const seriesName = pathify(node.seriesName),
+					seasonName = pathify(node.seasonName),
+					seasonId = node.seasonId
+					
 		createPage({
-			path: `${node.seriesName}/schedule/${node.seasonName}`,
+			path: `${seriesName}/schedule/${seasonName}`,
 			component: path.resolve(`src/templates/schedule.js`),
-			context: {
-				seasonId: node.seasonId
-			},
+			context: { seriesName, seasonName, seasonId },
+		})
+		createPage({
+			path: `${seriesName}/standings/${seasonName}`,
+			component: path.resolve(`src/templates/standings.js`),
+			context: { seriesName, seasonName, seasonId },
+		})
+		
+		if (node.active === true) {
+			createPage({
+				path: `${seriesName}/schedule`,
+				component: path.resolve(`src/templates/schedule.js`),
+				context: { seriesName, seasonName, seasonId },
+			})
+			createPage({
+				path: `${seriesName}/standings`,
+				component: path.resolve(`src/templates/standings.js`),
+				context: { seriesName, seasonName, seasonId },
+			})
+		}
+		
+		let latestRaceId
+		node.events.forEach(({ race }, index) => {
+			if (!race) return
+			const raceId = race.raceId
+			createPage({
+				path: `${seriesName}/results/${race.raceId}`,
+				component: path.resolve(`src/templates/results.js`),
+				context: { seriesName, seasonName, seasonId, raceId },
+			})
+			if (node.active === true && !latestRaceId) {
+				createPage({
+					path: `${seriesName}/results`,
+					component: path.resolve(`src/templates/results.js`),
+					context: { seriesName, seasonName, seasonId, raceId },
+				})
+				latestRaceId = raceId
+			}
 		})
 	})
 }

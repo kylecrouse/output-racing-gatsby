@@ -114,6 +114,22 @@ export const driverData = graphql`
 	}
 `
 
+export const driverChipData = graphql`
+	fragment driverChipData on SimRacerHubDriver {
+		custid
+		active
+		driverName
+		driverNickname
+		driverNumber
+		driverNumberArt {
+			gatsbyImageData	
+			file {
+				url
+			}
+		}
+	}
+`
+
 export const eventData = graphql`
 	fragment eventData on SimRacerHubEvent {
 		cars {
@@ -138,36 +154,28 @@ export const eventData = graphql`
 
 export const participantData = graphql`
 	fragment participantData on SimRacerHubParticipant {
-		carId
+		carName
 		carImage {
 			publicURL
 		}
-		carName
-		driverId
 		driverName
 		member {
-			...driverData
+			...driverChipData
 		}
 		finishPos
 		incidents
-		intv
+		interval
 		lapsLed
-		numLaps
+		lapsCompleted
 		qualifyPos
 		qualifyTime
 		fastestLapTime
+		totalPoints
 		racePoints
 		avgLap
-		provisional
 		status
-		bonus {
-			bonusPoints
-			bonusDescr
-		}
-		penalty {
-			penaltyPoints
-			penaltyDescr
-		}
+		bonusPoints
+		penaltyPoints
 		avgPos
 		arp
 		avgFastLap
@@ -198,14 +206,14 @@ export const raceData = graphql`
 		trackConfigName
 		trackLogo
 		weatherFog
-		weatherRh
+		weatherHumidity
 		weatherSkies
 		weatherTemp
-		weatherTempunit
+		weatherTempUnit
 		weatherType
 		weatherWind
-		weatherWinddir
-		weatherWindunit
+		weatherWindDir
+		weatherWindUnit
 		seriesName
 		seasonName
 		raceAvgTime
@@ -219,58 +227,31 @@ export const raceData = graphql`
 			...participantData
 		}
 		bestAvgPos {
-			driver {
-				...driverData
-			}
-			avgPos
+			...superlativeData
 		}
 		bestFastLap {
-			driver {
-				...driverData
-			}
-			fastestLapTime
+			...superlativeData
 		}
 		bestNumFastLap {
-			driver {
-				...driverData
-			}
-			numFastLap
+			...superlativeData
 		}
 		bestAvgFastLap {
-			driver {
-				...driverData
-			}
-			avgFastLap
+			...superlativeData
 		}
 		bestRestart {
-			driver {
-				...driverData
-			}
-			fastestRestart
+			...superlativeData
 		}
 		bestPasses {
-			driver {
-				...driverData
-			}
-			passes
+			...superlativeData
 		}
 		bestQualityPasses {
-			driver {
-				...driverData
-			}
-			qualityPasses
+			...superlativeData
 		}
 		bestClosingPasses {
-			driver {
-				...driverData
-			}
-			closingPasses
+			...superlativeData
 		}
 		hardCharger {
-			driver {
-				...driverData
-			}
-			gain
+			...superlativeData
 		}
 	}
 `
@@ -286,15 +267,25 @@ export const standingsData = graphql`
 		incidents
 		lapsCompleted
 		member {
-			...driverData
+			...driverChipData
 		}
 		penaltyPoints
 		position
 		racesCounted
+		rating
 		starts
 		top10s
 		top5s
 		totalPoints
 		wins	
+	}
+`
+
+export const superlativeData = graphql`
+	fragment superlativeData on DriverSuperlative {
+		driver {
+			...driverChipData
+		}
+		value
 	}
 `

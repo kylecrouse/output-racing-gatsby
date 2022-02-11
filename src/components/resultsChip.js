@@ -6,21 +6,16 @@ const ResultsChip = (props) => {
 	return (
 		<div className={ `${styles.container} ${props.hideSm && 'hide-sm'}` }>
 			{ props.results
-					.map((item, index) => {
-						const { bonus, penalty } = item
-						const bonusPoints = bonus.reduce((a, { bonusPoints = 0 }) => a + bonusPoints, 0)
-						const penaltyPoints = penalty.reduce((a, { penaltyPoints = 0 }) => a + penaltyPoints, 0)
-						return (
-							<ResultItem
-								driver={item.member ? item.member : item.driverName}
-								result={
-									props.counts
-										? <><b>{ item.racePoints + bonusPoints + penaltyPoints }</b> pts</>
-										: <b>{`P${index+1}`}</b>
-								}
-							/>
-						)
-					})
+					.map((item, index) => (
+						<ResultItem
+							driver={item.member ? item.member : item.driverName}
+							result={
+								props.counts
+									? <><b>{ item.totalPoints }</b> pts</>
+									: <b>{`P${index+1}`}</b>
+							}
+						/>
+					))
 			}
 		</div>
 	)

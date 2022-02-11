@@ -22,7 +22,7 @@ const Results = (props) => {
 						: change < 0
 							? 'negative'
 							: 'neutral'
-					return props.hardCharger.driverId === row.original.driverId
+					return props.hardCharger.driverId && props.hardCharger.driverId === row.original.driverId
 						? <b className={className}>
 								{Math.abs(change) || '\u00a0'}
 							</b>
@@ -50,7 +50,7 @@ const Results = (props) => {
 				className: 'cell-carLogo',
 				Cell: ({ value, row }) => (
 					<img 
-						src={ value.publicURL }
+						src={ value?.publicURL }
 						alt={ row.original.carName }
 					/>
 				)
@@ -89,23 +89,23 @@ const Results = (props) => {
 			},
 			{
 				Header: 'Time',
-				accessor: 'intv',
+				accessor: 'interval',
 				className: 'hide-sm',
 				Cell: ({ value, row }) => {
-					const { finishPos, numLaps, status } = row.original
+					const { finishPos, lapsCompleted, status } = row.original
 					return (value > 0)
 						? `+${value.toFixed(3)}`
 						: (finishPos === 1)
 							? moment.utc(moment.duration(props.duration, 's').as('milliseconds'))
 									.format('HH:mm:ss')
 							: (status.toLowerCase() === 'running')
-								? `+${props.raceLaps - numLaps} lap${props.raceLaps - numLaps > 1 ? 's' : ''}`
+								? `+${props.raceLaps - lapsCompleted} lap${props.raceLaps - lapsCompleted > 1 ? 's' : ''}`
 								: 'DNF'
 				}
 			},
 			{
 				Header: 'Laps',
-				accessor: 'numLaps',
+				accessor: 'lapsCompleted',
 				className: 'hide-sm'
 			},
 			{
@@ -208,15 +208,14 @@ const Results = (props) => {
 				accessor: 'fastestLapTime',
 				className: 'hide-sm',
 				Cell: ({ value, data }) => {
-					return moment(value, ['m:s.S', 's.S']).isSame(
-						moment.min(
-							...data
-								.filter(({ fastestLapTime }) => fastestLapTime > 0)
-								.map(({ fastestLapTime }) => moment(fastestLapTime, ['m:s.S', 's.S']))
-						)
+					return value === data.reduce(
+						(a, { fastestLapTime }) => fastestLapTime > 0 
+							? Math.min(fastestLapTime, a) 
+							: a,
+							9999999999999
 					)
-						? <b>{ value.toFixed(3) }</b>
-						: value > 0 ? value.toFixed(3) : '-'
+						? <b>{ (value/10000).toFixed(3) }</b>
+						: value > 0 ? (value/10000).toFixed(3) : '-'
 				}
 			},
 			{

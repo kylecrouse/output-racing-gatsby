@@ -1,35 +1,40 @@
 import * as React from 'react'
-import { Helmet } from 'react-helmet'
-import useSiteMetadata from '../hooks/use-site-metadata'
+import { graphql } from 'gatsby'
 import Cars from '../components/cars'
+import Layout from '../components/layout'
+import Meta from '../components/meta'
 import Seasons from '../components/seasons'
-import Standings from '../components/standings'
-import logo from '../images/logo.png'
+import StandingsTable from '../components/standingsTable'
 
-const StandingsTemplate = ({ pageContext, location }) => {
-	const { season } = pageContext
-	const seasons = React.useMemo(() => pageContext.seasons.edges.map(({ node }) => node), [pageContext.seasons])
-	const { title, siteUrl } = useSiteMetadata()
-	const totalRounds = season.events.filter(({ pointsCount, chase, offWeek }) => pointsCount && !chase && !offWeek)?.length ?? 0
-	const roundsCompleted = season.events.filter(({ pointsCount, chase, offWeek, race }) => pointsCount && !chase && !offWeek && race)?.length ?? 0
+const StandingsTemplate = (props) => {
+	const { season } = props.data
+	
+	const seasons = React.useMemo(
+		() => props.data.seasons.edges.map(
+			({ node }) => node
+		), 
+		[props.data.seasons]
+	)
+
+	const { totalRounds, roundsCompleted } = React.useMemo(
+		() => season.events.reduce(
+			(a, { pointsCount, chase, offWeek, race }) => {
+				if (pointsCount && !chase && !offWeek) {
+					a.totalRounds++
+					if (race) a.roundsCompleted++
+				}
+				return a
+			},
+			{ totalRounds: 0, roundsCompleted: 0 }
+		),
+		[season.events]
+	)
+
 	return (
-		<>
+		<Layout {...props}>
+			<Meta {...props}/>
 			<main className="container">
 	
-				<Helmet>
-					<title>Output Racing League | {season.seriesName} | {season.seasonName} Standings</title>
-					<meta property="og:image" content={`${siteUrl}${logo}`} />
-					<meta property="og:description" content={`An asphalt oval league for the late-night racer.`} />
-					<meta property="og:title" content={ `${title} | ${season.seasonName} Standings` } />
-					<meta property="og:type" content="website"/>
-					<meta property="og:url" content={ `${siteUrl}${location.pathname}` } />
-					<meta name="twitter:card" content="summary_large_image"/>
-					<meta name="twitter:title" content={ `${title} | ${season.seasonName} Standings` } />
-					<meta name="twitter:description" content={`An asphalt oval league for the late-night racer.`} />
-					<meta name="twitter:image" content={`${siteUrl}${logo}`} />
-					<meta name="theme-color" content="#000000"/>
-				</Helmet>
-				
 				<div className="columns">
 					<div className="column col-8 col-xl-12 col-mx-auto content">
 				
@@ -49,7 +54,7 @@ const StandingsTemplate = ({ pageContext, location }) => {
 							}
 						</hgroup>
 	
-						<Standings 
+						<StandingsTable
 							standings={ season.standings }
 							fields={ column => ['laps'].includes(column) }
 						/>
@@ -61,12 +66,66 @@ const StandingsTemplate = ({ pageContext, location }) => {
 	
 			<div className="columns seasons-container">
 				<div className="column col-8 col-xl-12 col-mx-auto">
-					<Seasons path="standings" seasons={seasons} />
+					<Seasons path={`${props.pageContext.seriesName}/standings`} seasons={seasons} />
 				</div>
 			</div>
 			
-		</>
+		</Layout>
 	)
 }
+
+export const query = graphql`
+	query StandingsQuery($seasonId: Int) {
+		season: simRacerHubSeason(seasonId: {eq: $seasonId}) {
+			leagueName
+			seriesName
+			seasonName
+			seasonClass {
+				seasonClassCars {
+					carId
+					carName
+				}
+			}
+			events {
+				pointsCount
+				chase
+				offWeek
+				race {
+					raceId
+				}
+			}
+			standings {
+				...standingsData
+			}	
+		}
+		seasons: allSimRacerHubSeason(
+			sort: {fields: events___raceDate, order: DESC}
+			filter: {seasonId: {ne: $seasonId}}
+		) {
+			edges {
+				node {
+					seasonName
+					seasonId
+					seriesName
+					seasonClass {
+						seasonClassCars {
+							carId
+							carName
+						}
+					}
+					standings {
+						driverId
+						driverName
+						member {
+							...driverChipData
+						}
+						position
+						totalPoints
+					}	
+				}
+			}
+		}
+	}
+`
 
 export default StandingsTemplate

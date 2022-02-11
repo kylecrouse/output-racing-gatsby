@@ -1,26 +1,23 @@
 import * as React from 'React'
 
-const OutputLaytout = React.lazy(
-	() => import('../layouts/output')
-)
-const NightOwlLayout = React.lazy(
-	() => import('../layouts/nightowl')
-)
+import OutputLayout from '../layouts/output'
+import NightOwlLayout from '../layouts/nightowl'
 
 const Layout = props => {
-	const { seriesName = null } = props.params
+	const { seriesName = null } = props.pageContext
 	return (
-		<React.Suspense fallback={<></>}>
-			{	seriesName === 'output-series' && 
-					<OutputLayout {...props}>
-						{ props.children }
-					</OutputLayout>
-			}
-			{	seriesName === 'night-owl-series' && 
+		seriesName === 'night-owl-series'
+			? (
 					<NightOwlLayout {...props}>
 						{ props.children }
 					</NightOwlLayout>
-			}
-		</React.Suspense>
+				)
+			: (
+					<OutputLayout {...props}>
+						{ props.children }
+					</OutputLayout>	
+				)
 	)
 }
+
+export default Layout

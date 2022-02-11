@@ -91,10 +91,6 @@
 	display: none;
 }
 
-.season-results {
-	margin-bottom: 1rem;
-}
-
 .season-result-item {
 	background: linear-gradient(90deg, transparent 67%, black);
 	border-color: black;
@@ -123,6 +119,7 @@
 .season-result-item:nth-child(3) {
 	background: linear-gradient(112deg, transparent 67%, rgba(177,86,15,0.6));
 	border-color: rgb(177,86,15);
+	margin-bottom: 1rem;
 }
 
 .season-result-item > div {

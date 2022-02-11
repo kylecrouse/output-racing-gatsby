@@ -3,7 +3,7 @@ import * as styles from './license.module.scss'
 
 const License = (props) => {
 	return (
-		<ul className={ styles.container }>
+		<ul className={ `${styles.container} hide-sm` }>
 			<li style={{ backgroundColor: `#${props.licColor}`, color: props.licGroup === 3 ? 'black' : 'white' }}>
 				<span>
 					{props.licGroupDisplayName.replace('Class ', '')}&nbsp;

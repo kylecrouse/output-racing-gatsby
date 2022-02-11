@@ -16,7 +16,7 @@ const ScheduleTemplate = props => {
 		<Layout {...props}>
 			<main className="container">
 	
-				<Meta {...season} page="Schedule"/>
+				<Meta {...props}/>
 
 				<div className="columns">
 					<div className="column col-8 col-xl-10 col-lg-11 col-sm-12 col-mx-auto content">
@@ -29,7 +29,7 @@ const ScheduleTemplate = props => {
 								</h3>
 							</div>
 							{ season.seasonClass?.length > 0 &&
-								<Cars cars={season.seasonClass[0]?.seasonClassCars} />
+								<Cars cars={season.seasonClass[0]?.seasonClassCars} className="hide-sm" />
 							}
 						</hgroup>
 	
@@ -42,7 +42,7 @@ const ScheduleTemplate = props => {
 					
 			<div className="columns seasons-container">
 				<div className="column col-8 col-xl-10 col-lg-11 col-mx-auto">
-					<Seasons path="schedule" seasons={seasons} />
+					<Seasons path={`${props.pageContext.seriesName}/schedule`} seasons={seasons} />
 				</div>
 			</div>
 		</Layout>
@@ -84,16 +84,7 @@ export const query = graphql`
 						driverId
 						driverName
 						member {
-							active
-							driverName
-							driverNickname
-							driverNumber
-							driverNumberArt {
-								gatsbyImageData	
-								file {
-									url
-								}
-							}
+							...driverChipData
 						}
 						position
 						totalPoints

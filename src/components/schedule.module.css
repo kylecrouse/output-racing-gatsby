@@ -50,8 +50,8 @@ a.details:focus .track h4 {
 
 .info {
 	align-items: flex-end;
-	font-size: 0.6rem;
-	font-weight: 100;
+	font-family: obvia, sans-serif;
+	font-size: 0.7rem;
 	margin-left: auto;
 	text-align: right;
 	text-transform: uppercase;
@@ -59,6 +59,12 @@ a.details:focus .track h4 {
 
 .info span {
 	display: block;
+	line-height: 1.25;
+}
+
+.info span b {
+	font-size: 0.65rem;
+	font-weight: 600;
 }
 
 .container [class*="cars-container"] {

@@ -10,7 +10,7 @@ const Cars = (props) => {
 		[props.cars]
 	)
 	return (
-		<div className="cars-container">
+		<div className={`cars-container ${props.className}`}>
 			{ cars }
 		</div>
 	)

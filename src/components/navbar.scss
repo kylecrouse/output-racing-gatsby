@@ -108,14 +108,26 @@ header {
 		
 		a:link,
 		a:visited {
-			color: var(--highlight-color);
+			color: white;//var(--highlight-color);
+			font-family: obvia-expanded, sans-serif;
+			font-size: 0.7rem;
+			font-style: italic;
+			line-height: 1;
+			opacity: 0.5;
+			margin-left: 0.5rem;
 		}
 		
-		a.active,
-		a:hover,
-		a:active {
+		a.active {
 			background-color: var(--highlight-color);
 			color: var(--secondary-color);
+			opacity: 1;
+		}
+		
+		a:not(.active):hover,
+		a:not(.active):active {
+			background: transparent;
+			color: var(--highlight-color);
+			opacity: 1;
 		}
 		
 	}
@@ -126,6 +138,26 @@ header {
 		height: 2.5rem;
 	}
 	
+}
+
+@media (max-width: 1280px) {
+	.subnav	> .column::before {
+		left: -10%;
+	}
+}
+
+@media (max-width: 960px) {
+	.navbar {
+		padding-left: 1rem;
+		padding-right: 1rem;
+	}
+	.subnav {
+		padding-left: 2rem;
+		padding-right: 2rem;
+		> .column::before {
+			left: -12%;
+		}
+	}
 }
 
 @media (max-width: 480px) {

@@ -3,13 +3,15 @@ import './seasonCard.css'
 import DriverChip from '../components/driverChip'
 import Cars from '../components/cars'
 
+const pathify = (string) => string.replace(/[:-]/g, '').replace(/\s+/g, '-').toLowerCase()
+
 const SeasonCard = (props) => {
 	const [, year, head, , subhead] = React.useMemo(
 		() => props.seasonName.match(/^20(\d+) ((Winter )?Season\s?\d?)?:?(.*)/),
 		[props.seasonName]
 	)
 	const standings = React.useMemo(
-		() => props.standings.slice(0, 3)
+		() => props.standings && props.standings.slice(0, 3)
 			.map((item, index) => (
 				<div key={`seasonCardStanding${index}`} className="season-result-item">
 					<div className="columns">
@@ -32,7 +34,7 @@ const SeasonCard = (props) => {
 		[props.standings]
 	)
 	return (
-		<a href={`/${props.path}/${props.seasonId}`} className="season-card">
+		<a href={`/${props.path}/${pathify(props.seasonName)}`} className="season-card">
 			<div className="season-details">
 				<div className="season-date">
 					<span className="season-day">

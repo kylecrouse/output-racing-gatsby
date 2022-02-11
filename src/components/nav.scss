@@ -15,7 +15,7 @@
 	font-size: 0.6rem;
 	font-weight: 300;
 	color: #666;
-	padding: 0.2rem 0.5rem;
+	padding: 0.2rem 0.5rem 0.2rem 0.4rem;
 	text-transform: uppercase;
 	text-decoration: none;
 }
@@ -25,14 +25,14 @@
 .nav a:active {
 	background-color: #f4a913;
 	color: #000;
-	transform: skew(-12deg);
+	transform: skew(-20deg);
 }
 
 .nav a.active span,
 .nav a:hover span,
 .nav a:active span {
 	display: inline-block;
-	transform: skew(12deg);
+	transform: skew(20deg);
 }
 
 @media (max-width: 600px) {

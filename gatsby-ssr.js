@@ -2,7 +2,7 @@
 const React = require("react")
 
 const HeadComponents = [
-	<link rel="stylesheet" href="https://use.typekit.net/ovc0kir.css"/>
+	<link key="typekit-css" rel="stylesheet" href="https://use.typekit.net/ovc0kir.css"/>
 ]
 
 exports.onRenderBody = ({ pathname, setHeadComponents }) => {

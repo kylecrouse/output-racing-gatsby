@@ -14,7 +14,7 @@
 .glide__arrow:hover,
 .glide__arrow:focus {
 	background: var(--highlight-color);
-	color: black !important;
+	color: var(--highlight-opposite-color) !important;
 }
 
 .glide__bullet {

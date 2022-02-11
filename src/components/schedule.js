@@ -13,7 +13,7 @@ const Schedule = (props) => {
 								{ event.eventName || 'Chase for the Championship' }
 							</div>
 						: event.race
-							?	<a href={ `/results/${event.race.raceId}` } className={ styles.details }>
+							?	<a href={ `../results/${event.race.raceId}` } className={ styles.details }>
 									<RaceChip {...event}/>
 									<ResultsChip
 										counts={event.pointsCount}
@@ -29,11 +29,13 @@ const Schedule = (props) => {
 									<RaceChip {...event}/>
 									<div className={ `${styles.info} hide-sm` }>
 										<div>
-											{ !event.pointsCount && <span>non-points</span> }
+											{ event.raceLength && 
+													<span><b>{`${event.raceLength}`}</b>{`\u00A0${event.raceLengthUnit}`}</span>
+											}
 											{ event.trackConfigName && event.trackConfigName.toLowerCase() !== 'oval' &&
 													<span>{ event.trackConfigName }</span>
 											}
-											<span>{`${event.raceLength}\u00A0${event.raceLengthUnit}`}</span>
+											{ !event.pointsCount && <span>non-points</span> }
 										</div>
 										{ false &&
 											<Cars cars={event.cars} />
