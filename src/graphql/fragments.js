@@ -3,26 +3,14 @@ import { graphql } from 'gatsby'
 
 export const driverData = graphql`
 	fragment driverData on SimRacerHubDriver {
-		custid
 		active
 		driverName
-		driverNickname
-		driverNumber
+		carNumber
 		driverNumberArt {
 			gatsbyImageData	
 			file {
 				url
 			}
-		}
-		driverLicense {
-			iRating
-			licColor
-			licGroup
-			licGroupDisplayName
-			licLevel
-			licLevelDisplayName
-			srPrime
-			srSub
 		}
 		driverMedia {
 			gatsbyImageData(
@@ -33,6 +21,12 @@ export const driverData = graphql`
 				url
 			}
 		}
+		driverIROval
+		driverSROval
+		driverLicenseOval
+		driverIRRoad
+		driverSRRoad
+		driverLicenseRoad
 		stats {
 			starts
 			avgStartPos
@@ -53,6 +47,7 @@ export const driverData = graphql`
 			lapsLedPct
 			polePct
 			incidentsPerLap
+			rating
 		}
 		trackStats {
 			trackName
@@ -76,6 +71,7 @@ export const driverData = graphql`
 			lapsLedPct
 			polePct
 			incidentsPerLap
+			rating
 		}
 		typeStats {
 			typeName
@@ -98,29 +94,16 @@ export const driverData = graphql`
 			lapsLedPct
 			polePct
 			incidentsPerLap
-		}
-		races {
-			carId
-			finishPos
-			incidents
-			lapsLed
-			numLaps
-			qualifyPos
-			scheduleId
-			seasonId
-			seriesId
-			trackConfigId
+			rating
 		}
 	}
 `
 
 export const driverChipData = graphql`
 	fragment driverChipData on SimRacerHubDriver {
-		custid
 		active
 		driverName
-		driverNickname
-		driverNumber
+		carNumber
 		driverNumberArt {
 			gatsbyImageData	
 			file {

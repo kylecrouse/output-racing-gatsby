@@ -3,6 +3,7 @@ import { graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
 import { BLOCKS, MARKS } from "@contentful/rich-text-types"
 import { renderRichText } from "gatsby-source-contentful/rich-text"
+import Layout from '../components/layout'
 import Tabs from '../components/tabs'
 import * as styles from './rules.module.css'
 
@@ -33,99 +34,101 @@ const options = {
 	},
 }
 
-const RulesPage = ({ data }) => {
+const RulesPage = (props) => {
 	return (
-		<main className="container">
-			<Helmet>
-				<title>Output Racing League | Rules</title>
-			</Helmet>
+		<Layout {...props}>
+			<main className="container">
+				<Helmet>
+					<title>Output Racing League | Rules</title>
+				</Helmet>
+		
+				<div className="columns">
+					<div className="column col-8 col-xl-10 col-lg-12 col-mx-auto content">
 	
-			<div className="columns">
-				<div className="column col-8 col-xl-10 col-lg-12 col-mx-auto content">
-
-					<hgroup className="page-header">
-						<h2 className="page-title">Rulebook</h2>
-					</hgroup>
-				
-					<Tabs 
-						tabs={[
-							{
-								title: 'Rules',
-								content: (
-									<div className="columns">
-										<div className="column col-4 hide-sm">
-											<ol className={ styles.toc }>
-												{ React.useMemo(
-														() => (
-															(JSON.parse(data.league.rules.raw)).content
-																.filter(({ nodeType }) => nodeType === 'heading-3')
-																.map(({ content }) => content[0].value)
-																.map(section => (
-																	<li>
-																		<a href={`#section-${section.replace(/\s/g,'-').toLowerCase()}`}>
-																			{ section }
-																		</a>
-																	</li>
-																))
-														),
-														[data.league.rules.raw]
-													)		
-												}
-											</ol>
+						<hgroup className="page-header">
+							<h2 className="page-title">Rulebook</h2>
+						</hgroup>
+					
+						<Tabs 
+							tabs={[
+								{
+									title: 'Rules',
+									content: (
+										<div className="columns">
+											<div className="column col-4 hide-sm">
+												<ol className={ styles.toc }>
+													{ React.useMemo(
+															() => (
+																(JSON.parse(props.data.league.rules.raw)).content
+																	.filter(({ nodeType }) => nodeType === 'heading-3')
+																	.map(({ content }) => content[0].value)
+																	.map(section => (
+																		<li>
+																			<a href={`#section-${section.replace(/\s/g,'-').toLowerCase()}`}>
+																				{ section }
+																			</a>
+																		</li>
+																	))
+															),
+															[props.data.league.rules.raw]
+														)		
+													}
+												</ol>
+											</div>
+											<div className="column col-6 col-sm-12 col-mx-auto">
+												{ renderRichText(props.data.league.rules, options) }
+											</div>
 										</div>
-										<div className="column col-6 col-sm-12 col-mx-auto">
-											{ renderRichText(data.league.rules, options) }
+									),
+								},
+								{
+									title: 'Session Info',
+									content: (
+										<div className="columns">
+											<div className="column col-4 hide-sm">
+												<ol className={ styles.toc }>
+													{ React.useMemo(
+															() => (
+																(JSON.parse(props.data.league.raceInfo.raw)).content
+																	.filter(({ nodeType }) => nodeType === 'heading-3')
+																	.map(({ content }) => content[0].value)
+																	.map(section => (
+																		<li>
+																			<a href={`#section-${section.replace(/\s/g,'-').toLowerCase()}`}>
+																				{ section }
+																			</a>
+																		</li>
+																	))
+															),
+															[props.data.league.raceInfo.raw]
+														)		
+													}
+												</ol>												
+											</div>
+											<div className="column col-6 col-sm-12 col-mx-auto">
+												{ renderRichText(props.data.league.raceInfo, options) }
+											</div>
 										</div>
-									</div>
-								),
-							},
-							{
-								title: 'Session Info',
-								content: (
-									<div className="columns">
-										<div className="column col-4 hide-sm">
-											<ol className={ styles.toc }>
-												{ React.useMemo(
-														() => (
-															(JSON.parse(data.league.raceInfo.raw)).content
-																.filter(({ nodeType }) => nodeType === 'heading-3')
-																.map(({ content }) => content[0].value)
-																.map(section => (
-																	<li>
-																		<a href={`#section-${section.replace(/\s/g,'-').toLowerCase()}`}>
-																			{ section }
-																		</a>
-																	</li>
-																))
-														),
-														[data.league.raceInfo.raw]
-													)		
-												}
-											</ol>												
+									),
+								},
+								{
+									title: 'Code of Conduct',
+									content: (
+										<div className="columns">
+											<div className="column col-6 col-sm-12 col-mx-auto">
+												{ renderRichText(props.data.league.codeOfConduct, options) }
+											</div>
 										</div>
-										<div className="column col-6 col-sm-12 col-mx-auto">
-											{ renderRichText(data.league.raceInfo, options) }
-										</div>
-									</div>
-								),
-							},
-							{
-								title: 'Code of Conduct',
-								content: (
-									<div className="columns">
-										<div className="column col-6 col-sm-12 col-mx-auto">
-											{ renderRichText(data.league.codeOfConduct, options) }
-										</div>
-									</div>
-								),
-							},
-						]}
-					/>
-
+									),
+								},
+							]}
+						/>
+	
+					</div>
 				</div>
-			</div>
-
-		</main>
+	
+			</main>
+		</Layout>
 	)
 }
 

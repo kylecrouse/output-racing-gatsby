@@ -1,22 +1,23 @@
 import * as React from "react"
-import { Helmet } from 'react-helmet'
+import { graphql } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
-import useSiteMetadata from '../hooks/use-site-metadata'
 import DriverChip from '../components/driverChip'
+import Layout from '../components/layout'
+import Meta from '../components/meta'
 import License from '../components/license'
 import Table from '../components/table'
 import * as styles from './driver.module.scss'
 
-const TYPE_ORDER = ['Overall', 'Short Track', '1-mile', 'Intermediate', '2-mile', 'Superspeedway', 'Road Course', 'Dirt Oval', 'Rallycross']
+const TYPE_ORDER = ['Short Track', '1 mile', 'Intermediate', '2+ mile', 'Superspeedway', 'Road Course', 'Dirt Oval', 'Rallycross', 'Overall']
 
-const DriverTemplate = ({ pageContext, location }) => {
-	const { title, siteUrl } = useSiteMetadata()
+const DriverTemplate = props => {
+	const { driver } = props.data
 	const typeStats = React.useMemo(
-		() => pageContext.typeStats && [
-			{ typeName: 'Overall', ...pageContext.stats },
-			...pageContext.typeStats
+		() => driver.typeStats && [
+			{ typeName: 'Overall', ...driver.stats },
+			...driver.typeStats
 		].sort((a, b) => TYPE_ORDER.indexOf(a.typeName) - TYPE_ORDER.indexOf(b.typeName)),
-		[pageContext.stats, pageContext.typeStats]
+		[driver.stats, driver.typeStats]
 	)
 	const typeColumns = React.useMemo(
 		() => [
@@ -37,6 +38,10 @@ const DriverTemplate = ({ pageContext, location }) => {
 			{
 				Header: 'Avg Finish',
 				accessor: 'avgFinishPos'
+			},
+			{
+				Header: 'Avg Rating',
+				accessor: 'rating'
 			},
 			{
 				Header: 'Laps',
@@ -123,6 +128,10 @@ const DriverTemplate = ({ pageContext, location }) => {
 				accessor: 'avgFinishPos'
 			},
 			{
+				Header: 'Avg Rating',
+				accessor: 'rating'
+			},
+			{
 				Header: 'Laps',
 				accessor: 'lapsCompleted'
 			},
@@ -183,30 +192,14 @@ const DriverTemplate = ({ pageContext, location }) => {
 	)
 	
 	return (
-		<>
-			<Helmet>
-				<title>{title} | Drivers | {pageContext.driverNickname || pageContext.driverName}</title>
-				{ pageContext.driverMedia &&
-					<meta property="og:image" content={`http:${pageContext.driverMedia.file.url}`} />
-				}
-				<meta property="og:description" content={`${pageContext.driverNickname || pageContext.driverName}'s driver profile and league statistics.`} />
-				<meta property="og:title" content={ `${title} | ${pageContext.driverNickname || pageContext.driverName}` } />
-				<meta property="og:type" content="website"/>
-				<meta property="og:url" content={ `${siteUrl}${location.pathname}` } />
-				<meta name="twitter:card" content="summary_large_image"/>
-				<meta name="twitter:title" content={ `${title} | ${pageContext.driverNickname || pageContext.driverName}` } />
-				<meta name="twitter:description" content={`${pageContext.driverNickname || pageContext.driverName}'s driver profile and league statistics.`} />
-				{ pageContext.driverMedia &&
-					<meta name="twitter:image" content={`http:${pageContext.driverMedia.file.url}`} />
-				}
-				<meta name="theme-color" content="#000000"/>
-			</Helmet>
+		<Layout {...props}>
+			<Meta {...props}/>
 			
-			{ pageContext.driverMedia && 
+			{ driver.driverMedia && 
 					<GatsbyImage 
 						alt="car screenshot"
 						className={ styles.driverImage }
-						image={ getImage(pageContext.driverMedia) } 
+						image={ getImage(driver.driverMedia) } 
 					/>
 			}
 
@@ -217,14 +210,27 @@ const DriverTemplate = ({ pageContext, location }) => {
 					
 						<hgroup className={`page-header ${styles.pageHeader}`}>
 							<DriverChip 
-								{...pageContext} 
+								{...driver} 
 								active={true}
 								license={true}
 								link={false}
 							/>
-							{ pageContext.driverLicense && 
-								<License {...pageContext.driverLicense}/>
-							}
+							<div className={ styles.licenseContainer }>
+								{ driver.driverLicenseOval && 
+										<License 
+											license={driver.driverLicenseOval}
+											ir={driver.driverIROval}
+											sr={driver.driverSROval}
+										/>
+								}
+								{ driver.driverLicenseRoad && 
+										<License 
+											license={driver.driverLicenseRoad}
+											ir={driver.driverIRRoad}
+											sr={driver.driverSRRoad}
+										/>
+								}
+							</div>
 						</hgroup>
 
 						{ typeStats && 
@@ -238,10 +244,10 @@ const DriverTemplate = ({ pageContext, location }) => {
 						
 						<br/>
 
-						{ pageContext.trackStats && 
+						{ driver.trackStats && 
 							<Table 
 								columns={trackColumns} 
-								data={pageContext.trackStats}
+								data={driver.trackStats}
 								disableSortBy={true} 
 								initialState={{
 									sortBy: [{ id: 'trackName', desc: false }]
@@ -254,8 +260,18 @@ const DriverTemplate = ({ pageContext, location }) => {
 				</div>
 	
 			</main>
-		</>
+		</Layout>
 	)
 }
+
+export const query = graphql`
+	query DriverQuery($driverId: Int) {
+		driver: simRacerHubDriver(
+			driverId: {eq: $driverId}
+		) {
+			...driverData	
+		}	
+	}
+`
 
 export default DriverTemplate

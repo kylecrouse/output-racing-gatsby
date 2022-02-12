@@ -45,56 +45,20 @@ exports.createResolvers = ({ createResolvers }) => {
 	
 	const resolvers = {
 		SimRacerHubDriver: {
-			active: {
-				type: "Boolean",
-				resolve: async (source, args, context, info) => {
-					// @TODO: Pull this from iRacing roster presence?
-					const { active = false } = await getContentfulDriver(source, args, context, info)
-					return active
-				}
-			},
-			driverLicense: {
-				type: "DriverLicense",
-				resolve: async (source, args, context, info) => {
-					const { license___NODE = null } = await getContentfulDriver(source, args, context, info)
-					if (!license___NODE) 
-						return null				
-							
-					const node = context.nodeModel.getNodeById({ id: license___NODE })
-					return {
-						...node,
-						iRating: node.iRating === '---' ? 0 : node.iRating
-					}
-				}
-			},
 			driverMedia: {
 				type: "ContentfulAsset",
 				resolve: async (source, args, context, info) => {
-					const { media___NODE = null } = await getContentfulDriver(source, args, context, info)
+					const { media___NODE = null } = await getContentfulDriver(source, args, context, info) ?? {}
 					if (!media___NODE) 
 						return null				
 							
 					return context.nodeModel.getNodeById({ id: media___NODE })
 				}
 			},
-			driverNickname: {
-				type: "String",
-				resolve: async (source, args, context, info) => {
-					const { nickname = null } = await getContentfulDriver(source, args, context, info)
-					return nickname
-				}
-			},
-			driverNumber: {
-				type: "String",
-				resolve: async (source, args, context, info) => {
-					const { number = null } = await getContentfulDriver(source, args, context, info)
-					return number
-				}
-			},
 			driverNumberArt: {
 				type: "ContentfulAsset",
 				resolve: async (source, args, context, info) => {
-					const { numberArt___NODE = null } = await getContentfulDriver(source, args, context, info)
+					const { numberArt___NODE = null } = await getContentfulDriver(source, args, context, info) ?? {}
 					if (!numberArt___NODE) 
 						return null
 					
@@ -207,6 +171,16 @@ exports.createPages = async ({ graphql, actions }) => {
 	const { createPage } = actions
 	const { data } = await graphql(`
 		query {
+			drivers: allSimRacerHubDriver(
+				filter: {active: {eq: true}}
+			) {
+				edges {
+					node {
+						driverId
+						driverName
+					}
+				}
+			}
 			seasons: allSimRacerHubSeason(
 				sort: { 
 					fields: events___race___raceDate, 
@@ -229,6 +203,20 @@ exports.createPages = async ({ graphql, actions }) => {
 			}
 		}
 	`)
+	// Create drivers pages
+	data.drivers.edges.forEach(({ node }) => {
+		const seriesName = pathify('Output Series'),
+					seasonName = pathify(node.driverName),
+					driverId = node.driverId
+
+		createPage({
+			path: `${seriesName}/drivers/${seasonName}`,
+			component: path.resolve(`src/templates/driver.js`),
+			context: { seriesName, seasonName, driverId },
+		})
+	})
+	
+	// Create schedule, standings and results pages
 	data.seasons.edges.forEach(({ node }) => {
 		const seriesName = pathify(node.seriesName),
 					seasonName = pathify(node.seasonName),

@@ -1,6 +1,19 @@
+:root {
+	--class-a-bg: #0153DB;
+	--class-a-fg: white;
+	--class-b-bg: #00C702;
+	--class-b-fg: white;
+	--class-c-bg: rgb(252,138,38);
+	--class-c-fg: black;
+	--class-d-bg: rgb(254,236,1);
+	--class-d-fg: black;
+	--class-rookie-bg: #FC0706;
+	--class-rookie-fg: white;
+}
+
 .container {
 	list-style: none;
-	margin: 0 0.2rem 0 0;
+	margin: 0 0.2rem;
 	padding: 0;
 }
 
@@ -10,9 +23,76 @@
 	font-size: 0.6rem;
 	font-weight: 600;
 	display: inline-block;
-	margin-bottom: 0.4rem;
+	margin: 0.2rem 0;
 	text-transform: uppercase;
-	transform: skew(-12deg);
+	transform: skew(-20deg);
+}
+
+.container li:first-child::before {
+	background: transparent url('../images/series-meta.png') no-repeat -3px -46px;
+	content: ' ';
+	display: inline-block;
+	filter: brightness(0) saturate(1) invert(1);
+	height: 9px;
+	margin: -0.1rem -0.35rem 0 0.5rem;
+	transform: skew(20deg);
+	vertical-align: middle;
+	width: 12px;
+}
+
+.container[class*="class-C"] li:first-child::before,
+.container[class*="class-D"] li:first-child::before {
+	filter: brightness(0) saturate(1);
+}
+
+.container:last-of-type li:first-child::before {
+	background-position: -1px -61px;
+}
+
+.container[class*="class-A"] {
+	li:first-child {
+		background-color: var(--class-a-bg);
+		color: var(--class-a-fg);		
+	}
+	li:last-child {
+		border-right-color: var(--class-a-bg);
+	}
+}
+.container[class*="class-B"] {
+	li:first-child {
+		background-color: var(--class-b-bg);
+		color: var(--class-b-fg);
+	}
+	li:last-child {
+		border-right-color: var(--class-b-bg);
+	}
+}
+.container[class*="class-C"] {
+	li:first-child {
+		background-color: var(--class-c-bg);
+		color: var(--class-c-fg);		
+	}
+	li:last-child {
+		border-right-color: var(--class-c-bg);
+	}
+}
+.container[class*="class-D"] {
+	li:first-child {
+		background-color: var(--class-d-bg);
+		color: var(--class-d-fg);
+	}
+	li:last-child {
+		border-right-color: var(--class-d-bg);
+	}
+}
+.container[class*="class-Rookie"] {
+	li:first-child {
+		background-color: var(--class-rookie-bg);
+		color: var(--class-rookie-fg);
+	}
+	li:last-child {
+		border-right-color: var(--class-rookie-bg);
+	}
 }
 
 .container li:last-child {
@@ -22,8 +102,8 @@
 
 .container li > span {
 	display: inline-block;
-	padding: 0.2rem 1rem;
-	transform: skew(12deg);
+	padding: 0.1rem 0.75rem;
+	transform: skew(20deg);
 }
 
 .container li > span span {

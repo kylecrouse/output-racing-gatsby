@@ -2,16 +2,17 @@ import * as React from 'react'
 import * as styles from './license.module.scss'
 
 const License = (props) => {
+	const licenseClass = props.license.replace('Class ', '')
 	return (
-		<ul className={ `${styles.container} hide-sm` }>
-			<li style={{ backgroundColor: `#${props.licColor}`, color: props.licGroup === 3 ? 'black' : 'white' }}>
+		<ul className={ `${styles.container} class-${licenseClass} hide-sm` }>
+			<li>
 				<span>
-					{props.licGroupDisplayName.replace('Class ', '')}&nbsp;
-					{props.srPrime}.{props.srSub}
+					{licenseClass}&nbsp;
+					{props.sr}
 				</span>
 			</li>
-			<li style={{ borderRightColor: `#${props.licColor}` }}>
-				<span>{`${Math.floor(props.iRating/100)/10}k`}</span>
+			<li>
+				<span>{`${(Math.floor(props.ir/100)/10).toFixed(1)}k`}</span>
 			</li>
 		</ul>		
 	)

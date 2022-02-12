@@ -33,33 +33,23 @@ exports.sourceNodes = async ({
       .then(({ data }) => cache.set(url, data))
       .catch(err => console.log(url, err.response.status, err.response.statusText, err.response.data)))
   }
-  
-  const nodes = getNodesByType('ContentfulDriver')
-  const ids = nodes.reduce(
-    (a, { custId, active }) => custId && active ? [...a, custId] : a, 
-    []
-  )
-  
-  // Build query string for API request
-  let qs = { leagueId: LEAGUE_ID }
-  if (ids.length > 0)
-    qs.custId = ids.join(',')
-    
-  const [drivers = [], series = null, schedule = {}] = await Promise.all([
-    fetch(`/drivers?${querystring.encode(qs)}`),
+      
+  const [drivers = {}, series = null, schedule = {}] = await Promise.all([
+    fetch(`/drivers?seriesId=6842`),
     fetch(`/series?seriesId=6842`),
     fetch(`/schedule?seriesId=6842`),
   ])
-    
-  drivers.forEach(driver => createNode({
-    ...driver,
-    id: createNodeId(`SimRacerHubDriver-${driver.driverId}`),
-    internal: {
-      type: 'SimRacerHubDriver',
-      content: JSON.stringify(driver),
-      contentDigest: createContentDigest(driver),
-    },
-  }))
+  
+  if (drivers)
+    Object.values(drivers).forEach(driver => createNode({
+      ...driver,
+      id: createNodeId(`SimRacerHubDriver-${driver.driverId}`),
+      internal: {
+        type: 'SimRacerHubDriver',
+        content: JSON.stringify(driver),
+        contentDigest: createContentDigest(driver),
+      },
+    }))
 
   await Promise.all(
     series.seasons.map(

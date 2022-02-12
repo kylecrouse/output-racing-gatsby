@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Helmet } from 'react-helmet'
 import 'spectre.css/dist/spectre.min.css'
 import 'spectre.css/dist/spectre-icons.min.css'
 import 'spectre.css/dist/spectre-exp.min.css'
@@ -15,6 +16,9 @@ const Layout = ({ pageContext, uri, children }) => {
 	}, [])
 	return (
 		<>
+			<Helmet>
+				<style type="text/css">{ `body { padding-top: 6.5rem; }` }</style>
+			</Helmet>
 			<Navbar series={pageContext.seriesName} page={ uri.split('/')[1] } />
 			{ children }
 			<Footer />

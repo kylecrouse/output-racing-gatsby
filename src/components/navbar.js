@@ -8,7 +8,7 @@ const Navbar = (props) => {
 	return (
 		<header>
 			<div className="container">
-				<div className="navbar columns col-gapless">
+				<div className={`navbar columns col-gapless ${props.series ? 'with-subnav' : 'no-subnav'}`}>
 					<div className="column col-8 col-xl-10 col-lg-12 col-mx-auto">
 						<section className="navbar-section">
 							<a href="/" className="navbar-brand mr-2">
@@ -42,38 +42,40 @@ const Navbar = (props) => {
 						</section>
 					</div>
 				</div>
-				<div className="subnav columns col-gapless">
-					<div className="column col-8 col-xl-10 col-lg-12 col-mx-auto col-gapless">
-						<div className="subnav-section">
-							{	props.series === 'night-owl-series'
-									? (	<a href="/night-owl-series/schedule" className="nightowl-logo">
-												<img src={nightowlLogo} alt="Night Owl Series"/>
-											</a>
-										)
-									: (	<a href="/output-series/schedule" className="output-logo">
-												<img src={outputLogo} alt="Output Series"/>
-											</a>		
-										)
-							}
+				{ props.series &&
+					<div className="subnav columns col-gapless">
+						<div className="column col-8 col-xl-10 col-lg-12 col-mx-auto col-gapless">
+							<div className="subnav-section">
+								{	props.series === 'night-owl-series'
+										? (	<a href="/night-owl-series/schedule" className="nightowl-logo">
+													<img src={nightowlLogo} alt="Night Owl Series"/>
+												</a>
+											)
+										: (	<a href="/output-series/schedule" className="output-logo">
+													<img src={outputLogo} alt="Output Series"/>
+												</a>		
+											)
+								}
+							</div>
+							<div className="subnav-section">
+								<nav className="nav">
+									<a href={`/${props.series}/drivers`} className={props.page === 'drivers' ? 'active' : ''}>
+										<span>Drivers</span>
+									</a>
+									<a href={`/${props.series}/schedule`} className={props.page === 'schedule' ? 'active' : ''}>
+										<span>Schedule</span>
+									</a>
+									<a href={`/${props.series}/standings`} className={props.page === 'standings' ? 'active' : ''}>
+										<span>Standings</span>
+									</a>
+									<a href={`/${props.series}/stats`} className={props.page === 'stats' ? 'active' : ''}>
+										<span>Stats</span>
+									</a>
+								</nav>
+							</div>
 						</div>
-						<div className="subnav-section">
-							<nav className="nav">
-								<a href={`/${props.series}/drivers`} className={props.page === 'drivers' ? 'active' : ''}>
-									<span>Drivers</span>
-								</a>
-								<a href={`/${props.series}/schedule`} className={props.page === 'schedule' ? 'active' : ''}>
-									<span>Schedule</span>
-								</a>
-								<a href={`/${props.series}/standings`} className={props.page === 'standings' ? 'active' : ''}>
-									<span>Standings</span>
-								</a>
-								<a href={`/${props.series}/stats`} className={props.page === 'stats' ? 'active' : ''}>
-									<span>Stats</span>
-								</a>
-							</nav>
-						</div>
-					</div>
-				</div>
+					</div>	
+				}
 			</div>
 		</header>
 	)

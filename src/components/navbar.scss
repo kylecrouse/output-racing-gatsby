@@ -42,12 +42,19 @@ header {
 		}
 	}
 	
-	
+	&.no-subnav {
+		padding: 0.6rem 0;
+		
+		.logo {
+			height: 2rem;
+			filter: none;
+		}
+	}
 }
 
 .navbar-section {
 	&:not(:first-child):last-child {
-		align-items: flex-end;
+		// align-items: flex-end;
 		justify-content: flex-end;
 	}
 }

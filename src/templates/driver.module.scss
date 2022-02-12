@@ -1,6 +1,6 @@
 .driverImage {
 	display: block;
-	max-height: 40vh;
+	max-height: 50vh;
 	width: 100%;
 }
 
@@ -47,4 +47,8 @@
 	font-style: italic;
 	font-weight: 900;
 	margin-left: -2px;
+}
+
+table:first-of-type tbody tr:last-child td {
+	font-weight: 400;
 }

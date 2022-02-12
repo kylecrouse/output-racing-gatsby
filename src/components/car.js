@@ -6,7 +6,7 @@ const Car = (props) => {
 	const image = CARS[props.carId]?.image?.default
 	return image ? (
 		<figure key={props.carName} className="car-container">
-			<img src={image} alt={props.carName} className="car-image" style={{ transform: props.transform, zIndex: props.zIndex }}/>
+			<img src={image} alt={props.carName} className="car-image" />
 			<figcaption className="car-caption">{props.carName}</figcaption>
 		</figure>
 	) : null
