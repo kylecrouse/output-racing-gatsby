@@ -1,5 +1,6 @@
 import * as React from 'react'
 import './navbar.scss'
+import './nav.scss'
 import logo from '../images/logo.png'
 import outputLogo from '../images/output-logo.svg'
 import nightowlLogo from '../images/nightowl-logo.svg'
@@ -14,10 +15,10 @@ const Navbar = (props) => {
 							<a href="/" className="navbar-brand mr-2">
 								<img src={logo} alt="Output Racing" className="logo"/>
 							</a>
-							<a href="/output-series/schedule" className="output-logo">
+							<a href="/output-series/schedule" className={`output-logo ${props.series === 'output-series' ? 'hide-sm' : ''}`}>
 								<img src={outputLogo} alt="Output Series"/>
 							</a>
-							<a href="/night-owl-series/schedule" className="nightowl-logo">
+							<a href="/night-owl-series/schedule" className={`nightowl-logo ${props.series === 'night-owl-series' ? 'hide-sm' : ''}`}>
 								<img src={nightowlLogo} alt="Night Owl Series"/>
 							</a>
 						</section>	

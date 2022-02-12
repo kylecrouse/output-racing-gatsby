@@ -23,7 +23,7 @@
 .nav a.active,
 .nav a:hover,
 .nav a:active {
-	background-color: #f4a913;
+	background-color: var(--highlight-color);
 	color: #000;
 	transform: skew(-20deg);
 }
@@ -38,7 +38,7 @@
 @media (max-width: 600px) {
 	.nav a:link,
 	.nav a:visited {
-		font-size: 0.4rem;
+		font-size: 0.5rem;
 	}
 }
 

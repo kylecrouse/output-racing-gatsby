@@ -39,5 +39,5 @@
 
 .toc a:hover,
 .toc a:focus {
-	color: #f4a913;
+	color: var(--highlight-color);
 }

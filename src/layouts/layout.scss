@@ -7,10 +7,6 @@ body {
 		Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
-body {
-	padding-top: 3rem;
-}
-
 * {
 	box-sizing: border-box;
 }
@@ -109,7 +105,7 @@ main {
 }
 
 .page-header .cars-container {
-	margin: 0 1.5rem 0 0;
+	margin: 0 1.5rem 0 0.4rem;
 }
 
 .page-header .car-caption {
@@ -117,6 +113,14 @@ main {
 }
 
 @media (max-width: 480px) {
+	main {
+		padding: 0;
+	}
+	
+	header + main {
+		padding: 3.5rem;
+	}
+	
 	.page-header .cars-container {
 		margin-top: 1rem;
 	}

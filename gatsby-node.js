@@ -203,17 +203,35 @@ exports.createPages = async ({ graphql, actions }) => {
 			}
 		}
 	`)
+	
+	// Get all series names
+	const series = data.seasons.edges.reduce(
+		(a, { node }) => [...a, node.seriesName], 
+		[]
+	)
+	
 	// Create drivers pages
 	data.drivers.edges.forEach(({ node }) => {
-		const seriesName = pathify('Output Series'),
-					seasonName = pathify(node.driverName),
+		const seasonName = pathify(node.driverName),
 					driverId = node.driverId
 
-		createPage({
-			path: `${seriesName}/drivers/${seasonName}`,
-			component: path.resolve(`src/templates/driver.js`),
-			context: { seriesName, seasonName, driverId },
+		series.forEach(seriesName => {
+			seriesName = pathify(seriesName)
+			createPage({
+				path: `${seriesName}/drivers/${seasonName}`,
+				component: path.resolve(`src/templates/driver.js`),
+				context: { seriesName, seasonName, driverId },
+			})			
 		})
+	})
+	
+	series.forEach(seriesName => {
+		seriesName = pathify(seriesName)
+		createPage({
+			path: `${seriesName}/drivers`,
+			component: path.resolve(`src/templates/drivers.js`),
+			context: { seriesName, seasonName: 'Drivers' },
+		})			
 	})
 	
 	// Create schedule, standings and results pages

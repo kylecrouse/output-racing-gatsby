@@ -8,7 +8,7 @@ const DriverChip = (props) => {
 				<NumberArt number={props.driverNumber} image={props.driverNumberArt.file.url}/>
 			}
 			{ props.active && props.link !== false
-				? <a href={`/drivers/${props.driverName.replace(/\s/g, '-').toLowerCase()}/`}>
+				? <a href={`drivers/${props.driverName.replace(/\s/g, '-').toLowerCase()}/`}>
 						{ renderName(props) }
 					</a>
 				: renderName(props)

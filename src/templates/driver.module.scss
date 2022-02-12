@@ -52,3 +52,18 @@
 table:first-of-type tbody tr:last-child td {
 	font-weight: 400;
 }
+
+@media (max-width: 480px) {
+	.page-header [class*="driverChip"] {
+		font-size: 0.8rem;
+	}
+	
+	.page-header [class*="numberArtContainer"] {
+		height: 2.5rem;
+		width: 2.5rem;
+	}
+	
+	.page-header [class*="last-name"] {
+		font-size: 1.5rem;
+	}
+}

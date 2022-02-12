@@ -1,7 +1,7 @@
 header {
-	position: fixed;
-	top: 0;
-	width: 100%;
+	position: relative;
+	// top: 0;
+	// width: 100%;
 	z-index: 10;
 	
 	.container {
@@ -168,7 +168,46 @@ header {
 }
 
 @media (max-width: 480px) {
+	.navbar {
+		.nav {
+			display: none;
+		}
+	}
+	
 	.navbar-section {
 		justify-content: center !important;
 	}
+
+	.subnav {
+		padding-left: 1rem;
+		padding-right: 1rem;
+		> .column {
+			display: block;
+			&::before {
+				bottom: 1.5rem;
+				clip-path: polygon(0 0, 0 88%, 15% 80%, 23% 3%);
+				left: -8%;
+				top: -1rem;
+			}			
+		}
+		&::after {
+			clip-path: polygon(28% 25%, 25% 90%, 100% 100%, 100% 0.6rem);
+			top: 3rem;
+		}
+	}
+	
+	.subnav-section {
+		display: flex;
+		justify-content: center;
+		padding-top: 0.5rem;
+		.nav {
+			margin-top: 1.5rem;
+			right: auto;
+			a:link,
+			a:visited, {
+				font-size: 0.6rem;
+			}
+		}
+	}
+
 }

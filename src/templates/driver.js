@@ -215,7 +215,7 @@ const DriverTemplate = props => {
 								license={true}
 								link={false}
 							/>
-							<div className={ styles.licenseContainer }>
+							<div className={ `${styles.licenseContainer} hide-sm` }>
 								{ driver.driverLicenseOval && 
 										<License 
 											license={driver.driverLicenseOval}

@@ -415,8 +415,8 @@
 }
 
 .btn.btn-primary {
-	background-color: #f4a913;
-	border-color: #f4a913;
+	background-color: var(--highlight-color);
+	border-color: var(--highlight-color);
 	color: #000;
 }
 

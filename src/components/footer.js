@@ -1,7 +1,8 @@
 import * as React from 'react'
 import './footer.css'
-import Nav from './nav'
 import logo from '../images/logo.png'
+import outputLogo from '../images/output-logo.svg'
+import nightOwlLogo from '../images/nightowl-logo.svg'
 
 const Footer = (props) => {
 	return (
@@ -14,7 +15,61 @@ const Footer = (props) => {
 					<p><a href="/apply" className="btn btn-primary"><span>Apply Now</span></a></p>
 				</div>
 				<div className="col-4 col-md-12 col-ml-auto">
-					<Nav {...props}/>
+					<div className="footer-nav-container">
+							<a href="/output-series/schedule" className="output-logo">
+								<img src={outputLogo} alt="Output Series"/>
+							</a>		
+							<nav className="footer-nav">
+								<a href={`/output-series/drivers`}>
+									<span>Drivers</span>
+								</a>
+								<a href={`/output-series/schedule`}>
+									<span>Schedule</span>
+								</a>
+								<a href={`/output-series/standings`}>
+									<span>Standings</span>
+								</a>
+								<a href={`/output-series/stats`}>
+									<span>Stats</span>
+								</a>
+							</nav>
+						<hr/>
+							<a href="/night-owl-series/schedule" className="night-owl-logo">
+								<img src={nightOwlLogo} alt="Night Owl Series"/>
+							</a>		
+							<nav className="footer-nav">
+								<a href={`/night-owl-series/drivers`}>
+									<span>Drivers</span>
+								</a>
+								<a href={`/night-owl-series/schedule`}>
+									<span>Schedule</span>
+								</a>
+								<a href={`/night-owl-series/standings`}>
+									<span>Standings</span>
+								</a>
+								<a href={`/night-owl-series/stats`}>
+									<span>Stats</span>
+								</a>
+							</nav>
+						<hr/>
+							<nav className="footer-nav">
+								<a href="https://www.youtube.com/c/AussieSimCommentator" target="_blank" rel="noreferrer">
+									<span>Broadcast</span>
+								</a>
+								<a href="https://shop.champsspeedshop.com/collections/t-shirts/products/output-racing-league-t-shirt" target="_blank" rel="noreferrer">
+									<span>Merch</span>
+								</a>
+								<a href="/rules" className={props.page === 'rules' ? 'active' : ''}>
+									<span>Rules</span>
+								</a>
+								<a href="/protest" className={props.page === 'protest' ? 'active' : ''}>
+									<span>Protest</span>
+								</a>
+								<a href="/apply" className={props.page === 'apply' ? 'active' : ''}>
+									<span>Apply</span>
+								</a>
+							</nav>
+					</div>
 				</div>
 			</div>
 			<div className="columns">
