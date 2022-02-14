@@ -12,7 +12,7 @@ const Layout = ({ pageContext, uri, children }) => {
 	}, [])
 	return (
 		<>
-			<Navbar series={pageContext.seriesName} page={ uri.split('/')[1] } />
+			<Navbar series={pageContext.seriesName} page={ uri.split('/')[2] } />
 			{ children }
 			<Footer />
 		</>

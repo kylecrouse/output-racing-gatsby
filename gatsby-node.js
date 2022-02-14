@@ -189,6 +189,7 @@ exports.createPages = async ({ graphql, actions }) => {
 			) {
 				edges {
 					node {
+						seriesId
 						seriesName
 						seasonName
 						seasonId
@@ -236,31 +237,32 @@ exports.createPages = async ({ graphql, actions }) => {
 	
 	// Create schedule, standings and results pages
 	data.seasons.edges.forEach(({ node }) => {
-		const seriesName = pathify(node.seriesName),
+		const seriesId = node.seriesId,
+					seriesName = pathify(node.seriesName),
 					seasonName = pathify(node.seasonName),
 					seasonId = node.seasonId
 					
 		createPage({
 			path: `${seriesName}/schedule/${seasonName}`,
 			component: path.resolve(`src/templates/schedule.js`),
-			context: { seriesName, seasonName, seasonId },
+			context: { seriesId, seriesName, seasonName, seasonId },
 		})
 		createPage({
 			path: `${seriesName}/standings/${seasonName}`,
 			component: path.resolve(`src/templates/standings.js`),
-			context: { seriesName, seasonName, seasonId },
+			context: { seriesId, seriesName, seasonName, seasonId },
 		})
 		
 		if (node.active === true) {
 			createPage({
 				path: `${seriesName}/schedule`,
 				component: path.resolve(`src/templates/schedule.js`),
-				context: { seriesName, seasonName, seasonId },
+				context: { seriesId, seriesName, seasonName, seasonId },
 			})
 			createPage({
 				path: `${seriesName}/standings`,
 				component: path.resolve(`src/templates/standings.js`),
-				context: { seriesName, seasonName, seasonId },
+				context: { seriesId, seriesName, seasonName, seasonId },
 			})
 		}
 		

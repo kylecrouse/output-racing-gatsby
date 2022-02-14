@@ -75,7 +75,7 @@ const StandingsTemplate = (props) => {
 }
 
 export const query = graphql`
-	query StandingsQuery($seasonId: Int) {
+	query StandingsQuery($seriesId: Int, $seasonId: Int) {
 		season: simRacerHubSeason(seasonId: {eq: $seasonId}) {
 			leagueName
 			seriesName
@@ -100,7 +100,7 @@ export const query = graphql`
 		}
 		seasons: allSimRacerHubSeason(
 			sort: {fields: events___raceDate, order: DESC}
-			filter: {seasonId: {ne: $seasonId}}
+			filter: {seriesId: {eq: $seriesId}, seasonId: {ne: $seasonId}}
 		) {
 			edges {
 				node {

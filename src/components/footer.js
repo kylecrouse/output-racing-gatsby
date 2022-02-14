@@ -10,11 +10,11 @@ const Footer = (props) => {
 			<div className="about columns">
 				<div className="col-6 col-md-12 col-mr-auto">
 					<p>Output Racing is an online sim racing league on iRacing.</p>
-					<p>We put this league together to provide a place for the late night racer to hang out, make friends and race hard. Established in mid 2018 with the goal of building a competitive league without toxic people or egos, we focused on building a tight knit community that meshes well on and off the track.</p>
-					<p>If you are a late night racer that is looking for a fun group to chill and race with once a week, feel free to apply. We welcome a wide range of skill levels with a minimum C class 2.0 SR license and 1000 IR.</p>
+					<p>We put this league together to provide a place for the late night racer to hang out, make friends and race hard. Established in mid-2018 with the goal of building a competitive league without toxic people or egos, we focused on building a tight-knit community that meshes well on and off the track.</p>
+					<p>If you are a late-night racer that is looking for a fun group to chill and race with once a week, feel free to apply. We welcome a wide range of skill levels with a minimum C class 2.0 SR license and 1000 IR.</p>
 					<p><a href="/apply" className="btn btn-primary"><span>Apply Now</span></a></p>
 				</div>
-				<div className="col-4 col-md-12 col-ml-auto">
+				<div className="col-5 col-md-12 col-ml-auto">
 					<div className="footer-nav-container">
 							<a href="/output-series/schedule" className="output-logo">
 								<img src={outputLogo} alt="Output Series"/>

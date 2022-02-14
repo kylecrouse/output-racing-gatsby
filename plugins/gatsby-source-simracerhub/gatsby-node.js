@@ -33,65 +33,112 @@ exports.sourceNodes = async ({
       .then(({ data }) => cache.set(url, data))
       .catch(err => console.log(url, err.response.status, err.response.statusText, err.response.data)))
   }
-      
-  const [drivers = {}, series = null, schedule = {}] = await Promise.all([
-    fetch(`/drivers?seriesId=6842`),
-    fetch(`/series?seriesId=6842`),
-    fetch(`/schedule?seriesId=6842`),
-  ])
   
-  if (drivers)
-    Object.values(drivers).forEach(driver => createNode({
-      ...driver,
-      id: createNodeId(`SimRacerHubDriver-${driver.driverId}`),
-      internal: {
-        type: 'SimRacerHubDriver',
-        content: JSON.stringify(driver),
-        contentDigest: createContentDigest(driver),
-      },
-    }))
-
-  await Promise.all(
-    series.seasons.map(
-      async (season) => {
-        
-        // Get events for this season
-        season.events = schedule[season.seasonId]
-        
-        // Get standings for season
-        season.standings = await fetch(`/standings?seasonId=${season.seasonId}`)
-        
-        // Get races for season
-        await fetch(`/results?seasonId=${season.seasonId}`)
-          .then(results => results && Object.entries(results).map(
-            ([raceId, race]) => createNode({
-              seriesName: series.seriesName,
-              seasonName: season.seasonName,
-              ...race,
-              id: createNodeId(`SimRacerHubRace-${race.raceId}`),
-              internal: {
-                type: 'SimRacerHubRace',
-                content: JSON.stringify(race),
-                contentDigest: createContentDigest(race),
-              },
-            })
-          ))
-        
-        // Create node for season
-        createNode({
-          leagueName: 'Output Racing League',
-          seriesName: series.seriesName,
-          ...season,
-          id: createNodeId(`SimRacerHubSeason-${season.seasonId}`),
-          internal: {
-            type: 'SimRacerHubSeason',
-            content: JSON.stringify(season),
-            contentDigest: createContentDigest(season)
-          }
-        })
-      }
+  await Promise.all([6842,8100].map(async (seriesId) => {
+    
+    const [drivers = {}, series = null, schedule = {}] = await Promise.all([
+      fetch(`/drivers?seriesId=${seriesId}`),
+      fetch(`/series?seriesId=${seriesId}`),
+      fetch(`/schedule?seriesId=${seriesId}`),
+    ])
+    
+    if (drivers)
+      Object.values(drivers).forEach(
+        ({ stats, trackStats, typeStats, ...driver }) => {
+          // Create driver node
+          createNode({
+            ...driver,
+            id: createNodeId(`SimRacerHubDriver-${driver.driverId}`),
+            internal: {
+              type: 'SimRacerHubDriver',
+              content: JSON.stringify(driver),
+              contentDigest: createContentDigest(driver),
+            },
+          })
+          // Create stats nodes based on series
+          createNode({
+            ...stats,
+            seriesId,
+            driverId: driver.driverId,
+            type: 'career',
+            id: createNodeId(`SimRacerHubCareerStats-${seriesId}-${driver.driverId}`),
+            internal: {
+              type: 'SimRacerHubCareerStats',
+              content: JSON.stringify(stats),
+              contentDigest: createContentDigest(stats),
+            },
+          })
+          createNode({
+            ...trackStats,
+            seriesId,
+            driverId: driver.driverId,
+            type: 'track',
+            id: createNodeId(`SimRacerHubTrackStats-${seriesId}-${driver.driverId}`),
+            internal: {
+              type: 'SimRacerHubTrackStats',
+              content: JSON.stringify(trackStats),
+              contentDigest: createContentDigest(trackStats),
+            },
+          })
+          createNode({
+            ...typeStats,
+            seriesId,
+            driverId: driver.driverId,
+            type: 'config',
+            id: createNodeId(`SimRacerHubConfigStats-${seriesId}-${driver.driverId}`),
+            internal: {
+              type: 'SimRacerHubConfigStats',
+              content: JSON.stringify(typeStats),
+              contentDigest: createContentDigest(typeStats),
+            },
+          })
+        }
+      )
+  
+    await Promise.all(
+      series.seasons.map(
+        async (season) => {
+          
+          // Get events for this season
+          season.events = schedule[season.seasonId]
+          
+          // Get standings for season
+          season.standings = await fetch(`/standings?seasonId=${season.seasonId}`)
+          
+          // Get races for season
+          await fetch(`/results?seasonId=${season.seasonId}`)
+            .then(results => results && Object.entries(results).map(
+              ([raceId, race]) => createNode({
+                seriesName: series.seriesName,
+                seasonName: season.seasonName,
+                ...race,
+                id: createNodeId(`SimRacerHubRace-${race.raceId}`),
+                internal: {
+                  type: 'SimRacerHubRace',
+                  content: JSON.stringify(race),
+                  contentDigest: createContentDigest(race),
+                },
+              })
+            ))
+          
+          // Create node for season
+          createNode({
+            leagueName: 'Output Racing League',
+            seriesId,
+            seriesName: series.seriesName,
+            ...season,
+            id: createNodeId(`SimRacerHubSeason-${season.seasonId}`),
+            internal: {
+              type: 'SimRacerHubSeason',
+              content: JSON.stringify(season),
+              contentDigest: createContentDigest(season)
+            }
+          })
+        }
+      )
     )
-  )
+    
+  }))
 
   return
 }

@@ -5,6 +5,7 @@
 .car-image {
 	display: block;
 	margin: 0 -1rem;
+	max-width: 200%;
 	position: relative;
 	/* filter: saturate(0); */
 	transform: scaleX(-1) rotate(-4deg);

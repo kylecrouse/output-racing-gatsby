@@ -63,15 +63,15 @@ const Navbar = (props) => {
 									<a href={`/${props.series}/drivers`} className={props.page === 'drivers' ? 'active' : ''}>
 										<span>Drivers</span>
 									</a>
-									<a href={`/${props.series}/schedule`} className={props.page === 'schedule' ? 'active' : ''}>
+									<a href={`/${props.series}/schedule`} className={props.page === 'schedule' || props.page === 'results' ? 'active' : ''}>
 										<span>Schedule</span>
 									</a>
 									<a href={`/${props.series}/standings`} className={props.page === 'standings' ? 'active' : ''}>
 										<span>Standings</span>
 									</a>
-									<a href={`/${props.series}/stats`} className={props.page === 'stats' ? 'active' : ''}>
+									{/*<a href={`/${props.series}/stats`} className={props.page === 'stats' ? 'active' : ''}>
 										<span>Stats</span>
-									</a>
+									</a>*/}
 								</nav>
 							</div>
 						</div>

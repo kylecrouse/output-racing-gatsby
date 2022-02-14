@@ -21,81 +21,12 @@ export const driverData = graphql`
 				url
 			}
 		}
-		driverIROval
-		driverSROval
-		driverLicenseOval
-		driverIRRoad
-		driverSRRoad
-		driverLicenseRoad
-		stats {
-			starts
-			avgStartPos
-			avgFinishPos
-			wins
-			podiums
-			top5s
-			top10s
-			lapsCompleted
-			lapsLed
-			poles
-			incidents
-			incidentsPerRace
-			winPct
-			podiumPct
-			top5Pct
-			top10Pct
-			lapsLedPct
-			polePct
-			incidentsPerLap
-			rating
-		}
-		trackStats {
-			trackName
-			typeName
-			starts
-			avgStartPos
-			avgFinishPos
-			wins
-			podiums
-			top5s
-			top10s
-			lapsCompleted
-			lapsLed
-			poles
-			incidents
-			incidentsPerRace
-			winPct
-			podiumPct
-			top5Pct
-			top10Pct
-			lapsLedPct
-			polePct
-			incidentsPerLap
-			rating
-		}
-		typeStats {
-			typeName
-			starts
-			avgStartPos
-			avgFinishPos
-			wins
-			podiums
-			top5s
-			top10s
-			lapsCompleted
-			lapsLed
-			poles
-			incidents
-			incidentsPerRace
-			winPct
-			podiumPct
-			top5Pct
-			top10Pct
-			lapsLedPct
-			polePct
-			incidentsPerLap
-			rating
-		}
+		irOval
+		srOval
+		licenseOval
+		irRoad
+		srRoad
+		licenseRoad
 	}
 `
 
@@ -129,8 +60,8 @@ export const eventData = graphql`
 			...raceData
 		}
 		raceDate
+		trackConfigId
 		trackConfigName
-		trackLogo
 		trackName
 	}
 `
@@ -186,8 +117,8 @@ export const raceData = graphql`
 		}
 		pointsCount
 		trackName
+		trackConfigId
 		trackConfigName
-		trackLogo
 		weatherFog
 		weatherHumidity
 		weatherSkies
@@ -261,6 +192,33 @@ export const standingsData = graphql`
 		top5s
 		totalPoints
 		wins	
+	}
+`
+
+export const statsData = graphql`
+	fragment statsData on SimRacerHubCareerStats {
+		trackName
+		typeName
+		starts
+		avgStartPos
+		avgFinishPos
+		wins
+		podiums
+		top5s
+		top10s
+		lapsCompleted
+		lapsLed
+		poles
+		incidents
+		incidentsPerRace
+		winPct
+		podiumPct
+		top5Pct
+		top10Pct
+		lapsLedPct
+		polePct
+		incidentsPerLap
+		rating
 	}
 `
 

@@ -80,11 +80,12 @@
 }
 
 .season-card .cars-container {
-	margin: 1rem 0;
+	margin: 0 1.5rem 1rem 2rem;
+	min-height: 3rem;
 }
 
 .season-card .car-container {
-	margin: -0.2rem 0 1rem;
+	margin: -0.2rem 0 0;
 }
 
 .season-card .car-container figcaption {

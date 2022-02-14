@@ -57,7 +57,10 @@
 }
 
 .footer-nav-container hr {
-	color: #333;
+	background: linear-gradient(112deg, transparent, #333, transparent);
+	border: 0;
+	color: rgba(0,0,0,0);
+	height: 2px;
 	margin: 1rem 2rem;
 }
 

@@ -126,7 +126,7 @@ header {
 		
 		a.active {
 			background-color: var(--highlight-color);
-			color: var(--secondary-color);
+			color: var(--highlight-opposite-color);
 			opacity: 1;
 		}
 		
@@ -191,7 +191,7 @@ header {
 			}			
 		}
 		&::after {
-			clip-path: polygon(28% 25%, 25% 90%, 100% 100%, 100% 0.6rem);
+			clip-path: polygon(28% 25%, 23% 90%, 100% 100%, 100% 0.6rem);
 			top: 3rem;
 		}
 	}

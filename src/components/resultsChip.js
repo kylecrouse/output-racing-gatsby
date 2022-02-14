@@ -8,6 +8,7 @@ const ResultsChip = (props) => {
 			{ props.results
 					.map((item, index) => (
 						<ResultItem
+							key={`result-${index}`}
 							driver={item.member ? item.member : item.driverName}
 							result={
 								props.counts

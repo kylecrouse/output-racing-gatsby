@@ -5,7 +5,7 @@ import './seasons.css'
 
 const Seasons = (props) => {
 	return (
-		<Carousel options={{ type: "carousel", perView: 3, breakpoints: { 960: { perView: 2 }, 680: { perView: 1 }}}}>
+		<Carousel options={{ type: "slider", perView: 3, rewind: true, breakpoints: { 960: { perView: 2 }, 680: { perView: 1 }}}}>
 			{ props.seasons.map((season, i) => (
 					<Slide key={`seasonCard${i}`}>
 						<SeasonCard {...season} path={props.path}/>

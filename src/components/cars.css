@@ -1,6 +1,8 @@
 .cars-container {
+	align-items: center;
 	display: flex; 
 	flex-direction: row;
 	justify-content: center;
 	margin: 2rem 0 1rem;
+	max-width: 15rem;
 }
