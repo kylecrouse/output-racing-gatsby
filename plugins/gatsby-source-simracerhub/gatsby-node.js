@@ -69,7 +69,7 @@ exports.sourceNodes = async ({
             },
           })
           createNode({
-            ...trackStats,
+            stats: trackStats,
             seriesId,
             driverId: driver.driverId,
             type: 'track',
@@ -81,7 +81,7 @@ exports.sourceNodes = async ({
             },
           })
           createNode({
-            ...typeStats,
+            stats: typeStats,
             seriesId,
             driverId: driver.driverId,
             type: 'config',
@@ -109,7 +109,9 @@ exports.sourceNodes = async ({
           await fetch(`/results?seasonId=${season.seasonId}`)
             .then(results => results && Object.entries(results).map(
               ([raceId, race]) => createNode({
+                seriesId,
                 seriesName: series.seriesName,
+                seasonId: season.seasonId,
                 seasonName: season.seasonName,
                 ...race,
                 id: createNodeId(`SimRacerHubRace-${race.raceId}`),

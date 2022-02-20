@@ -4,7 +4,11 @@ import { graphql } from 'gatsby'
 export const driverData = graphql`
 	fragment driverData on SimRacerHubDriver {
 		active
+		driverId
 		driverName
+		driverCarLogo {
+			publicURL
+		}
 		carNumber
 		driverNumberArt {
 			gatsbyImageData	
@@ -48,6 +52,7 @@ export const eventData = graphql`
 	fragment eventData on SimRacerHubEvent {
 		cars {
 			carId
+			carSimId
 			carName
 		}
 		chase

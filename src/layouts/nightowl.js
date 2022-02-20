@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Helmet } from 'react-helmet'
 import './layout.scss'
 import Navbar from '../components/navbar'
 import Footer from '../components/footer'
@@ -12,6 +13,9 @@ const Layout = ({ pageContext, uri, children }) => {
 	}, [])
 	return (
 		<>
+			<Helmet>
+				<body className="night-owl-series"/>
+			</Helmet>
 			<Navbar series={pageContext.seriesName} page={ uri.split('/')[2] } />
 			{ children }
 			<Footer />

@@ -6,7 +6,7 @@
 	background-position: center, center;
 	background-repeat: no-repeat, repeat;
 	background-size: 100%, 8px;
-	border-radius: 10px;
+	border-radius: 0.25rem;
 	/* box-shadow: 10px 10px 20px black, inset 0 0 0.6rem rgba(0,0,0,0.5); */
 	margin: 0 auto;
 	padding-bottom: 1rem;
@@ -16,77 +16,81 @@
 }
 
 .header {
-	background: black;
-	box-shadow: 0 0 0.6rem rgba(0,0,0,0.5);
-	color: #f0f0f0;
-	letter-spacing: 3px;
+	color: var(--highlight-opposite-color);
+	// letter-spacing: 3px;
+	padding: 1rem 1.2rem 0 1rem;
 	position: relative;
 	text-align: center;
 	text-transform: uppercase;
 	word-spacing: 6px;
 	z-index: 1;
-
-	h3 {
-		background: linear-gradient(112deg, 
-			black 25%, 
-			#333 25%, 
-			#333 calc(25% + 5px), 
-			black calc(25% + 5px), 
-			black calc(25% + 10px), 
-			#333 calc(25% + 10px), 
-			#454545, 
-			#333 calc(75% - 10px), 
-			black calc(75% - 10px), 
-			black calc(75% - 5px), 
-			#333 calc(75% - 5px), 
-			#333 75%, 
-			black 75%
-		);
-		font-family: obvia-expanded, sans-serif;
-		font-size: 0.7rem;
-		font-style: italic;
-		font-weight: 300;
-		line-height: 2;
-		position: relative;
-		margin: 0 auto;
+	
+	&::before,
+	&::after {
+		background: var(--primary-color);
+		bottom: 0;
+		clip-path: polygon(0 0, 0 100%, 100% 80%, 100% 0);
+		content: ' ';
+		left: 0;
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+	
+	&::after {
+		background: var(--secondary-color);
+		clip-path: polygon(64% 30%, 58% 90%, 100% 100%, 100% 20%);
+		bottom: -0.5rem;
+	}
+	
+	img {
+		display: block;
+		filter: brightness(0) saturate(1) invert(1);
+		margin-right: 40%;
 	}
 
-	span span {
+	h3 {
+		font-family: obvia-expanded, sans-serif;
+		font-size: 0.8rem;
+		font-style: italic;
 		font-weight: 900;
-	}	
+		margin: 0 0 0 62%;
+		position: relative;
+		text-align: right;
+		top: -0.8rem;
+		z-index: 1;
+	}
 }
 
 .container [class*="raceChip-module--logo"] {
-	position: absolute;
-	top: 1.2rem;
-	right: -20%;
-	z-index: 0;
+	bottom: auto;
+	right: 3rem;
+	top: 5.5rem;
+	transform: scale(1.5);
 	
 	img {
-		height: 100px;
+		max-height: 4rem;
+		max-width: 8rem;
 	}
 }
 
 .map {
 	display: block;
-	height: 150px;
-	margin: 0 auto 30px;
+	max-height: 8rem;
+	max-width: 80%;
+	margin: 1.5rem auto 2rem;
 	position: relative;
 	z-index: 1;
 }
 
 .container [class*="cars-container"] {
-	margin: 0;
+	margin: 0 0 1.5rem;
+	max-width: 100%;
 	padding: 0 1.5rem;
 }
 
 .container [class*="car-container"] {
-	margin: -0.2rem 0 1rem;
-
-	[class*="car-image"] {
-		max-height: 1.8rem;
-	}
-
+	transform: scale(1.5);
 	figcaption {
 		display: none;
 	}
@@ -192,6 +196,15 @@
 		}
 	}	
 	
+	.header {
+		padding-left: 0.8rem;
+		padding-right: 0.8rem;
+		h3 {
+			font-size: 0.7rem;
+			top: -0.6rem;
+		}
+	} 
+	
 	.countdown {
 		h3 {
 			font-size: 0.6rem;
@@ -201,6 +214,10 @@
 		& > div {
 			margin-left: 1.5rem;
 			margin-right: 1.5rem;
+		}
+		
+		b {
+			font-size: 1.2rem;
 		}
 	}
 }

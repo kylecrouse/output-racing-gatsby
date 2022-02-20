@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Link } from 'gatsby'
 import './seasonCard.css'
 import DriverChip from '../components/driverChip'
 import Cars from '../components/cars'
@@ -34,7 +35,7 @@ const SeasonCard = (props) => {
 		[props.standings]
 	)
 	return (
-		<a href={`/${props.path}/${pathify(props.seasonName)}`} className="season-card">
+		<Link to={`/${props.path}/${pathify(props.seasonName)}`} className="season-card">
 			<div className="season-details">
 				<div className="season-date">
 					<span className="season-day">
@@ -54,7 +55,7 @@ const SeasonCard = (props) => {
 						{ standings }
 					</div>
 			}
-		</a>
+		</Link>
 	)
 }
 

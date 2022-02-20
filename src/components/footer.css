@@ -41,11 +41,26 @@
 	font-size: 0.8rem;
 	margin: 1rem 0;
 	text-align: left;
+	
+}
+
+.footer .about p a:link,
+.footer .about p a:visited {
+	background-color: var(--highlight-color);
+	border-color: var(--highlight-color);
+	color: black;
+}
+
+.footer .about p a:hover,
+.footer .about p a:focus {
+	background-color: var(--highlight-opposite-color);
+	border-color: var(--highlight-opposite-color);
+	color: var(--highlight-color);
 }
 
 .footer-nav-container {
 	background-image: 
-	  linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+	  linear-gradient(rgba(0,0,0,1), rgba(0,0,0,0.8)), 
 		radial-gradient(farthest-corner at 50% 45%, transparent 50%, rgba(0,0,0,0.9)),
 		url(../images/plus-white-x1.png);
 	background-repeat: no-repeat, no-repeat, repeat;

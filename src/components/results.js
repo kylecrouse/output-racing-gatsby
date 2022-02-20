@@ -60,9 +60,7 @@ const Results = (props) => {
 				accessor: 'racePoints',
 				className: 'cell-totalPoints',
 				Cell: ({ value, row }) => {
-					const { bonus, penalty } = row.original
-					const bonusPoints = bonus.reduce((a, { bonusPoints = 0 }) => a + bonusPoints, 0)
-					const penaltyPoints = penalty.reduce((a, { penaltyPoints = 0 }) => a + penaltyPoints, 0)
+					const { bonusPoints, penaltyPoints } = row.original
 					return (
 						<div>
 							<span>

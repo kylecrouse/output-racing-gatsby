@@ -1,14 +1,26 @@
 .car-container {
 	margin: 0;
+	position: relative;
 }
 
 .car-image {
 	display: block;
-	margin: 0 -1rem;
-	max-width: 200%;
+	filter: brightness(1.25);
+	max-height: 3rem;
+	max-width: 100%;
 	position: relative;
-	/* filter: saturate(0); */
-	transform: scaleX(-1) rotate(-4deg);
+	transform: scaleX(-1);
+	z-index: 2;
+}
+
+.car-logo {
+	max-height: 0.8rem;
+	max-width: 50%;
+	opacity: 0.4;
+	position: absolute;
+	left: 0.8rem;
+	top: -0.1rem;
+	z-index: 2;
 }
 
 .car-caption {

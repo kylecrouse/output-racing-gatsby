@@ -1,6 +1,6 @@
 import * as React from 'react'
+import { Link } from 'gatsby'
 import moment from 'moment'
-import Cars from '../components/cars'
 import RaceChip from '../components/raceChip'
 import ResultsChip from '../components/resultsChip'
 import * as styles from './schedule.module.css'
@@ -14,7 +14,7 @@ const Schedule = (props) => {
 								{ event.eventName || 'Chase for the Championship' }
 							</div>
 						: event.race
-							?	<a key={`schedule-${index}`} href={ `results/${event.race.raceId}` } className={ styles.details }>
+							?	<Link key={`schedule-${index}`} to={ `/${props.uri.split('/')[1]}/results/${event.race.raceId}` } className={ styles.details }>
 									<RaceChip {...event}/>
 									<ResultsChip
 										counts={event.pointsCount}
@@ -25,7 +25,7 @@ const Schedule = (props) => {
 										}
 										hideSm={true}
 									/>
-								</a>
+								</Link>
 							: <div key={`schedule-${index}`} className={ styles.details }>
 									<RaceChip {...event}/>
 									<div className={ `${styles.info} hide-sm` }>
@@ -44,9 +44,6 @@ const Schedule = (props) => {
 											}
 											{ !event.pointsCount && <span>non-points</span> }
 										</div>
-										{ false &&
-											<Cars cars={event.cars} />
-										}
 									</div>
 								</div>
 				}) 

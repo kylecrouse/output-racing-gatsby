@@ -1,0 +1,101 @@
+.driverChip {
+	display: flex;
+	font-family: obvia, sans-serif;
+	font-weight: 400;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.driverChip a:link,
+.driverChip a:visited {
+	color: inherit;
+	opacity: 1;
+}
+
+.driverChip a:hover,
+.driverChip a:focus {
+	color: var(--highlight-color);
+}
+
+.driverChip a:hover .driver-name::after,
+.driverChip a:focus .driver-name::after {
+	/* display: inline-block; */
+	/* content: "\2192"; */
+	/* padding-left: 0.4rem; */
+}
+
+.driverChip.inactive {
+	opacity: 0.3;
+}
+
+.last-name {
+	font-size: 95%;
+	font-weight: 600;
+}
+
+.numberArtContainer {
+	display: flex;
+	align-items: center; 
+	margin: 0 0.6rem 0 0;
+	width: 1rem;
+	height: 1rem;
+}
+
+.numberArt {
+	display: block;
+	width: 100%;
+	margin: 0 auto; 
+	max-height: 1.8rem;
+}
+
+.driver-children {
+	font-family: museo-sans, sans-serif;
+	margin-left: 0.6rem;
+}
+
+.numberPlate {
+	background: white;
+	border: 1px solid var(--primary-color);
+	border-radius: 3px;
+	color: #3b4351;
+	display: none;
+	font-family: graystroke, obvia-expanded, sans-serif;
+	font-size: 0.4rem;
+	line-height: 1;
+	margin-right: 0.4rem;
+	padding: 0.2rem 0 0.25rem;
+	position: relative;
+	text-indent: 0.05rem;
+	width: 0.8rem;
+	
+	&::before {
+		background: black url(../images/logo.png) no-repeat 50% 50%;
+		background-size: contain;
+		border-radius: 2px 2px 0 0;
+		content: ' ';
+		display: block;
+		position: absolute;
+		height: 0.2rem;
+		top: 0;
+		width: 100%;
+	}
+	
+	&::after {
+		background: var(--primary-color) url(../images/nightowl-logo.svg) no-repeat 50% 50%;
+		bottom: 0;
+		content: ' ';
+		display: block;
+		position: absolute;
+		height: 0.2rem;
+		width: 100%;
+	}
+}
+
+.night-owl-series {
+	.numberPlate {
+		display: block;
+	}
+	.numberArtContainer {
+		display: none;
+	}	
+}

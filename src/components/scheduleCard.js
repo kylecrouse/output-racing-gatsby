@@ -1,12 +1,28 @@
 import * as React from 'react'
+import { useStaticQuery, graphql } from "gatsby"
 import moment from 'moment'
-import Cars from '../components/cars'
 import RaceChip from '../components/raceChip'
 import ResultsChip from '../components/resultsChip'
+import outputLogo from '../images/output-logo.svg'
+import nightowlLogo from '../images/nightowl-logo.svg'
 import * as styles from './scheduleCard.module.scss'
 
 const ScheduleCard = (props) => {
-	const date = moment(props.date)
+	const data = useStaticQuery(graphql`
+		{
+			maps: allFile(filter: { relativePath: { glob: "tracks/*_map.png" } }) {
+				edges {
+					node {
+						name
+						publicURL
+					}
+				}
+			}
+		}
+	`)
+	// const image = `https://images-static.iracing.com${props.folder}/${props.smallImage}`
+	const { node: mapNode = null } = data.maps.edges.find(({ node }) => node.name === `${props.trackConfigId}_map`) ?? {}
+	const date = moment(`${props.raceDate}T${props.raceTime ?? '21:00:00'}`)
 	const getDuration = () => {
 		return moment.duration(date.diff(moment()))
 	}
@@ -18,16 +34,24 @@ const ScheduleCard = (props) => {
 		return () => clearTimeout(timer)
 	})
 	return (
-		<div className={ styles.container }>
+		<div className={ styles.container } style={props.style}>
 			<div className={ styles.header }>
-				<h3><span>Round <span>{props.round + 1}</span></span></h3>
+				{ props.seriesId === 8100
+						? <img src={nightowlLogo} alt="Night Owl Series"/>
+						: <img src={outputLogo} alt="Night Owl Series"/>
+				}
+				<h3>
+					{ props.title
+							? props.title.split(' ')[0]
+							: `Round ${props.raceNumber}`
+					}
+				</h3>
 			</div>
 			<RaceChip {...props}/>
-			<img className={ styles.map } src={ props.track.map } alt="track map"/>
-			{ props.cars &&
-				<Cars cars={props.cars} />
+			{ mapNode?.publicURL &&
+					<img className={ styles.map } src={ mapNode.publicURL } alt="track map"/>
 			}
-			{ !props.uploaded && duration.asSeconds() > 0 &&
+			{ duration && duration.asSeconds() > 0 &&
 					<div className={ styles.countdown }>
 						<h3>Countdown to Green</h3>
 						<div className="columns">
@@ -46,14 +70,15 @@ const ScheduleCard = (props) => {
 						</div>
 					</div>
 			}
-			{ props.results &&
+			{ props.race &&
 					<ResultsChip
-						counts={props.counts}
+						counts={props.pointsCount}
 						results={
-							props.results
+							props.race.participants
+								.sort((a, b) => a.finishPos - b.finishPos)
 								.slice(0, 3)
-								.sort((a, b) => a.finish - b.finish)
 						}
+						hideSm={true}
 					/>
 			}
 		</div>

@@ -86,13 +86,17 @@ a.details:focus .track h4 {
 	border-top: 2px solid #f0f0f0;
 	color: black;
 	font-family: obvia-expanded, sans-serif;
-	font-size: 1.4rem;
+	font-size: 1.2rem;
 	font-style: italic;
 	font-weight: 900;
 	line-height: 1;
-	padding-top: 3rem;
+	margin: 0 auto;
+	max-width: 80%;		
+	padding: 3.5rem 0 0.5rem;
+	position: relative;
 	text-align: center;
 	text-transform: uppercase;
+	z-index: 2;
 }
 
 .chase::after {
@@ -112,14 +116,16 @@ a.details:focus .track h4 {
 	);
 	content: ' ';
 	display: block;
-	margin-top: -1.7rem;
-	height: 2rem;
-	width: 100%;
+	height: calc(100% - 3rem);
+	margin-left: -20%;
+	position: absolute;
+	top: 3rem;
+	width: 140%;
+	z-index: -1;
 }
 
 @media (max-width: 480px) {
 	.chase {
 		font-size: 0.8rem;
-		line-height: 1.6;
 	}
 }

@@ -39,7 +39,7 @@ const StandingsTemplate = (props) => {
 					<div className="column col-8 col-xl-12 col-mx-auto content">
 				
 						<hgroup className="page-header columns">
-							<div>
+							<div className="column col-6">
 								<h2 className="page-title">Standings</h2>
 								<h3 className="page-subtitle">
 									<span>{ season.seasonName }</span>
@@ -50,7 +50,9 @@ const StandingsTemplate = (props) => {
 								</h3>
 							</div>
 							{ season.seasonClass?.length > 0 &&
-								<Cars cars={season.seasonClass[0]?.seasonClassCars} />
+								<div className="column col-6">
+									<Cars cars={season.seasonClass[0]?.seasonClassCars} />
+								</div>
 							}
 						</hgroup>
 	
@@ -83,6 +85,7 @@ export const query = graphql`
 			seasonClass {
 				seasonClassCars {
 					carId
+					carSimId
 					carName
 				}
 			}
@@ -110,6 +113,7 @@ export const query = graphql`
 					seasonClass {
 						seasonClassCars {
 							carId
+							carSimId
 							carName
 						}
 					}

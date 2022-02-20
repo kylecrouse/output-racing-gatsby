@@ -1,34 +1,41 @@
 import * as React from 'react'
+import { Link } from 'gatsby'
 import DriverChip from './driverChip'
-import * as styles from './driverCard.module.css'
+import * as styles from './driverCard.module.scss'
 
 const DriverCard = (props) => {
+	const showNumberArt = props.seriesName !== 'night-owl-series'
 	return (
-		<a 
+		<Link 
 			className={ styles.container } 
-			href={`drivers/${props.driverName.replace(/\s/g,'-').toLowerCase()}`}
+			to={`${props.driverName.replace(/\s/g,'-').toLowerCase()}`}
 		>
 			<div className={ styles.stats }>
 				<div className={ styles.driver }>
-					{ !props.driverNumberArt &&
-						<div className={ styles.numberText }>
+					{ (!showNumberArt || (showNumberArt && !props.driverNumberArt)) &&
+						<div className={ `${styles.numberText} number-plate-${props.seriesName}` }>
 							{ props.carNumber || '-' }
 						</div>	
 					}
-					<DriverChip {...props} link={false} />
+					{ props.driverCarLogo &&
+						<div className={styles.carLogo}>
+							<img src={props.driverCarLogo.publicURL} alt="manufacturer logo"/>
+						</div>
+					}
+					<DriverChip {...props} showNumberArt={showNumberArt} link={false} />
 				</div>
 				<dl className="hide-sm">
 					<dt>Starts</dt>
-					<dd>{ props.stats?.starts ?? 0 } </dd>
+					<dd>{ props.driverCareerStats?.starts ?? '-' } </dd>
 					<dt>Wins</dt>
-					<dd>{ props.stats?.wins ?? 0 }</dd>
+					<dd>{ props.driverCareerStats?.wins ?? '-' }</dd>
 					<dt>Top 5</dt>
-					<dd>{ props.stats?.top5s ?? 0 }</dd>
+					<dd>{ props.driverCareerStats?.top5s ?? '-' }</dd>
 					<dt>Rating</dt>
-					<dd>{ props.stats?.rating ?? 0 }</dd>
+					<dd>{ props.driverCareerStats?.rating?.toFixed(0) ?? '-' }</dd>
 				</dl>
 			</div>
-		</a>		
+		</Link>		
 	)
 }
 

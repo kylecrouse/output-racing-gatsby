@@ -65,19 +65,108 @@ exports.createResolvers = ({ createResolvers }) => {
 					return context.nodeModel.getNodeById({ id: numberArt___NODE })
 				}
 			},
+			driverCarLogo: {
+				type: "File",
+				resolve: async (source, args, context, info) => {
+					const season = await context.nodeModel.findOne({
+						query: {
+							filter: {
+								seriesId: {eq: context.context.seriesId},
+								active: {eq: true}
+							}
+						},
+						type: 'SimRacerHubSeason'
+					})
+					
+					const raceId = season.events.reduce(
+						(a, { raceId }) => raceId ? [...a, raceId] : a, []
+					)
+					
+					const races = await context.nodeModel.findAll({
+						query: {
+							filter: {
+								raceId: {in: raceId}
+							}
+						},
+						type: 'SimRacerHubRace'
+					})
+					
+					const carId = Array.from(races.entries).reduce(
+						(a, { participants }) => {
+							const d = participants.find(p => p.driverId === source.driverId) 
+							return d ? d.carSimId : a
+						}, 
+						null
+					)
+					
+					if (!carId)
+						return null
+					
+					return context.nodeModel.findOne({
+						query: {
+							filter: {
+								relativePath: { eq: `cars/${carId}.svg` }
+							},
+						},
+						type: "File",
+					}).catch(err => console.log(err))
+				}
+			},
+			driverCareerStats: {
+				type: "SimRacerHubCareerStats",
+				resolve: async (source, args, context, info) => {
+					return context.nodeModel.findOne({
+						query: {
+							filter: {
+								driverId: { eq: source.driverId },
+								seriesId: { eq: context.context.seriesId }
+							},
+						},
+						type: "SimRacerHubCareerStats",
+					})
+				}
+			},
+			driverTrackStats: {
+				type: "SimRacerHubTrackStats",
+				resolve: async (source, args, context, info) => {
+					return context.nodeModel.findOne({
+						query: {
+							filter: {
+								driverId: { eq: source.driverId },
+								seriesId: { eq: context.context.seriesId }
+							},
+						},
+						type: "SimRacerHubTrackStats",
+					})
+				}
+			},
+			driverConfigStats: {
+				type: "SimRacerHubConfigStats",
+				resolve: async (source, args, context, info) => {
+					return context.nodeModel.findOne({
+						query: {
+							filter: {
+								driverId: { eq: source.driverId },
+								seriesId: { eq: context.context.seriesId }
+							},
+						},
+						type: "SimRacerHubConfigStats",
+					})
+				}
+			},
 		},
 		SimRacerHubRace: {
 			eventBroadcast: {
 				type: "String",
 				resolve: async (source, args, context, info) => {
-					const { broadcast = null } = await getContentfulRace(source, args, context, info)
+					const { broadcast = null } = await getContentfulRace(source, args, context, info) ?? {}
 					return broadcast
 				}
 			},
 			eventLogo: {
 				type: "ContentfulAsset",
 				resolve: async (source, args, context, info) => {
-					const { logo___NODE = null } = await getContentfulRace(source, args, context, info)
+					const { logo___NODE = null } = await getContentfulRace(source, args, context, info) ?? {}
 					if (!logo___NODE)
 						return null
 						
@@ -87,7 +176,7 @@ exports.createResolvers = ({ createResolvers }) => {
 			eventMedia: {
 				type: ["ContentfulAsset"],
 				resolve: async (source, args, context, info) => {
-					const { media___NODE = [] } = await getContentfulRace(source, args, context, info)
+					const { media___NODE = [] } = await getContentfulRace(source, args, context, info) ?? {}
 					return Promise.all(
 						media___NODE.map(
 							id => context.nodeModel.getNodeById({ id })
@@ -103,7 +192,7 @@ exports.createResolvers = ({ createResolvers }) => {
 					const file = await context.nodeModel.findOne({
 						query: {
 							filter: {
-								relativePath: { eq: `cars/${source.carId}.svg` }
+								relativePath: { eq: `cars/${source.carSimId}.svg` }
 							},
 						},
 						type: "File",
@@ -202,12 +291,24 @@ exports.createPages = async ({ graphql, actions }) => {
 					}
 				}
 			}
+			series: allSimRacerHubSeason {
+				group(field: seriesId) {
+					fieldValue
+					distinct(field: seriesName)
+				}
+			}
 		}
 	`)
 	
 	// Get all series names
-	const series = data.seasons.edges.reduce(
-		(a, { node }) => [...a, node.seriesName], 
+	const series = data.series.group.reduce(
+		(a, { fieldValue, distinct }) => [
+			...a, 
+			{ 
+				seriesId: Math.floor(fieldValue), 
+				seriesName: distinct[0] 
+			}
+		], 
 		[]
 	)
 	
@@ -216,22 +317,22 @@ exports.createPages = async ({ graphql, actions }) => {
 		const seasonName = pathify(node.driverName),
 					driverId = node.driverId
 
-		series.forEach(seriesName => {
+		series.forEach(({ seriesId, seriesName }) => {
 			seriesName = pathify(seriesName)
 			createPage({
 				path: `${seriesName}/drivers/${seasonName}`,
 				component: path.resolve(`src/templates/driver.js`),
-				context: { seriesName, seasonName, driverId },
+				context: { seriesId, seriesName, seasonName, driverId },
 			})			
 		})
 	})
 	
-	series.forEach(seriesName => {
+	series.forEach(({ seriesId, seriesName }) => {
 		seriesName = pathify(seriesName)
 		createPage({
 			path: `${seriesName}/drivers`,
 			component: path.resolve(`src/templates/drivers.js`),
-			context: { seriesName, seasonName: 'Drivers' },
+			context: { seriesId, seriesName, seasonName: 'Drivers' },
 		})			
 	})
 	
@@ -271,18 +372,32 @@ exports.createPages = async ({ graphql, actions }) => {
 			if (!race) return
 			const raceId = race.raceId
 			createPage({
-				path: `${seriesName}/results/${race.raceId}`,
+				path: `${seriesName}/results/${raceId}`,
 				component: path.resolve(`src/templates/results.js`),
-				context: { seriesName, seasonName, seasonId, raceId },
+				context: { seriesId, seriesName, seasonName, seasonId, raceId },
 			})
 			if (node.active === true && !latestRaceId) {
 				createPage({
 					path: `${seriesName}/results`,
 					component: path.resolve(`src/templates/results.js`),
-					context: { seriesName, seasonName, seasonId, raceId },
+					context: { seriesId, seriesName, seasonName, seasonId, raceId },
 				})
 				latestRaceId = raceId
 			}
 		})
 	})
+}
+
+exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
+	if (stage === 'build-javascript' || stage === 'develop') {
+			const config = getConfig()
+
+			const miniCssExtractPlugin = config.plugins.find(
+					plugin => (plugin.constructor.name === 'MiniCssExtractPlugin')
+			)
+
+			if (miniCssExtractPlugin) miniCssExtractPlugin.options.ignoreOrder = true
+
+			actions.replaceWebpackConfig(config)
+	}
 }

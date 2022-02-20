@@ -8,16 +8,17 @@ import License from '../components/license'
 import Table from '../components/table'
 import * as styles from './driver.module.scss'
 
-const TYPE_ORDER = ['Short Track', '1 mile', 'Intermediate', '2+ mile', 'Superspeedway', 'Road Course', 'Dirt Oval', 'Rallycross', 'Overall']
+const TYPE_ORDER = ['Overall', 'Short Track', '1 mile', 'Intermediate', '2+ mile', 'Superspeedway', 'Road Course', 'Dirt Oval', 'Rallycross']
 
 const DriverTemplate = props => {
 	const { driver } = props.data
-	const typeStats = React.useMemo(
-		() => driver.typeStats && [
-			{ typeName: 'Overall', ...driver.stats },
-			...driver.typeStats
-		].sort((a, b) => TYPE_ORDER.indexOf(a.typeName) - TYPE_ORDER.indexOf(b.typeName)),
-		[driver.stats, driver.typeStats]
+	const configStats = React.useMemo(
+		() => driver.driverConfigStats && driver.driverConfigStats.stats.length > 1
+			? [{ typeName: 'Overall', ...driver.driverCareerStats },
+				  ...driver.driverConfigStats.stats
+				].sort((a, b) => TYPE_ORDER.indexOf(a.typeName) - TYPE_ORDER.indexOf(b.typeName))
+			: [{ typeName: 'Overall', ...driver.driverCareerStats }],
+		[driver.driverCareerStats, driver.driverConfigStats]
 	)
 	const typeColumns = React.useMemo(
 		() => [
@@ -215,28 +216,28 @@ const DriverTemplate = props => {
 								license={true}
 								link={false}
 							/>
-							<div className={ `${styles.licenseContainer} hide-sm` }>
-								{ driver.driverLicenseOval && 
+							<div className="hide-sm">
+								{ driver.licenseOval && 
 										<License 
-											license={driver.driverLicenseOval}
-											ir={driver.driverIROval}
-											sr={driver.driverSROval}
+											license={driver.licenseOval}
+											ir={driver.irOval}
+											sr={driver.srOval}
 										/>
 								}
-								{ driver.driverLicenseRoad && 
+								{ driver.licenseRoad && 
 										<License 
-											license={driver.driverLicenseRoad}
-											ir={driver.driverIRRoad}
-											sr={driver.driverSRRoad}
+											license={driver.licenseRoad}
+											ir={driver.irRoad}
+											sr={driver.srRoad}
 										/>
 								}
 							</div>
 						</hgroup>
 
-						{ typeStats && 
+						{ configStats && 
 							<Table 
 								columns={typeColumns} 
-								data={typeStats}
+								data={configStats}
 								disableSortBy={true} 
 								scrolling={true}
 							/>							
@@ -244,10 +245,10 @@ const DriverTemplate = props => {
 						
 						<br/>
 
-						{ driver.trackStats && 
+						{ driver.driverTrackStats && 
 							<Table 
 								columns={trackColumns} 
-								data={driver.trackStats}
+								data={driver.driverTrackStats.stats}
 								disableSortBy={true} 
 								initialState={{
 									sortBy: [{ id: 'trackName', desc: false }]
@@ -270,6 +271,79 @@ export const query = graphql`
 			driverId: {eq: $driverId}
 		) {
 			...driverData	
+			driverCareerStats {
+				starts
+				avgStartPos
+				avgFinishPos
+				wins
+				podiums
+				top5s
+				top10s
+				lapsCompleted
+				lapsLed
+				poles
+				incidents
+				incidentsPerRace
+				winPct
+				podiumPct
+				top5Pct
+				top10Pct
+				lapsLedPct
+				polePct
+				incidentsPerLap
+				rating
+			}
+			driverConfigStats {
+				stats {					
+					typeName
+					starts
+					avgStartPos
+					avgFinishPos
+					wins
+					podiums
+					top5s
+					top10s
+					lapsCompleted
+					lapsLed
+					poles
+					incidents
+					incidentsPerRace
+					winPct
+					podiumPct
+					top5Pct
+					top10Pct
+					lapsLedPct
+					polePct
+					incidentsPerLap
+					rating
+				}
+			}
+			driverTrackStats {
+				stats {					
+					trackName
+					typeName
+					starts
+					avgStartPos
+					avgFinishPos
+					wins
+					podiums
+					top5s
+					top10s
+					lapsCompleted
+					lapsLed
+					poles
+					incidents
+					incidentsPerRace
+					winPct
+					podiumPct
+					top5Pct
+					top10Pct
+					lapsLedPct
+					polePct
+					incidentsPerLap
+					rating
+				}
+			}
 		}	
 	}
 `

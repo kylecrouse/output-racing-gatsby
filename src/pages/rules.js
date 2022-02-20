@@ -1,5 +1,5 @@
 import * as React from "react"
-import { graphql } from 'gatsby'
+import { Link, graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
 import { BLOCKS, MARKS } from "@contentful/rich-text-types"
 import { renderRichText } from "gatsby-source-contentful/rich-text"
@@ -64,9 +64,9 @@ const RulesPage = (props) => {
 																	.map(({ content }) => content[0].value)
 																	.map(section => (
 																		<li>
-																			<a href={`#section-${section.replace(/\s/g,'-').toLowerCase()}`}>
+																			<Link to={`#section-${section.replace(/\s/g,'-').toLowerCase()}`}>
 																				{ section }
-																			</a>
+																			</Link>
 																		</li>
 																	))
 															),
@@ -94,9 +94,9 @@ const RulesPage = (props) => {
 																	.map(({ content }) => content[0].value)
 																	.map(section => (
 																		<li>
-																			<a href={`#section-${section.replace(/\s/g,'-').toLowerCase()}`}>
+																			<Link to={`#section-${section.replace(/\s/g,'-').toLowerCase()}`}>
 																				{ section }
-																			</a>
+																			</Link>
 																		</li>
 																	))
 															),

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { graphql } from 'gatsby'
+import { graphql } from "gatsby"
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import moment from 'moment'
 import Layout from '../components/layout'
@@ -11,7 +11,8 @@ import Video from '../components/video'
 import * as styles from './results.module.scss'
 
 const ResultsTemplate = (props) => {
-	const { race } = props.data
+	const { race, trackLogos } = props.data
+	const { node: logoNode = null } = trackLogos.edges.find(({ node }) => Math.floor(node.name) === race.trackConfigId) ?? {}
 	return (
 		<Layout {...props}>
 			<Meta {...props} />
@@ -57,13 +58,11 @@ const ResultsTemplate = (props) => {
 									<span>{race.trackName}</span>
 								</h5>
 							</div>
-							<div className="column col-4 text-right hide-sm">
-								<img 
-									alt={`${race.trackName} logo`} 
-									className={ styles.logo } 
-									src={ `https://images-static.iracing.com${race.trackLogo}` } 
-								/>
-							</div>
+							{ logoNode?.publicURL &&
+								<div className="column col-4 text-right hide-sm">
+									<img className={ styles.logo } src={ logoNode.publicURL } alt="track logo"/>
+								</div>
+							}
 						</hgroup>
 			
 						<ResultsTable 
@@ -230,6 +229,14 @@ export const query = graphql`
 			raceId: {eq: $raceId}
 		) {
 			...raceData	
+		}
+		trackLogos: allFile(filter: { relativePath: { glob: "tracks/*.png" } }) {
+			edges {
+				node {
+					name
+					publicURL
+				}
+			}
 		}
 	}	
 `

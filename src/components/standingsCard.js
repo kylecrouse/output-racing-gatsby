@@ -1,35 +1,16 @@
 import * as React from 'react'
-import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import DriverChip from './driverChip'
 import * as styles from './standingsCard.module.scss'
 
 const StandingsCard = (props) => {
 	return (
 		<div className={ styles.container }>
-			{ props.driver.media && 
-				props.driver.media
-					.slice(0, 1)
-					.map(image => (
-						<GatsbyImage 
-							alt="car screenshot"
-							className={ styles.image }
-							image={ getImage(image) } 
-						/>
-					)) 
-			}
-			<div className={ styles.details }>
-				<DriverChip {...props.driver} />
-				{ props.fields && 
-					<dl>
-						{ props.fields.map(field => (
-								<>
-									<dt>{ field.name }</dt>
-									<dd>{ field.value }</dd>
-								</>
-							))
-						}
-					</dl>
-				}
+			<div className={ styles.position }>
+				<span>{props.position}</span>
+			</div>
+			<DriverChip {...props.driver} link={false} showNumberArt={false} />
+			<div className={ styles.totalPoints }>
+				<b>{props.totalPoints}</b> pts
 			</div>
 		</div>		
 	)

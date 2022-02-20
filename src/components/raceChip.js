@@ -17,7 +17,7 @@ const RaceChip = (props) => {
 		}
 	`)
 	const { node = null } = data.allFile.edges.find(({ node }) => Math.floor(node.name) === props.trackConfigId) ?? {}
-	console.log(props.trackName, props.trackConfigId)
+	// console.log(props.trackName, props.trackConfigId)
 	return (
 		<div className={ styles.container }>
 			{ node?.publicURL &&

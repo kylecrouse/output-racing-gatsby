@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Link } from 'gatsby'
 import './navbar.scss'
 import './nav.scss'
 import logo from '../images/logo.png'
@@ -12,15 +13,15 @@ const Navbar = (props) => {
 				<div className={`navbar columns col-gapless ${props.series ? 'with-subnav' : 'no-subnav'}`}>
 					<div className="column col-8 col-xl-10 col-lg-12 col-mx-auto">
 						<section className="navbar-section">
-							<a href="/" className="navbar-brand mr-2">
+							<Link to="/" className="navbar-brand mr-2">
 								<img src={logo} alt="Output Racing" className="logo"/>
-							</a>
-							<a href="/output-series/schedule" className={`output-logo ${props.series === 'output-series' ? 'hide-sm' : ''}`}>
+							</Link>
+							<Link to="/output-series/schedule" className={`output-logo ${props.series === 'output-series' ? 'hide-sm' : ''}`}>
 								<img src={outputLogo} alt="Output Series"/>
-							</a>
-							<a href="/night-owl-series/schedule" className={`nightowl-logo ${props.series === 'night-owl-series' ? 'hide-sm' : ''}`}>
+							</Link>
+							<Link to="/night-owl-series/schedule" className={`nightowl-logo ${props.series === 'night-owl-series' ? 'hide-sm' : ''}`}>
 								<img src={nightowlLogo} alt="Night Owl Series"/>
-							</a>
+							</Link>
 						</section>	
 						<section className="navbar-section">
 							<nav className="nav">
@@ -30,15 +31,15 @@ const Navbar = (props) => {
 								<a href="https://shop.champsspeedshop.com/collections/t-shirts/products/output-racing-league-t-shirt" target="_blank" rel="noreferrer">
 									<span>Merch</span>
 								</a>
-								<a href="/rules" className={props.page === 'rules' ? 'active' : ''}>
+								<Link to="/rules" activeClassName="active">
 									<span>Rules</span>
-								</a>
-								<a href="/protest" className={props.page === 'protest' ? 'active' : ''}>
+								</Link>
+								<Link to="/protest" activeClassName="active">
 									<span>Protest</span>
-								</a>
-								<a href="/apply" className={props.page === 'apply' ? 'active' : ''}>
+								</Link>
+								<Link to="/apply" activeClassName="active">
 									<span>Apply</span>
-								</a>
+								</Link>
 							</nav>
 						</section>
 					</div>
@@ -48,27 +49,27 @@ const Navbar = (props) => {
 						<div className="column col-8 col-xl-10 col-lg-12 col-mx-auto col-gapless">
 							<div className="subnav-section">
 								{	props.series === 'night-owl-series'
-										? (	<a href="/night-owl-series/schedule" className="nightowl-logo">
+										? (	<Link to="/night-owl-series/schedule" className="nightowl-logo">
 													<img src={nightowlLogo} alt="Night Owl Series"/>
-												</a>
+												</Link>
 											)
-										: (	<a href="/output-series/schedule" className="output-logo">
+										: (	<Link to="/output-series/schedule" className="output-logo">
 													<img src={outputLogo} alt="Output Series"/>
-												</a>		
+												</Link>		
 											)
 								}
 							</div>
 							<div className="subnav-section">
 								<nav className="nav">
-									<a href={`/${props.series}/drivers`} className={props.page === 'drivers' ? 'active' : ''}>
+									<Link to={`/${props.series}/drivers`} activeClassName="active" partiallyActive={true}>
 										<span>Drivers</span>
-									</a>
-									<a href={`/${props.series}/schedule`} className={props.page === 'schedule' || props.page === 'results' ? 'active' : ''}>
+									</Link>
+									<Link to={`/${props.series}/schedule`} activeClassName="active" partiallyActive={true}>
 										<span>Schedule</span>
-									</a>
-									<a href={`/${props.series}/standings`} className={props.page === 'standings' ? 'active' : ''}>
+									</Link>
+									<Link to={`/${props.series}/standings`} activeClassName="active" partiallyActive={true}>
 										<span>Standings</span>
-									</a>
+									</Link>
 									{/*<a href={`/${props.series}/stats`} className={props.page === 'stats' ? 'active' : ''}>
 										<span>Stats</span>
 									</a>*/}

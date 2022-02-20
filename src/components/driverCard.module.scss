@@ -1,0 +1,186 @@
+.container {
+	border-top: 2px solid #f0f0f0;
+	border-bottom: 2px solid transparent;
+	box-shadow: 0 0 10px rgba(0,0,0,0);
+	display: block;
+	overflow: hidden;
+	position: relative;
+	text-transform: uppercase;
+	transition: 100ms ease-out;
+}
+
+.container:link,
+.container:visited {
+	color: inherit;
+}
+
+.container:hover,
+.container:focus {
+	border-bottom-color: #f0f0f0;
+	color: inherit;
+	text-decoration: none;
+	transform: scale(1.02);
+	transition-timing-function: ease-in;
+}
+
+.container:hover + .container,
+.container:focus + .container {
+	border-top-color: transparent;
+}
+
+.stats {
+	align-items: center;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	padding: 0.5rem 1rem 0.4rem;
+}
+
+.stats [class*="driverChip"] {
+	align-items: center;
+	font-family: museo-sans, sans-serif;
+	font-weight: 300;
+	line-height: 1;
+}
+
+.stats [class*="numberArtContainer"] {
+	height: 3rem;
+	width: 3rem;
+	margin-right: 1.5rem;
+}
+
+.stats [class*="numberArt"] {
+	max-height: 100%;
+}
+
+.stats [class*="last-name"] {
+	display: block;
+	font-family: obvia-expanded, sans-serif;
+	font-size: 1.1rem;
+	font-style: italic;
+	font-weight: 900;
+	margin-left: -2px;
+}
+
+.stats dl {
+	display: grid;
+	grid-template-rows: auto auto;
+	grid-auto-columns: 1fr;
+	grid-auto-flow: column;
+	margin: 0;
+	text-align: center;
+}
+
+.stats dt {
+	font-family: obvia, sans-serif;
+	font-size: 0.5rem;
+	font-weight: 300;
+	line-height: 1;
+	opacity: 0.5;
+	text-transform: uppercase;
+}
+
+.stats dd {
+	font-family: obvia-expanded, sans-serif;
+	font-size: 1rem;
+	font-weight: 600;
+	line-height: 1;
+	margin: 0.2rem 0 0;
+	width: 4rem;
+}
+
+.driver {
+	align-items: center;
+	display: flex;
+	flex-direction: row;
+}
+
+.numberText {
+	color: rgba(0,0,0,0.15);
+	font-family: obvia-expanded, sans-serif;
+	font-size: 2rem;
+	font-weight: 900;
+	line-height: 3.5rem;
+	margin-right: 1.5rem;
+	text-align: center;
+	width: 3rem;
+}
+
+.carLogo {
+	align-items: center;
+	bottom: 0;
+	display: flex;
+	justify-content: flex-end;
+	position: absolute !important;
+	right: 36%;
+	top: 0;
+	transform: scale(1.2);
+	width: 300px;
+	z-index: 0;
+
+	/*&::after {
+		background: 
+			linear-gradient(
+				112deg,
+				rgba(255,255,255,1) 20%, 
+				rgba(255,255,255,0.8)
+			),
+			linear-gradient(
+				rgba(255,255,255,0.5) 10%,
+				transparent 30%, 
+				transparent 70%, 
+				rgba(255,255,255,0.5) 90%
+			);
+		bottom: 0;
+		content: ' ';
+		left: 0;
+		right: 0;
+		position: absolute;
+		top: 0;
+		transition: 100ms ease-out;
+		z-index: 1;
+	}*/
+
+	img {
+		display: block;
+		margin: 0 auto;
+		max-height: 2rem;
+		max-width: 2rem;
+	}
+}
+
+[class*="number-plate-night-owl-series"] {
+	color: #3b4351;
+	border: 3px solid var(--primary-color);
+	border-bottom-width: 1px;
+	border-radius: 5px;
+	font-family: graystroke, obvia-expanded, sans-serif;
+	font-size: 1.2rem;
+	line-height: 1;
+	padding: 0.6rem 0 0.75rem;
+	position: relative;
+	text-indent: 0.18rem;
+	width: 2.2rem;
+	
+	&::before {
+		background: black url(../images/logo.png) no-repeat 50% 50%;
+		background-size: contain;
+		border-radius: 3px 3px 0 0;
+		content: ' ';
+		display: block;
+		position: absolute;
+		height: 0.5rem;
+		top: 0;
+		width: 100%;
+	}
+	
+	&::after {
+		background: var(--primary-color) url(../images/nightowl-logo.svg) no-repeat 50% 50%;
+		bottom: 0;
+		content: ' ';
+		display: block;
+		position: absolute;
+		height: 0.5rem;
+		width: 100%;
+	}
+}

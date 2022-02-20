@@ -1,6 +1,6 @@
 @font-face {
 	font-family: 'graystroke';
-	src: url('../fonts/graystroke_regular.woff2') format('woff2'),
+	src: url('../fonts/graystroke_regular.woff2') format('woff2'), 
 			 url('../fonts/graystroke_regular.woff') format('woff');
 	font-weight: normal;
 	font-style: normal;
@@ -117,7 +117,13 @@ main {
 }
 
 .page-header .cars-container {
-	margin: 0 1.5rem 0 0.4rem;
+	justify-content: flex-end;
+	margin: 0 1.4rem 0;
+}
+
+.page-header .car-container {
+	margin: 0 -0.8rem;
+	// height: 3rem;
 }
 
 .page-header .car-caption {

@@ -22,18 +22,20 @@ const ScheduleTemplate = props => {
 					<div className="column col-8 col-xl-10 col-lg-11 col-sm-12 col-mx-auto content">
 					
 						<hgroup className="page-header columns">
-							<div>
+							<div className="column col-6">
 								<h2 className="page-title">Schedule</h2>
 								<h3 className="page-subtitle">
 									{ season.seasonName }
 								</h3>
 							</div>
 							{ season.seasonClass?.length > 0 &&
-								<Cars cars={season.seasonClass[0]?.seasonClassCars} className="hide-sm" />
+								<div className="column col-6">
+									<Cars cars={season.seasonClass[0]?.seasonClassCars} className="hide-sm" />
+								</div>
 							}
 						</hgroup>
 	
-						<Schedule events={season.events} />
+						<Schedule events={season.events} {...props} />
 	
 					</div>
 				</div>
@@ -58,6 +60,7 @@ export const query = graphql`
 			seasonClass {
 				seasonClassCars {
 					carId
+					carSimId
 					carName
 				}
 			}
@@ -77,6 +80,7 @@ export const query = graphql`
 					seasonClass {
 						seasonClassCars {
 							carId
+							carSimId
 							carName
 						}
 					}

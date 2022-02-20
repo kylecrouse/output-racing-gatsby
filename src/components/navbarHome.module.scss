@@ -1,0 +1,34 @@
+.navbar {
+	padding: 2rem 0 3rem;
+	
+	img {
+		display: block;
+		margin: 0 auto;
+		max-width: 100%;
+		position: relative;
+		left: 1.8%;
+	}
+	
+	[class*="columns"] {
+		align-items: center;
+	}
+}
+
+.tagline p {
+	color: #f0f0f0;
+	font-family: obvia-expanded, sans-serif;
+	font-size: 0.8rem;
+	font-style: oblique;
+	font-weight: 600;
+	letter-spacing: 1.8px;
+	line-height: 1;
+	margin: 1rem 0 0;
+	text-align: center;
+	text-transform: uppercase;
+	word-spacing: 1.8px;
+}
+
+.seriesLogo {
+	max-height: 2rem;
+	filter: brightness(0) saturate(1) invert(1);
+}

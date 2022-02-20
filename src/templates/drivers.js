@@ -1,15 +1,21 @@
 import * as React from "react"
 import { graphql } from 'gatsby'
-import Layout from "../components/Layout"
-import Meta from "../components/Meta"
+import Layout from "../components/layout"
+import Meta from "../components/meta"
 import DriverCard from '../components/driverCard'
 
 const DriversPage = (props) => {
 	const drivers = React.useMemo(
 		() => props.data.drivers.edges
 			.sort(({ node: a }, { node: b }) => (a.carNumber ? a.carNumber : 1000) - (b.carNumber ? b.carNumber: 1000))
-			.map(({ node }) => <DriverCard {...node} />),
-		[props.data.drivers]
+			.map(({ node }, index) => (
+				<DriverCard 
+					key={`driver-${index}`} 
+					{...node} 
+					seriesName={props.pageContext.seriesName}
+				/>
+			)),
+		[props.data.drivers, props.pageContext.seriesName]
 	)
 	return (
 		<Layout {...props}>
@@ -43,6 +49,28 @@ export const query = graphql`
 			edges {
 				node {
 					...driverData	
+					driverCareerStats {
+						starts
+						avgStartPos
+						avgFinishPos
+						wins
+						podiums
+						top5s
+						top10s
+						lapsCompleted
+						lapsLed
+						poles
+						incidents
+						incidentsPerRace
+						winPct
+						podiumPct
+						top5Pct
+						top10Pct
+						lapsLedPct
+						polePct
+						incidentsPerLap
+						rating
+					}
 				}
 			}
 		}	
