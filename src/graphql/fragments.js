@@ -73,10 +73,12 @@ export const eventData = graphql`
 
 export const participantData = graphql`
 	fragment participantData on SimRacerHubParticipant {
+		carId
 		carName
 		carImage {
 			publicURL
 		}
+		driverId
 		driverName
 		member {
 			...driverChipData

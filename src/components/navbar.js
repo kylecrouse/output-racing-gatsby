@@ -70,9 +70,9 @@ const Navbar = (props) => {
 									<Link to={`/${props.series}/standings`} activeClassName="active" partiallyActive={true}>
 										<span>Standings</span>
 									</Link>
-									{/*<a href={`/${props.series}/stats`} className={props.page === 'stats' ? 'active' : ''}>
+									<Link to={`/${props.series}/stats`} activeClassName="active">
 										<span>Stats</span>
-									</a>*/}
+									</Link>
 								</nav>
 							</div>
 						</div>

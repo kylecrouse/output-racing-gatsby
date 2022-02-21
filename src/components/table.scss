@@ -55,7 +55,11 @@ th.cell-position .sort-indicator {
 td { 
 	font-size: 0.7rem;
 	padding: 5px 10px; 
-	text-align: center;
+	text-align: right;
+	&.cell-driver {
+		text-align: left;
+		white-space: nowrap;
+	}
 }
 
 td:not(.cell-driver) {

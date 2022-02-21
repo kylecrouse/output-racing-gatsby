@@ -334,6 +334,11 @@ exports.createPages = async ({ graphql, actions }) => {
 			component: path.resolve(`src/templates/drivers.js`),
 			context: { seriesId, seriesName, seasonName: 'Drivers' },
 		})			
+		createPage({
+			path: `${seriesName}/stats`,
+			component: path.resolve(`src/templates/stats.js`),
+			context: { seriesId, seriesName, seasonName: 'Stats' },
+		})			
 	})
 	
 	// Create schedule, standings and results pages

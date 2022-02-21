@@ -53,7 +53,7 @@ const DriverTemplate = props => {
 				accessor: 'lapsLed',
 			},
 			{
-				Header: 'Led\u00A0%',
+				Header: '%Led',
 				accessor: 'lapsLedPct',
 			},
 			{
@@ -73,7 +73,7 @@ const DriverTemplate = props => {
 				accessor: 'wins'
 			},
 			{
-				Header: 'W%',
+				Header: '%W',
 				accessor: 'winPct'
 			},
 			{
@@ -81,7 +81,7 @@ const DriverTemplate = props => {
 				accessor: 'top5s'
 			},
 			{
-				Header: 'T5%',
+				Header: '%T5',
 				accessor: 'top5Pct'
 			},
 			{
@@ -89,7 +89,7 @@ const DriverTemplate = props => {
 				accessor: 'top10s'
 			},
 			{
-				Header: 'T10%',
+				Header: '%T10',
 				accessor: 'top10Pct'
 			},
 			{
@@ -97,7 +97,7 @@ const DriverTemplate = props => {
 				accessor: 'poles'
 			},
 			{
-				Header: `Pole\u00A0%`,
+				Header: `%Pole`,
 				accessor: 'polePct'
 			},
 		],
@@ -141,7 +141,7 @@ const DriverTemplate = props => {
 				accessor: 'lapsLed',
 			},
 			{
-				Header: 'Led\u00A0%',
+				Header: '%Led',
 				accessor: 'lapsLedPct',
 			},
 			{
@@ -161,7 +161,7 @@ const DriverTemplate = props => {
 				accessor: 'wins'
 			},
 			{
-				Header: 'W%',
+				Header: '%W',
 				accessor: 'winPct'
 			},
 			{
@@ -169,7 +169,7 @@ const DriverTemplate = props => {
 				accessor: 'top5s'
 			},
 			{
-				Header: 'T5%',
+				Header: '%T5',
 				accessor: 'top5Pct'
 			},
 			{
@@ -177,7 +177,7 @@ const DriverTemplate = props => {
 				accessor: 'top10s'
 			},
 			{
-				Header: 'T10%',
+				Header: '%T10',
 				accessor: 'top10Pct'
 			},
 			{
@@ -185,7 +185,7 @@ const DriverTemplate = props => {
 				accessor: 'poles'
 			},
 			{
-				Header: `Pole\u00A0%`,
+				Header: `%Pole`,
 				accessor: 'polePct'
 			},
 		],

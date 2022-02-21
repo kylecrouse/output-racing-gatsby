@@ -124,17 +124,6 @@ const IndexPage = props => {
                       Output Racing League's flagship Tuesday late-night NASCAR series racing the Camping World trucks. The first official season of 2022 is now underway, loosely following the first half of the real-world NASCAR schedule. <Link to="/apply" className={`${styles.btn} ${styles.btnPrimary}`}><span>Apply now</span></Link>
                     </p>
               }
-              <h3>Current Standings</h3>
-              { node.standings
-                  .slice(0, 3)
-                  .map((item, index) => (
-                    <StandingsCard 
-                      position={item.position}
-                      driver={item.member ? item.member : item.driverName}
-                      totalPoints={item.totalPoints}
-                    />
-                  ))
-              }
               <nav className={styles.nav}>
                 <ul>
                   <li>
@@ -148,12 +137,28 @@ const IndexPage = props => {
                     </Link>
                   </li>
                   <li>
-                    <Link to={`/${pathify(node.seriesName)}/standings`}>
-                      <span>Standings</span>
+                    <Link to={`/${pathify(node.seriesName)}/stats`}>
+                      <span>Stats</span>
                     </Link>
                   </li>
                 </ul>
               </nav>
+              <h3>Current Standings</h3>
+              { node.standings
+                  .slice(0, 3)
+                  .map((item, index) => (
+                    <StandingsCard 
+                      position={item.position}
+                      driver={item.member ? item.member : item.driverName}
+                      totalPoints={item.totalPoints}
+                    />
+                  ))
+              }
+              <p className="cta">                    
+                <Link to={`/${pathify(node.seriesName)}/standings`}>
+                  <span>Full Standings</span>
+                </Link>
+              </p>
             </div>
           </div>
         </section>
