@@ -4,7 +4,6 @@
  * See: https://www.gatsbyjs.com/docs/node-apis/
  */
 const axios = require('axios')
-const axiosRetry = require('axios-retry')
 const querystring = require('querystring')
 const throttledQueue = require('./lib/throttled-queue')
 
@@ -13,7 +12,6 @@ const throttle = throttledQueue(1, 10000)
 const LEAGUE_ID = 1710
 
 const instance = axios.create({ baseURL: 'http://127.0.0.1:3000' })
-// axiosRetry(instance, { retries: 5 })
 
 exports.sourceNodes = async ({
   actions,

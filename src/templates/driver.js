@@ -1,6 +1,7 @@
 import * as React from "react"
 import { graphql } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
+import { Carousel, Slide } from '../components/carousel'
 import DriverChip from '../components/driverChip'
 import Layout from '../components/layout'
 import Meta from '../components/meta'
@@ -192,17 +193,42 @@ const DriverTemplate = props => {
 		[]
 	)
 	
+	const media = React.useMemo(() => {
+		if (!driver.driverMedia) 
+			return null
+		const slides = driver.driverMedia.reduce(
+			(a, m) => {
+				if ((props.pageContext.seriesId !== 8100 && m.metadata.tags[0]?.name === 'Series: Night Owl Series') || (props.pageContext.seriesId === 8100 && m.metadata.tags[0]?.name !== 'Series: Night Owl Series'))
+					return a
+				else 
+					return (
+						[...a, (
+							<Slide>
+								<GatsbyImage 
+									alt="car screenshot"
+									className={ styles.driverImage }
+									image={ getImage(m) } 
+								/>
+							</Slide>	
+						)]
+					)
+			},
+			[]
+		)
+		return slides.length > 1 
+			? (
+					<Carousel options={{ type: "carousel", showNav: true }}>
+						{ slides }
+					</Carousel>
+				) 
+			: slides
+	}, [driver.driverMedia, props.pageContext.seriesId])
+	
 	return (
 		<Layout {...props}>
 			<Meta {...props}/>
 			
-			{ driver.driverMedia && 
-					<GatsbyImage 
-						alt="car screenshot"
-						className={ styles.driverImage }
-						image={ getImage(driver.driverMedia) } 
-					/>
-			}
+			{ media }
 
 			<main className="container">
 				

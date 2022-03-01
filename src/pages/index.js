@@ -10,7 +10,7 @@ import StandingsCard from '../components/standingsCard'
 import Video from '../components/video'
 import * as styles from './index.module.scss'
 import outputLogo from '../images/output-logo.svg'
-import outputImage from '../images/output-screenshot.png'
+import outputImage from '../images/output-screenshot-trucks.png'
 import nightowlLogo from '../images/nightowl-logo.svg'
 import nightOwlImage from '../images/night-owl-screenshot.png'
 import promo from '../images/ORL-Season-2-promo.mp4'
@@ -49,10 +49,10 @@ const IndexPage = props => {
   let startAt = null
   const mergedEvents = React.useMemo(() => {
     const events = props.data.seasons.edges.reduce(
-      (a, { node: { seriesId, seriesName, seasonId, seasonName, events }}) => [ 
+      (a, { node: { seriesId, seriesName, seasonId, seasonName, seasonClass, events }}) => [ 
         ...a, 
         ...events.map(
-          e => ({ seriesId, seriesName, seasonId, seasonName, ...e })
+          e => ({ seriesId, seriesName, seasonId, seasonName, seasonClass, ...e })
         )
       ], 
       []
@@ -73,21 +73,8 @@ const IndexPage = props => {
                 <ScheduleCard 
                   { ...e }
                   title={chase}
-                  style={ 
-                    e.seriesId === 8100
-                      ? {
-                        '--highlight-color': '#FF0066',
-                        '--primary-color': '#0FC3E8',
-                        '--secondary-color': '#0194BE',
-                        '--highlight-opposite-color': 'white'
-                      }
-                      : {
-                        '--highlight-color': '#fccc00',
-                        '--primary-color': '#530388',
-                        '--secondary-color': '#37096c',
-                        '--highlight-opposite-color': 'white'
-                      }
-                  }
+                  countdown={startAt === i}
+                  className={pathify(e.seriesName)}
                 />
               </Slide>
             ) 
@@ -100,14 +87,11 @@ const IndexPage = props => {
       ...a,
       [node.seriesId]: (
         <section className={`${styles.section} ${node.seriesId === 8100 ? styles.nightOwl : styles.output}`}>
-          <div>
-            { node.seriesId === 8100
-                ? <img src={nightOwlImage} alt="screenshot from Night Owl Series race"/>
-                : <img src={outputImage} alt="screenshot from Output Series race"/>
-            }
-          </div>
-          <div>
-            <div>
+          <div className={styles.sectionContainer}>
+            <div className={styles.sectionScreenshot}>
+              <div style={{backgroundImage: `url(${node.seriesId === 8100 ? nightOwlImage : outputImage })`}}/>
+            </div>
+            <div className={styles.sectionContent}>
               { node.seriesId === 8100
                   ? <Link to="/night-owl-series/schedule" className={styles.seriesLogo}>
                       <img src={nightowlLogo} alt="Night Owl Series"/>
@@ -215,6 +199,13 @@ export const query = graphql`
           seasonName
           seriesId
           seriesName
+          seasonClass {
+            seasonClassCars {
+              carId
+              carSimId
+              carName
+            }
+          }
           events {
             raceNumber
             raceDate

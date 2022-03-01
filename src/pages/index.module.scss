@@ -22,7 +22,7 @@
 
 .broadcast-container {
 	margin: -12rem 0 0;
-	padding: 15rem 0 8rem;
+	padding: 12rem 0 8rem;
 	position: relative;
 }
 
@@ -31,6 +31,7 @@
 	z-index: 0;
 }
 
+.broadcast-container,
 .schedule-container {
 	background: 
 		radial-gradient(circle at center, rgba(0,0,0,0.7), rgba(0,0,0,0.5)),
@@ -38,6 +39,10 @@
 	margin: -12rem 0 0;
 	padding: 15rem 0 8rem;
 	position: relative;
+}
+
+.broadcast-container {
+	padding-top: 12rem;
 }
 
 .schedule-container [class*="glide__arrow"] {
@@ -67,21 +72,7 @@
 	color: var(--highlight-opposite-color);
 	position: relative;
 	
-	& > div:first-child {
-		filter: drop-shadow(0 0 0.25rem rgba(0,0,0,1));
-		position: relative;
-		img {
-			display: block;
-			height: 50vh;
-			min-height: 31rem;
-		}
-	}
-	& > div:last-child {
-		bottom: 0;
-		left: 0;
-		position: absolute;
-		right: 0;
-		top: 0;		
+	.sectionContainer {
 		&::before {
 			background-color: var(--primary-color);	
 			content: ' ';
@@ -89,7 +80,30 @@
 			right: 0;
 			position: absolute;
 			width: 100%;
+			z-index: 1;
 		}
+	}
+	.sectionScreenshot {
+		bottom: 0;
+		filter: drop-shadow(0 0 0.25rem rgba(0,0,0,1));
+		left: 0;
+		position: absolute;
+		right: 0;
+		top: 0;		
+		z-index: 0;
+		div {
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			height: 100%;
+			width: 100%;
+		}
+	}
+	.sectionContent {
+		margin: 0 auto;
+		max-width: 30rem;
+		position: relative;
+		z-index: 2;
 	}
 	h3 {
 		margin-top: 2rem;
@@ -141,23 +155,27 @@
 	--secondary-color: #0194BE;
 	--highlight-opposite-color: white;
 	
-	margin: 0 0 -3rem;
+	margin: 0 0 -1.5rem;
 	
-	& > div:first-child {
-		transform: translateX(-20%);
-		z-index: 2;
-		img {
-			clip-path: polygon(0 0, 0 100%, 100% 95%, 100% 2%);
-		}
-	}
-	& > div:last-child {
+	.sectionContainer {
 		padding: 1rem 2% 1rem 63%;
-		z-index: 3;		
 		&::before {
 			clip-path: polygon(62% 5%, 56% 97%, 100% 100%, 100% 0);
 			bottom: -1rem;
-			top: -3rem;
+			top: -2.5rem;
+			z-index: 3;
 		}
+	}
+	.sectionScreenshot {
+		bottom: -2%;
+		right: 38%;
+		div {
+			background-position: center 100%;
+			clip-path: polygon(0 0, 0 100%, 100% 95%, 100% 2%);
+		}
+	}
+	.sectionContent {
+		z-index: 4;
 	}
 	[class*="standingsCard-module--container"]:nth-of-type(1) {
 		margin-left: 0;
@@ -176,22 +194,24 @@
 	--secondary-color: #37096c;
 	--highlight-opposite-color: white;
 	
-	margin: -0.5rem 0 -3rem;
+	margin: -1.5rem 0;
 	
-	& > div:first-child {
-		transform: translate(-2%, -1rem);
-		img {
-			clip-path: polygon(0 5%, 0 100%, 100% 95%, 100% 0);
-			filter: saturate(1.1) contrast(1.2) brightness(1.2);
-		}
-	}
-	& > div:last-child {
+	.sectionContainer {
 		padding: 1rem 62% 1rem 3%;
 		z-index: 4;
 		&::before {
 			clip-path: polygon(0 0, 0 100%, 38% 95%, 44% 3%);
-			bottom: -2.5rem;
-			top: -3rem;
+			bottom: -2rem;
+			top: -2.5rem;
+		}
+	}
+	.sectionScreenshot {
+		filter: saturate(1.1) contrast(1.2) brightness(1.2);
+		left: 38%;
+		top: -5%;
+		div {
+			background-position: 25% center;
+			clip-path: polygon(0 5%, 0 100%, 100% 95%, 100% 0);
 		}
 	}
 	p {
@@ -250,7 +270,7 @@
 	display: flex;
 	filter: drop-shadow(0 0 1rem black);
 	height: 50vh;
-	margin: 0 0 -4rem;
+	margin: 0 0 -2rem;
 	min-height: 30rem;
 	overflow: hidden;
 	position: relative;
@@ -344,10 +364,7 @@
 	
 	.output {
 		margin-top: -3rem !important;
-		& > div:first-child {
-			transform: translate(-25%, -1rem);
-		}
-		& > div:last-child {
+		.sectionContainer {
 			padding: 0 1rem 1rem;
 			padding-right: 52%;
 			&::before {
@@ -357,10 +374,8 @@
 	}
 	.nightOwl {
 		margin-bottom: 0;
-		& > div:first-child {
-			transform: translate(-54%);
-		}
-		& > div:last-child {
+		padding-top: 1rem;
+		.sectionContainer {
 			padding: 0 1rem 1rem;
 			padding-left: 54%;
 			&::before {
@@ -380,18 +395,17 @@
 	}	
 	
 	.section {
-		margin: 0 !important;
-		& > div:first-child {
-			transform: translate(-20%);
-			img {
-				height: 30vh;
-				min-height: 0;
-			}
-		}
-		& > div:last-child {
+		margin: 0;
+		.sectionContainer {
 			padding-left: 1rem;
 			padding-right: 1rem;
 			position: relative;
+		}
+		.sectionScreenshot {
+			display: none;
+		}
+		.sectionContent {
+			max-width: 100%;
 		}
 		p {
 			font-size: 0.7rem;
@@ -403,18 +417,21 @@
 		}
 	}
 	.output {
-		margin-top: -3rem !important;
-		& > div:last-child {
+		margin-top: -3rem;
+		.sectionContainer {
 			&::before {
 				clip-path: polygon(0 0, 0 100%, 100% 95%, 100% 3%);
+				bottom: -1rem;
 			}
 		}
 	}
 	.nightOwl {
-		& > div:last-child {
-			margin-top: 1.5rem;
+		.sectionContainer {
+			margin-top: 0;
+			padding-top: 2rem;
 			&::before {
 				clip-path: polygon(0 5%, 0 97%, 100% 100%, 100% 0);
+				top: -1rem;
 			}
 		}
 	}

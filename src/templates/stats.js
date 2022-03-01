@@ -81,8 +81,8 @@ const StatsTemplate = props => {
 							))
 								a.driver[p.driverId] = {
 									value: p.driverId,
-									label: p.driverName,
-									sort: p.driverName.split(' ').pop()
+									label: p.member.driverName,
+									sort: p.member.driverName.split(' ').pop()
 								}
 					})
 					return a
@@ -95,7 +95,7 @@ const StatsTemplate = props => {
 				typeOptions: Object.values(options.type)//.sort(sortAlpha),
 			}
 		},
-		[props.data.races.edges]
+		[props.data.races.edges, props.data.activeDrivers.edges]
 	)
 	const carOptions = React.useMemo(
 		() => {
@@ -393,13 +393,21 @@ const StatsTemplate = props => {
 				Header: '%LL',
 				accessor: 'lapsLedPct',
 				sortDescFirst: true,
-				aggregate: (leafRows) => leafRows.reduce((a, v) => a + v, 0),
-				aggregateValue: (value, row) => row.original.lapsLed,
+				aggregate: (leafRows) => Math.round(
+					leafRows.reduce(
+						(a, { lapsLed }) => a + lapsLed, 0
+					) / leafRows.reduce(
+						(a, { lapsCompleted }) => a + lapsCompleted, 0
+					) * 1000
+				) / 10,
+				aggregateValue: (value, row) => ({ 
+					lapsLed: row.original.lapsLed, 
+					lapsCompleted: row.original.lapsCompleted 
+				}),
 				Aggregated: ({ value, row, groupedRows }) => {
-					value = Math.round(value / row.values.lapsCompleted * 1000) / 10
 					return value === Math.max(...groupedRows.reduce(
-						(a, { values }) => values.lapsLed 
-							? [...a, Math.round(values.lapsLed / values.lapsCompleted * 1000) / 10] 
+						(a, { values }) => values.lapsLedPct
+							? [...a, values.lapsLedPct] 
 							: a,
 						[]
 					))
@@ -421,6 +429,62 @@ const StatsTemplate = props => {
 					))
 						? <b>{ value }</b>
 						: value ?? '-'
+				}
+			},
+			{
+				Header: 'I',
+				accessor: 'incidents',
+				aggregate: 'sum',
+				Aggregated: ({ value, groupedRows }) => {
+					return value === Math.min(...groupedRows.reduce(
+						(a, { values }) => values.incidents 
+							? [...a, values.incidents] 
+							: a,
+						[]
+					))
+						? <b>{ value }</b>
+						: value ?? '-'
+				}
+			},
+			{
+				Header: 'IR',
+				accessor: 'incidentsRace',
+				aggregate: (leafRows) => Math.round(leafRows.reduce((a, v) => a + v, 0) / leafRows.length * 1000) / 1000,
+				aggregateValue: (value, row) => row.original.incidents,
+				Aggregated: ({ value, row, groupedRows }) => {
+					return value === Math.min(...groupedRows.reduce(
+						(a, { values }) => values.incidentsRace 
+							? [...a, values.incidentsRace] 
+							: a,
+						[]
+					))
+						? <b>{ value.toFixed(2) }</b>
+						: value?.toFixed(2) ?? '-'
+				}
+			},
+			{
+				Header: 'IL',
+				accessor: 'incidentsLap',
+				aggregate: (leafRows) => Math.round(
+					leafRows.reduce(
+						(a, { incidents }) => a + incidents, 0
+					) / leafRows.reduce(
+						(a, { lapsCompleted }) => a + lapsCompleted, 0
+					) * 1000
+				) / 1000,
+				aggregateValue: (value, row) => ({
+					incidents: row.original.incidents, 
+					lapsCompleted: row.original.lapsCompleted 
+				}),
+				Aggregated: ({ value, row, groupedRows }) => {
+					return value === Math.min(...groupedRows.reduce(
+						(a, { values }) => values.incidentsLap
+							? [...a, values.incidentsLap] 
+							: a,
+						[]
+					))
+						? <b>{ value.toFixed(2) }</b>
+						: value?.toFixed(2) ?? '-'
 				}
 			},
 			{
@@ -507,8 +571,110 @@ const StatsTemplate = props => {
 								groupBy: ['driverName'],
 								sortBy: [{ id: 'starts', desc: true }],
 							}}
-						/>							
-
+						/>
+					
+						<div className={ styles.glossary }>
+							<h3>Glossary</h3>
+							<dl>
+								<dt>S</dt>
+								<dd>Starts</dd>
+								<dt>AS</dt>
+								<dd>
+									Average Starting Position<br/>
+									<i>Only starts with valid qualifying attempts</i>
+								</dd>
+								<dt>AF</dt>
+								<dd>
+									Average Finishing Position
+								</dd>
+								<dt>ARP</dt>
+								<dd>
+									Average Running Position<br/>
+									<i>Only green flag laps while on the lead lap</i>
+								</dd>
+								<dt>GP</dt>
+								<dd>
+									Green Flag Passes
+								</dd>
+								<dt>QP</dt>
+								<dd>
+									Quality Passes<br/>
+									<i>Green flag passes within top seven</i>
+								</dd>
+								<dt>#FL</dt>
+								<dd>
+									Number of Fast Laps<br/>
+									<i>Fastest time recorded each race lap</i>
+								</dd>
+								<dt>QP</dt>
+								<dd>
+									Quality Passes<br/>
+									<i>Green flag passes within top seven</i>
+								</dd>
+								<dt>W</dt>
+								<dd>
+									Wins
+								</dd>
+								<dt>%W</dt>
+								<dd>
+									Winning Percentage
+								</dd>
+								<dt>T5</dt>
+								<dd>
+									Top 5s
+								</dd>
+								<dt>%T5</dt>
+								<dd>
+									Top 5 Percentage
+								</dd>
+								<dt>T10</dt>
+								<dd>
+									Top 10s
+								</dd>
+								<dt>%T10</dt>
+								<dd>
+									Top 10 Percentage
+								</dd>
+								<dt>P</dt>
+								<dd>
+									Poles
+								</dd>
+								<dt>%P</dt>
+								<dd>
+									Poles Percentage
+								</dd>
+								<dt>LL</dt>
+								<dd>
+									Laps Led
+								</dd>
+								<dt>%LL</dt>
+								<dd>
+									Laps Led Percentage
+								</dd>
+								<dt>TL</dt>
+								<dd>
+									Total Laps Completed
+								</dd>
+								<dt>I</dt>
+								<dd>
+									Incidents
+								</dd>
+								<dt>IR</dt>
+								<dd>
+									Average Incidents per Race
+								</dd>
+								<dt>IL</dt>
+								<dd>
+									Average Incidents per Lap
+								</dd>
+								<dt>DR</dt>
+								<dd>
+									Driver Rating<br/>
+									<i>Formula combining the following categories: Win, Finish, Top-15 Finish, Average Running Position While on Lead Lap, Average Speed Under Green, Fastest Lap, Led Most Laps, Lead-Lap Finish. Maximum: 150 points per race</i>
+								</dd>
+							</dl>
+						</div>
+		
 					</div>
 				</div>
 	
@@ -531,7 +697,6 @@ const Table = ({
 		headerGroups,
 		rows,
 		prepareRow,
-		state: { groupBy },
 	} = useTable(
 		{
 			columns,

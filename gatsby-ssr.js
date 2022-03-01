@@ -10,3 +10,11 @@ const HeadComponents = [
 exports.onRenderBody = ({ pathname, setHeadComponents }) => {
 	setHeadComponents(HeadComponents)
 }
+
+exports.onPreRenderHTML = ({ getHeadComponents, replaceHeadComponents }) => {
+	const headComponents = getHeadComponents()
+	if (headComponents)
+		replaceHeadComponents(headComponents.sort(
+			item => item.key?.includes('spectre') ? -1 : 1
+		))
+}

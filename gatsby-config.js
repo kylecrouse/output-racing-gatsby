@@ -5,12 +5,14 @@ module.exports = {
     siteUrl: "http://output-racing-gatsby.s3-website-us-west-2.amazonaws.com",
     title: "Output Racing League",
   },
+  // trailingSlash: 'never',
   plugins: [
     {
       resolve: "gatsby-source-contentful",
       options: {
         accessToken: "hnJokTLzykmhsacKuzCdXre6Uf0LHDTMQ418DC2oZEc",
         spaceId: "38idy44jf6uy",
+        enableTags: true,
       },
     },
     // {
@@ -41,6 +43,5 @@ module.exports = {
         acl: null
       },
     },
-    `gatsby-plugin-remove-trailing-slashes`,
   ],
 };

@@ -22,7 +22,7 @@ const Results = (props) => {
 						: change < 0
 							? 'negative'
 							: 'neutral'
-					return props.hardCharger.driverId && props.hardCharger.driverId === row.original.driverId
+					return props.hardCharger?.driverId && props.hardCharger.driverId === row.original.driverId
 						? <b className={className}>
 								{Math.abs(change) || '\u00a0'}
 							</b>
@@ -92,7 +92,7 @@ const Results = (props) => {
 				Cell: ({ value, row }) => {
 					const { finishPos, lapsCompleted, status } = row.original
 					return (value > 0)
-						? `+${value.toFixed(3)}`
+						? `+${getTimeFromMilliseconds(value*10000)}`
 						: (finishPos === 1)
 							? moment.utc(moment.duration(props.duration, 's').as('milliseconds'))
 									.format('HH:mm:ss')
@@ -126,10 +126,10 @@ const Results = (props) => {
 				className: 'hide-sm',
 				Cell: ({ value, data }) => {
 					return value === Math.min(
-						...data.map(({ avgPos }) => avgPos)
+						...data.reduce((a, { avgPos }) => avgPos !== -1 ? [...a, avgPos] : a, [])
 					)
 						? <b>{ (value + 1).toFixed(1) }</b>
-						: (value + 1).toFixed(1)
+						: value !== -1 ? (value + 1).toFixed(1) : '-'
 				}
 			},
 			{
@@ -137,7 +137,7 @@ const Results = (props) => {
 				accessor: 'passes',
 				className: 'hide-sm',
 				Cell: ({ value, data }) => {
-					return value === Math.max(
+					return value !== 0 && value === Math.max(
 						...data.map(({ passes }) => passes)
 					)
 						? <b>{ value }</b>
@@ -149,7 +149,7 @@ const Results = (props) => {
 				accessor: 'qualityPasses',
 				className: 'hide-sm',
 				Cell: ({ value, data }) => {
-					return value === Math.max(
+					return value !== 0 && value === Math.max(
 						...data.map(({ qualityPasses }) => qualityPasses)
 					)
 						? <b>{ value }</b>
@@ -161,7 +161,7 @@ const Results = (props) => {
 				accessor: 'closingPasses',
 				className: 'hide-sm',
 				Cell: ({ value, data }) => {
-					return value === Math.max(
+					return value !== 0 && value === Math.max(
 						...data.map(({ closingPasses }) => closingPasses)
 					)
 						? <b>{ value }</b>
@@ -212,8 +212,8 @@ const Results = (props) => {
 							: a,
 							9999999999999
 					)
-						? <b>{ (value/10000).toFixed(3) }</b>
-						: value > 0 ? (value/10000).toFixed(3) : '-'
+						? <b>{ getTimeFromMilliseconds(value) }</b>
+						: value > 0 ? getTimeFromMilliseconds(value) : '-'
 				}
 			},
 			{
@@ -228,12 +228,12 @@ const Results = (props) => {
 								.map(({ qualifyTime }) => moment(qualifyTime, ['m:s.S', 's.S']))
 						)
 					)
-						? <b>{ value.toFixed(3) }</b>
-						: value > 0 ? value.toFixed(3) : '-'
+						? <b>{ getTimeFromMilliseconds(value * 10000) }</b>
+						: value > 0 ? getTimeFromMilliseconds(value * 10000) : '-'
 				}
 			},
 		],
-		[props.duration, props.pointsCount, props.raceLaps, props.hardCharger.driverId]
+		[props.duration, props.pointsCount, props.raceLaps, props.hardCharger?.driverId]
 	)
 	
 	return (
@@ -263,3 +263,26 @@ const Results = (props) => {
 }
 
 export default Results
+
+const getTimeFromMilliseconds = (time) => {
+	let hours = Math.floor(time / (3600 * 10000))
+	time = time - hours * 3600 * 10000
+	let min = Math.floor(time / (60 * 10000))
+	time = time - min * 60 * 10000
+	let secs = Math.floor(time / 10000)
+	time = time - secs * 10000
+	const tenths = Math.floor(time / 1000)
+	time = time - tenths * 1000
+	const hun = Math.floor(time / 100)
+	time = time - hun * 100
+	const thous = Math.floor(time / 10)
+	if (hours) 
+		hours += ":"
+	else 
+		hours = ""
+	if (hours && min < 10)
+		min = "0" + min
+	if (min && secs < 10)
+		secs = "0" + secs
+	return `${hours}${min > 0 ? `${min}:` : ``}${secs}.${tenths}${hun}${thous}`
+}

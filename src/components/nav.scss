@@ -18,6 +18,7 @@
 	padding: 0.2rem 0.5rem 0.2rem 0.4rem;
 	text-transform: uppercase;
 	text-decoration: none;
+	transform: skew(-20deg);
 }
 
 .nav a.active,
@@ -25,12 +26,9 @@
 .nav a:active {
 	background-color: var(--highlight-color);
 	color: #000;
-	transform: skew(-20deg);
 }
 
-.nav a.active span,
-.nav a:hover span,
-.nav a:active span {
+.nav a span {
 	display: inline-block;
 	transform: skew(20deg);
 }

@@ -150,6 +150,11 @@ td.cell-carLogo img {
 	width: 1rem;
 }
 
+td [class*="numberPlate"] {
+	padding-top: 0.25rem;
+	text-align: center;
+}
+
 td b {
 	font-weight: 500;
 }

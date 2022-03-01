@@ -13,7 +13,7 @@ const Navbar = (props) => {
 				<div className={`navbar columns col-gapless ${props.series ? 'with-subnav' : 'no-subnav'}`}>
 					<div className="column col-8 col-xl-10 col-lg-12 col-mx-auto">
 						<section className="navbar-section">
-							<Link to="/" className="navbar-brand mr-2">
+							<Link to="/" className="navbar-brand">
 								<img src={logo} alt="Output Racing" className="logo"/>
 							</Link>
 							<Link to="/output-series/schedule" className={`output-logo ${props.series === 'output-series' ? 'hide-sm' : ''}`}>

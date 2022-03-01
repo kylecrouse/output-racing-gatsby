@@ -23,14 +23,16 @@ export const Carousel = React.forwardRef(({ options, children }, ref) => {
 			<div className="glide__track" data-glide-el="track">
 				<ul className="glide__slides">{children}</ul>
 			</div>
-			<div className="glide__arrows" data-glide-el="controls">
-				<button className="glide__arrow glide__arrow--left" data-glide-dir="<">
-					<i className="icon icon-arrow-left">prev</i>
-				</button>
-				<button className="glide__arrow glide__arrow--right" data-glide-dir=">">
-					<i className="icon icon-arrow-right">next</i>
-				</button>
-			</div>
+			{ (options.showArrows === true || options.showArrows === undefined) &&
+				<div className="glide__arrows" data-glide-el="controls">
+					<button className="glide__arrow glide__arrow--left" data-glide-dir="<">
+						<i className="icon icon-arrow-left">prev</i>
+					</button>
+					<button className="glide__arrow glide__arrow--right" data-glide-dir=">">
+						<i className="icon icon-arrow-right">next</i>
+					</button>
+				</div>				
+			}
 			{ options.showNav === true &&
 				<div className="glide__bullets" data-glide-el="controls[nav]">
 					{ children.map((el, i) => (

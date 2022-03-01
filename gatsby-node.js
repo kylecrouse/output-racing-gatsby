@@ -46,13 +46,17 @@ exports.createResolvers = ({ createResolvers }) => {
 	const resolvers = {
 		SimRacerHubDriver: {
 			driverMedia: {
-				type: "ContentfulAsset",
+				type: ["ContentfulAsset"],
 				resolve: async (source, args, context, info) => {
-					const { media___NODE = null } = await getContentfulDriver(source, args, context, info) ?? {}
-					if (!media___NODE) 
-						return null				
-							
-					return context.nodeModel.getNodeById({ id: media___NODE })
+					const { media___NODE = [] } = await getContentfulDriver(source, args, context, info) ?? {}
+					return context.nodeModel.findAll({
+						query: {
+							filter: {
+								id: {in: media___NODE}
+							}
+						},
+						type: 'ContentfulAsset'
+					}).then(data => Array.from(data.entries))
 				}
 			},
 			driverNumberArt: {
@@ -372,23 +376,21 @@ exports.createPages = async ({ graphql, actions }) => {
 			})
 		}
 		
-		let latestRaceId
-		node.events.forEach(({ race }, index) => {
-			if (!race) return
-			const raceId = race.raceId
-			createPage({
-				path: `${seriesName}/results/${raceId}`,
-				component: path.resolve(`src/templates/results.js`),
-				context: { seriesId, seriesName, seasonName, seasonId, raceId },
-			})
-			if (node.active === true && !latestRaceId) {
-				createPage({
-					path: `${seriesName}/results`,
-					component: path.resolve(`src/templates/results.js`),
-					context: { seriesId, seriesName, seasonName, seasonId, raceId },
-				})
-				latestRaceId = raceId
+		node.events.forEach(({ race }, index, events) => {
+			if (!race) {
+				if (events?.[index - 1]?.race && node.active === true)
+					createPage({
+						path: `${seriesName}/results`,
+						component: path.resolve(`src/templates/results.js`),
+						context: { seriesId, seriesName, seasonName, seasonId, raceId: events[index - 1].race.raceId },
+					})
+				return
 			}
+			createPage({
+				path: `${seriesName}/results/${race.raceId}`,
+				component: path.resolve(`src/templates/results.js`),
+				context: { seriesId, seriesName, seasonName, seasonId, raceId: race.raceId },
+			})
 		})
 	})
 }

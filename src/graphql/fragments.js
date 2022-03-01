@@ -24,6 +24,11 @@ export const driverData = graphql`
 			file {
 				url
 			}
+			metadata {
+				tags {
+					name
+				}
+			}
 		}
 		irOval
 		srOval
@@ -126,6 +131,7 @@ export const raceData = graphql`
 		trackName
 		trackConfigId
 		trackConfigName
+		trackType
 		weatherFog
 		weatherHumidity
 		weatherSkies

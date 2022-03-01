@@ -22,3 +22,51 @@
 		text-align: center;
 	}
 }
+
+.glossary {
+	margin: 2rem 0.4rem 0 0.4rem;
+}
+
+.glossary dl {
+	display: grid;
+	grid-template-columns: 12% 36% 4% 12% 36%;
+}
+
+.glossary dt {
+	font-family: obvia, sans-serif;
+	font-size: 0.6rem;
+	font-weight: 600;
+	line-height: 1.6;
+	grid-column: 1;
+	text-transform: uppercase;
+	&:nth-of-type(even) {
+		grid-column: 4;
+	}
+}
+
+.glossary dt::before,
+.glossary dd::before {
+	border-top: 2px solid #f0f0f0;
+	display: block;
+	content: ' ';
+	padding-top: 0.4rem;
+}
+
+.glossary dt::after,
+.glossary dd::after {
+	display: block;
+	content: ' ';
+	line-height: 0;
+	margin-bottom: 0.3rem;
+}
+
+.glossary dd {
+	font-size: 0.65rem;
+	font-weight: 100;
+	grid-column: 2;
+	margin: 0;
+	&:nth-of-type(even) {
+		grid-column: 5;
+	}
+
+}

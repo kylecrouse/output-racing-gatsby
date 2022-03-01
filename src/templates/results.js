@@ -112,30 +112,48 @@ const ResultsTemplate = (props) => {
 												({ (race.bestAvgPos.value + 1).toFixed(1) })
 											</DriverChip>
 										</dd>
-										<dt>Hard Charger</dt>
-										<dd>
-											<DriverChip {...race.hardCharger.driver}>
-												({ race.hardCharger.value })
-											</DriverChip>
-										</dd>
+										{ race.hardCharger &&
+											<>
+												<dt>Hard Charger</dt>
+												<dd>
+													<DriverChip {...race.hardCharger.driver}>
+														({ race.hardCharger.value })
+													</DriverChip>
+												</dd>
+											</>
+										}
 										<dt>Most Passes</dt>
 										<dd>
 											<DriverChip {...race.bestPasses.driver}>
 												({ race.bestPasses.value })
 											</DriverChip>
 										</dd>
-										<dt>Most Quality Passes</dt>
-										<dd>
-											<DriverChip {...race.bestQualityPasses.driver}>
-												({ race.bestQualityPasses.value })
-											</DriverChip>
-										</dd>
-										<dt>Most Closing Passes</dt>
-										<dd>
-											<DriverChip {...race.bestClosingPasses.driver}>
-												({ race.bestClosingPasses.value })
-											</DriverChip>
-										</dd>
+										{ race.bestQualityPasses &&
+												<>
+													<dt>Most Quality Passes</dt>
+													<dd>
+														{ race.bestQualityPasses.value !== 0
+																? <DriverChip {...race.bestQualityPasses.driver}>
+																		({ race.bestQualityPasses.value })
+																	</DriverChip>
+																: 'none'
+														}
+													</dd>											
+												</>
+										}
+										{ race.bestClosingPasses && 
+												<>
+													<dt>Most Closing Passes</dt>
+													<dd>
+														{ race.bestClosingPasses.value !== 0
+																? <DriverChip {...race.bestClosingPasses.driver}>
+																		({ race.bestClosingPasses.value })
+																	</DriverChip>
+																: 'none'
+														}
+													</dd>											
+												</>
+										}
 										<dt>Fastest Lap</dt>
 										<dd>
 											<DriverChip {...race.bestFastLap.driver}>
@@ -148,7 +166,7 @@ const ResultsTemplate = (props) => {
 												({ getTimeFromMilliseconds(race.bestAvgFastLap.value) })
 											</DriverChip>
 										</dd>
-										{	race.cautions > 0 &&
+										{	race.bestRestarts &&
 											<>
 												<dt>Fastest Restarts</dt>
 												<dd>
@@ -200,11 +218,11 @@ const getTimeFromMilliseconds = (time) => {
 		hours += ":"
 	else 
 		hours = ""
-	if (min < 10)
+	if (hours && min < 10)
 		min = "0" + min
-	if (secs < 10)
+	if (min && secs < 10)
 		secs = "0" + secs
-	return hours + min + ":" + secs + "." + tenths + hun + thous
+	return `${hours}${min > 0 ? `${min}:` : ``}${secs}.${tenths}${hun}${thous}`
 }
 
 const getCautionsText = (raceCautions, raceCautionLaps) => {
