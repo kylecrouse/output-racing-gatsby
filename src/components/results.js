@@ -37,10 +37,11 @@ const Results = (props) => {
 				className: 'cell-driver',
 				Cell: ({ row, value }) => (
 					row.original.member
-						? <DriverChip { ...row.original.member } />
+						? <DriverChip { ...row.original.member } link={false} />
 						: <DriverChip 
 								active={false}
 								driverName={ row.original.driverName }
+								link={false}
 							/>
 				)
 			},

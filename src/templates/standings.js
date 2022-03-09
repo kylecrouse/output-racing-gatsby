@@ -91,7 +91,9 @@ export const query = graphql`
 			}
 			events {
 				pointsCount
-				chase
+				chase {
+					chaseNumDrivers
+				}
 				offWeek
 				race {
 					raceId

@@ -60,7 +60,9 @@ export const eventData = graphql`
 			carSimId
 			carName
 		}
-		chase
+		chase {
+			chaseNumDrivers
+		}
 		eventName
 		offWeek
 		raceLength

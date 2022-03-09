@@ -57,13 +57,13 @@ const IndexPage = props => {
       ], 
       []
     )
-    let chase = null
+    let chase = {}
     return events 
       ? events
           .sort((a, b) => new Date(a.raceDate) - new Date(b.raceDate))
           .map((e, i) => {
             if (!e.raceNumber) {
-              if (e.eventName) chase = e.eventName
+              if (e.eventName) chase[e.seasonId] = e.eventName
               return null              
             }
             if (startAt === null && !e.race)
@@ -72,7 +72,7 @@ const IndexPage = props => {
               <Slide key={`event-${i}`}>
                 <ScheduleCard 
                   { ...e }
-                  title={chase}
+                  title={chase[e.seasonId]}
                   countdown={startAt === i}
                   className={pathify(e.seriesName)}
                 />
@@ -127,22 +127,26 @@ const IndexPage = props => {
                   </li>
                 </ul>
               </nav>
-              <h3>Current Standings</h3>
-              { node.standings
-                  .slice(0, 3)
-                  .map((item, index) => (
-                    <StandingsCard 
-                      position={item.position}
-                      driver={item.member ? item.member : item.driverName}
-                      totalPoints={item.totalPoints}
-                    />
-                  ))
+              { node.standings?.length > 0 && 
+                <>
+                  <h3>Current Standings</h3>
+                  { node.standings
+                      .slice(0, 3)
+                      .map((item, index) => (
+                        <StandingsCard 
+                          position={item.position}
+                          driver={item.member ? item.member : item.driverName}
+                          totalPoints={item.totalPoints}
+                        />
+                      ))
+                  }
+                  <p className="cta">                    
+                    <Link to={`/${pathify(node.seriesName)}/standings`}>
+                      <span>Full Standings</span>
+                    </Link>
+                  </p>
+                </>
               }
-              <p className="cta">                    
-                <Link to={`/${pathify(node.seriesName)}/standings`}>
-                  <span>Full Standings</span>
-                </Link>
-              </p>
             </div>
           </div>
         </section>

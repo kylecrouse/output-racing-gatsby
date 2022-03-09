@@ -100,8 +100,12 @@
 		}
 	}
 	.sectionContent {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 		margin: 0 auto;
 		max-width: 30rem;
+		min-height: 25rem;
 		position: relative;
 		z-index: 2;
 	}
@@ -169,6 +173,7 @@
 	.sectionScreenshot {
 		bottom: -2%;
 		right: 38%;
+		z-index: 2;
 		div {
 			background-position: center 100%;
 			clip-path: polygon(0 0, 0 100%, 100% 95%, 100% 2%);
@@ -203,6 +208,7 @@
 			clip-path: polygon(0 0, 0 100%, 38% 95%, 44% 3%);
 			bottom: -2rem;
 			top: -2.5rem;
+			z-index: 3;
 		}
 	}
 	.sectionScreenshot {
@@ -219,6 +225,9 @@
 		a:visited {
 			color: var(--secondary-color);
 		}
+	}
+	.sectionContent {
+		z-index: 3;
 	}
 	[class*="standingsCard-module--container"]:nth-of-type(1) {
 		margin-right: 1.6rem;

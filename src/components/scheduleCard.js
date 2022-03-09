@@ -29,11 +29,14 @@ const ScheduleCard = (props) => {
 	}
 	const [duration, setDuration] = React.useState(getDuration)
 	React.useEffect(() => {
+		if (!(props.countdown && duration?.asSeconds() > 0)) 
+			return
 		const timer = setTimeout(() => {
 			setDuration(getDuration)
 		}, 1000)
 		return () => clearTimeout(timer)
 	})
+	// console.log(props.trackName, props.trackConfigId)
 	return (
 		<div className={ `${styles.container} ${props.className}` }>
 			<div className={ styles.header }>

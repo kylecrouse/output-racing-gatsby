@@ -98,7 +98,7 @@ exports.sourceNodes = async ({
         async (season) => {
           
           // Get events for this season
-          season.events = schedule[season.seasonId]
+          season.events = schedule.events[season.seasonId]
           
           // Get standings for season
           season.standings = await fetch(`/standings?seasonId=${season.seasonId}`)

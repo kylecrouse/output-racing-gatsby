@@ -23,7 +23,10 @@ const Standings = (props) => {
 									? 'negative' 
 									: 'neutral'
 							}>
-							{ value !== 0 ? Math.abs(value) : '\u00a0' }
+							{ value !== null && value !== 0 
+									? Math.abs(value) 
+									: '\u00a0' 
+							}
 						</span>
 					)
 				}
