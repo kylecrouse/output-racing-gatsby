@@ -46,7 +46,8 @@ const IndexPage = props => {
     })
   }, [isStreamOnline])
   
-  let startAt = null
+  let startAt = React.useRef(null),
+      offset = React.useRef(0)
   const mergedEvents = React.useMemo(() => {
     const events = props.data.seasons.edges.reduce(
       (a, { node: { seriesId, seriesName, seasonId, seasonName, seasonClass, events }}) => [ 
@@ -62,18 +63,20 @@ const IndexPage = props => {
       ? events
           .sort((a, b) => new Date(a.raceDate) - new Date(b.raceDate))
           .map((e, i) => {
+            console.log(startAt.current, offset.current, i, e)
             if (!e.raceNumber) {
               if (e.eventName) chase[e.seasonId] = e.eventName
-              return null              
+              if (startAt.current === null) offset.current += 1
+              return null
             }
-            if (startAt === null && !e.race)
-              startAt = i
+            if (startAt.current === null && !e.race)
+              startAt.current = i
             return (
               <Slide key={`event-${i}`}>
                 <ScheduleCard 
                   { ...e }
                   title={chase[e.seasonId]}
-                  countdown={startAt === i}
+                  countdown={startAt.current === i}
                   className={pathify(e.seriesName)}
                 />
               </Slide>
@@ -172,7 +175,11 @@ const IndexPage = props => {
           )
           : (
             <div className={styles.scheduleContainer}>
-              <Carousel options={{ type: "carousel", perView: 1, startAt }}>
+              <Carousel options={{ 
+                type: "carousel", 
+                perView: 1, 
+                startAt: startAt.current - offset.current
+              }}>
                 { mergedEvents }
               </Carousel>
             </div>            
