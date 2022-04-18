@@ -58,14 +58,14 @@ const Results = (props) => {
 			},
 			{
 				Header: 'Points',
-				accessor: 'racePoints',
+				accessor: 'totalPoints',
 				className: 'cell-totalPoints',
 				Cell: ({ value, row }) => {
 					const { bonusPoints, penaltyPoints } = row.original
 					return (
 						<div>
 							<span>
-								{ value + bonusPoints + penaltyPoints }
+								{ value }
 							</span>
 							<span className="adjustments">
 								{ bonusPoints > 0 && <span className="positive">{ `+${bonusPoints}` }</span> }

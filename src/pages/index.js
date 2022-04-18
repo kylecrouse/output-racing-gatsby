@@ -63,7 +63,6 @@ const IndexPage = props => {
       ? events
           .sort((a, b) => new Date(a.raceDate) - new Date(b.raceDate))
           .map((e, i) => {
-            console.log(startAt.current, offset.current, i, e)
             if (!e.raceNumber) {
               if (e.eventName) chase[e.seasonId] = e.eventName
               if (startAt.current === null) offset.current += 1
