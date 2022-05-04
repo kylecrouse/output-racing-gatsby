@@ -213,8 +213,8 @@ const Results = (props) => {
 							: a,
 							9999999999999
 					)
-						? <b>{ getTimeFromMilliseconds(value) }</b>
-						: value > 0 ? getTimeFromMilliseconds(value) : '-'
+						? <b>{ value }</b>
+						: value > 0 ? value : '-'
 				}
 			},
 			{
