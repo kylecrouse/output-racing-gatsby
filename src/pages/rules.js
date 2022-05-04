@@ -50,6 +50,22 @@ const RulesPage = (props) => {
 						</hgroup>
 					
 						<Tabs 
+							defaultIndex={getDefaultTabIndex(props.location.hash)}
+							onSelect={
+								(index) => {
+									switch (index) {
+										case 1:
+											window.history.pushState(null, null, '#session-info')
+											return true
+										case 2:
+											window.history.pushState(null, null, '#code-of-conduct')
+											return true
+										default:
+											window.history.pushState(null, null, '#rules')
+											return true
+									}
+								}
+							}
 							tabs={[
 								{
 									title: 'Rules',
@@ -130,6 +146,17 @@ const RulesPage = (props) => {
 			</main>
 		</Layout>
 	)
+}
+
+const getDefaultTabIndex = (hash) => {
+	switch (hash) {
+		case "#session-info":
+			return 1
+		case "#code-of-conduct":
+			return 2
+		default:
+			return 0
+	}
 }
 
 export const query = graphql`

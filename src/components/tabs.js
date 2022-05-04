@@ -4,7 +4,11 @@ import * as styles from './tabs.module.css';
 
 const TabWrapper = (props) => {
 	return (
-		<Tabs className={ styles.container }>
+		<Tabs 
+			className={ styles.container } 
+			defaultIndex={ props.defaultIndex ?? 0 } 
+			onSelect={ props.onSelect }
+		>
 			<TabList className={ styles.list }>
 				{ props.tabs.map(({ title }) => (
 						<Tab className={ styles.tab }><span>{ title }</span></Tab>	
