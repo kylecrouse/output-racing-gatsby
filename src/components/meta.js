@@ -11,7 +11,7 @@ const depathify = string => string
 
 const Meta = props => {
 	let { title, siteUrl } = useSiteMetadata(),
-			description = `An asphalt oval league for the late-night racer.`
+			description = `An asphalt league for the late-night racer.`
 	if (props.uri !== '/')
 		title += ` | ${depathify(props.uri)} | ${depathify(props.pageContext.seasonName)}`
 	return (

@@ -104,10 +104,10 @@ const IndexPage = props => {
               }
               { node.seriesId === 8100
                   ? <p>
-                      Output Racing League's GT3 road racing series for NASCAR drivers of all skill levels. Races on Thursday nights at tracks that Tuesday night drivers typically already own. 2022 Season 2 kicks off 3/3 at Charlotte Roval. <Link to="/apply" className={`${styles.btn} ${styles.btnPrimary}`}><span>Apply now</span></Link>
+                      Output Racing League's road racing series for drivers of all skill levels. Races on Thursday nights at tracks that Tuesday night drivers mostly already own. 2022 Season 3 starts soon, featuring Skippy double-headers with NASCAR AI drivers. <Link to="/apply" className={`${styles.btn} ${styles.btnPrimary}`}><span>Apply now</span></Link>
                     </p>
                   : <p>
-                      Output Racing League's flagship Tuesday late-night NASCAR series racing the Camping World trucks. The first official season of 2022 is now underway, loosely following the first half of the real-world NASCAR schedule. <Link to="/apply" className={`${styles.btn} ${styles.btnPrimary}`}><span>Apply now</span></Link>
+                      Output Racing League's flagship Tuesday late-night NASCAR series. Congratulations to Thomas Harmon for winning 2022 season 1 championship in Camping World trucks! Season two kicks off mid-July, featuring the Next-Gen Cup Cars. <Link to="/apply" className={`${styles.btn} ${styles.btnPrimary}`}><span>Apply now</span></Link>
                     </p>
               }
               <nav className={styles.nav}>
@@ -174,13 +174,18 @@ const IndexPage = props => {
           )
           : (
             <div className={styles.scheduleContainer}>
-              <Carousel options={{ 
-                type: "carousel", 
-                perView: 1, 
-                startAt: startAt.current - offset.current
-              }}>
-                { mergedEvents }
-              </Carousel>
+              { true
+                  ? (
+                    <Carousel options={{ 
+                      type: "carousel", 
+                      perView: 1, 
+                      startAt: startAt.current - offset.current
+                    }}>
+                      { mergedEvents }
+                    </Carousel>                    
+                  ) 
+                  : null
+              }
             </div>            
           )
       }
