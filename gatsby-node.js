@@ -239,6 +239,14 @@ exports.createSchemaCustomization = ({ actions }) => {
 		
 		type SimRacerHubParticipant implements Node {
 			member: SimRacerHubDriver @link(by: "driverId", from: "driverId")  
+			avgPos: Float
+			arp: Float
+			avgFastLap: Int
+			numFastLap: Int
+			passes: Int
+			qualityPasses: Int
+			closingPasses: Int
+			rating: Float
 		}
 		
 		type DriverLicense {
