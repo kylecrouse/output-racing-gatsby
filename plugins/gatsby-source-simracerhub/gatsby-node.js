@@ -7,11 +7,12 @@ const axios = require('axios')
 const querystring = require('querystring')
 const throttledQueue = require('./lib/throttled-queue')
 
-const throttle = throttledQueue(1, 10000)
+const throttle = throttledQueue(5, 500)
 
 const LEAGUE_ID = 1710
 
-const instance = axios.create({ baseURL: 'http://127.0.0.1:3000' })
+// const instance = axios.create({ baseURL: 'http://127.0.0.1:3000' })
+const instance = axios.create({ baseURL: 'https://api.simracerhub.com' })
 
 exports.sourceNodes = async ({
   actions,
@@ -34,10 +35,9 @@ exports.sourceNodes = async ({
   
   await Promise.all([6842,8100].map(async (seriesId) => {
     
-    const [drivers = {}, series = null, schedule = {}] = await Promise.all([
-      fetch(`/drivers?seriesId=${seriesId}`),
-      fetch(`/series?seriesId=${seriesId}`),
-      fetch(`/schedule?seriesId=${seriesId}`),
+    const [drivers = {}, series = null] = await Promise.all([
+      fetch(`/series/${seriesId}/drivers`),
+      fetch(`/series/${seriesId}`),
     ])
     
     if (drivers)
@@ -98,13 +98,14 @@ exports.sourceNodes = async ({
         async (season) => {
           
           // Get events for this season
-          season.events = schedule.events[season.seasonId]
+          season.events = await fetch(`/series/${seriesId}/schedule`)
+            .then(({ events }) => events)
           
           // Get standings for season
-          season.standings = await fetch(`/standings?seasonId=${season.seasonId}`)
+          season.standings = await fetch(`/season/${season.seasonId}/standings`)
           
           // Get races for season
-          await fetch(`/results?seasonId=${season.seasonId}`)
+          await fetch(`/season/${season.seasonId}/results`)
             .then(results => results && Object.entries(results).map(
               ([raceId, race]) => createNode({
                 seriesId,
