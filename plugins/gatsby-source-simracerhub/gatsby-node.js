@@ -7,12 +7,26 @@ const axios = require('axios')
 const querystring = require('querystring')
 const throttledQueue = require('./lib/throttled-queue')
 
-const throttle = throttledQueue(5, 500)
+const throttle = throttledQueue(1, 1000)
 
 const LEAGUE_ID = 1710
 
 // const instance = axios.create({ baseURL: 'http://127.0.0.1:3000' })
 const instance = axios.create({ baseURL: 'https://api.simracerhub.com' })
+
+const sleep = ms => new Promise(r => setTimeout(r, ms))
+
+instance.interceptors.response.use(
+  function (response) { return response },
+  async (error) => {
+    const originalRequest = error.config
+    if (error.response.status === 500 && !originalRequest._retry) {
+      originalRequest._retry = true
+      await sleep(5000)
+      return instance(originalRequest)
+    }
+    return Promise.reject(error)
+});
 
 exports.sourceNodes = async ({
   actions,

@@ -106,12 +106,16 @@ const ResultsTemplate = (props) => {
 												)
 											}
 										</dd>
-										<dt>Best Average Position</dt>
-										<dd>
-											<DriverChip {...race.bestAvgPos.driver}>
-												({ (race.bestAvgPos.value + 1).toFixed(1) })
-											</DriverChip>
-										</dd>
+										{ race.bestAvgPos && 
+											<>
+												<dt>Best Average Position</dt>
+												<dd>
+													<DriverChip {...race.bestAvgPos.driver}>
+														({ (race.bestAvgPos.value + 1).toFixed(1) })
+													</DriverChip>
+												</dd>
+											</>
+										}
 										{ race.hardCharger &&
 											<>
 												<dt>Hard Charger</dt>
@@ -122,12 +126,16 @@ const ResultsTemplate = (props) => {
 												</dd>
 											</>
 										}
-										<dt>Most Passes</dt>
-										<dd>
-											<DriverChip {...race.bestPasses.driver}>
-												({ race.bestPasses.value })
-											</DriverChip>
-										</dd>
+										{ race.bestPasses && 
+											<>
+												<dt>Most Passes</dt>
+												<dd>
+													<DriverChip {...race.bestPasses.driver}>
+														({ race.bestPasses.value })
+													</DriverChip>
+												</dd>
+											</>
+										}
 										{ race.bestQualityPasses &&
 												<>
 													<dt>Most Quality Passes</dt>
@@ -154,18 +162,26 @@ const ResultsTemplate = (props) => {
 													</dd>											
 												</>
 										}
-										<dt>Fastest Lap</dt>
-										<dd>
-											<DriverChip {...race.bestFastLap.driver}>
-												({ getTimeFromMilliseconds(race.bestFastLap.value) })
-											</DriverChip>
-										</dd>
-										<dt>Fastest 3-lap Average</dt>
-										<dd>
-											<DriverChip {...race.bestAvgFastLap.driver}>
-												({ getTimeFromMilliseconds(race.bestAvgFastLap.value) })
-											</DriverChip>
-										</dd>
+										{ race.bestFastLap &&
+											<>
+												<dt>Fastest Lap</dt>
+												<dd>
+													<DriverChip {...race.bestFastLap.driver}>
+														({ getTimeFromMilliseconds(race.bestFastLap.value) })
+													</DriverChip>
+												</dd>
+											</>
+										}
+										{ race.bestAvgFastLap && 
+											<>
+												<dt>Fastest 3-lap Average</dt>
+												<dd>
+													<DriverChip {...race.bestAvgFastLap.driver}>
+														({ getTimeFromMilliseconds(race.bestAvgFastLap.value) })
+													</DriverChip>
+												</dd>
+											</>
+										}
 										{	race.bestRestarts &&
 											<>
 												<dt>Fastest Restarts</dt>
@@ -176,12 +192,16 @@ const ResultsTemplate = (props) => {
 												</dd>
 											</>											
 										}
-										<dt>Most Fast Laps</dt>
-										<dd>
-											<DriverChip {...race.bestNumFastLap.driver}>
-												({ race.bestNumFastLap.value })
-											</DriverChip>
-										</dd>
+										{ race.bestNumFastLap && 
+											<>
+												<dt>Most Fast Laps</dt>
+												<dd>
+													<DriverChip {...race.bestNumFastLap.driver}>
+														({ race.bestNumFastLap.value })
+													</DriverChip>
+												</dd>
+											</>
+										}
 									</dl>
 								</div>
 							</div>
