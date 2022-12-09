@@ -1,84 +1,115 @@
 const axios = require('axios')
-const { wrapper } = require('axios-cookiejar-support')
-const { CookieJar } =  require('tough-cookie')
+const { CookieJar } = require('tough-cookie')
+const { HttpCookieAgent, HttpsCookieAgent } = require('http-cookie-agent/http')
+const { default: createAuthRefreshInterceptor } = require('axios-auth-refresh')
+const CookieFileStore = require("tough-cookie-file-store").FileCookieStore
+const CryptoJS = require('crypto-js')
 
-const jar = new CookieJar()
-const client = wrapper(axios.create({ jar }))
+class Client {
+    
+  constructor(email, password) {
+    this._instance = axios.create({ baseURL: 'https://members-ng.iracing.com' })
+    
+    const jar = new CookieJar(new CookieFileStore("./.cookies "))
+    this._instance.defaults.httpAgent = new HttpCookieAgent({ cookies: { jar } })
+    this._instance.defaults.httpsAgent = new HttpsCookieAgent({ cookies: { jar } })
+    
+    let hash = CryptoJS.SHA256(password + email.toLowerCase())
+    let hashInBase64 = CryptoJS.enc.Base64.stringify(hash)
+    
+    createAuthRefreshInterceptor(
+      this._instance, 
+      (failedRequest) => this._authenticate(email, hashInBase64)
+    )
+	}
 
-const baseURL = 'https://members.iracing.com'
+  _authenticate(email, password) {
+    return this._instance({
+      method: 'post',
+      url: '/auth', 
+      data: serialize({ email, password }).toString()
+    })
+  }
+  
+  _get(url) {
+    return this._instance(url)
+      .then(({ data: { link }}) => this._instance(link))
+      .then(({ data }) => data)
+      .catch(err => { console.dir(err) })
+  }
+  
+  _getChunks(url) {
+    return this._get(url)
+      .then(
+        ({ data }) => Promise.all(
+          data.chunk_info.chunk_file_names.map(
+            file => this._instance(`${data.chunk_info.base_download_url}${file}`)
+            )
+          )
+        )
+      .then(chunks => chunks.flat())
+  }
+    
+  async getCars(ids = null) {
+    const [cars, assets] = await Promise.all([
+      this._get('/data/car/get'),
+      this._get('/data/car/assets')
+    ])
+    
+    return ids 
+      ? ( !Array.isArray(ids) && (ids = [ids]), 
+          cars.reduce(
+            (a, car) => (!ids || (ids.includes(car.car_id)))
+              ? [...a, { ...car, ...assets[car.car_id] }]
+              : a,
+            []  
+          )
+        )
+      : cars
+  }
 
-const authenticate = async (username, password) => {
-	try {
-		// console.log(`Authenticating as ${username}...`)
-		
-		const date = new Date()
-		const utcoffset = Math.round(Math.abs(date.getTimezoneOffset()))
+  getLapChart(subsessionid) {
+    return this._getChunks(`/data/results/lap_chart_data?subsessionid=${subsessionid}&simsesnum=0`)
+  }
+      
+  getLeague(league_id) {
+    return this._get(`/data/league/get?league_id=${league_id}`)
+  }
 
-		const url = `${baseURL}/membersite/Login`
-		const params = serialize({ username, password, utcoffset, todaysdate: '' })
-
-		const response = await client.post(url, params.toString())
-
-		// @todo Check to make sure this wasn't a failure/redirect
-		// console.log('Authenticated!')
-		// console.log(response)
-		return
-
-	} catch(error) {
-		console.error(error)
-	} 
-	
-}
-
-const request = async (url, params, options) => {	
-	// console.log('Checking authentication...')
-	
-	// Look for authenticated session
-	const cookies = await jar.getCookies(baseURL)
-	if (cookies.length <= 0)
-		await authenticate(options.username, options.password)
-		
-	params = serialize(params)
-		
-	// console.log('Requesting data from iRacing...')
-	return client.post(url, params.toString())
+  getSessionEvents(subsessionid) {
+    return this._getChunks(`/data/results/event_log?subsessionid=${subsessionid}&simsesnum=0`)
+  }
+  
+  async getTracks(ids = null) {
+    const [tracks, assets] = await Promise.all([
+      this._get('/data/track/get'),
+      this.getTrackAssets()
+    ])
+    
+    return ids 
+      ? ( !Array.isArray(ids) && (ids = [ids]), 
+          tracks.reduce(
+            (a, track) => (!ids || (ids.includes(track.track_id)))
+              ? [...a, { ...track, ...assets[track.track_id] }]
+              : a,
+            []
+          )
+        )
+      : tracks
+  }
+    
+  getTrackAssets() {
+    return this._get('/data/track/assets')
+  }
+    
 }
 
 const serialize = (data) => {
-	const params = new URLSearchParams()
-	Object.entries(data).forEach(([key, value]) => {
-		params.append(key, value)
-	})
-	return params
+  const params = new URLSearchParams()
+  Object.entries(data).forEach(([key, value]) => {
+    params.append(key, value)
+  })
+  return params
 }
 
-exports.getLaps = async (subsessionid, options) => {
-	// @TODO Constants
-	const url = `${baseURL}/membersite/member/GetLapChart`
-	// @TODO Allow class and session as params
-	const payload = { subsessionid, carclassid: -1, simsesnum: 0 }
-	
-	const { data } = await request(url, payload, options)
-	return data	
-}
-
-exports.getSessionEvents = async (subsessionid, options) => {
-	// @TODO Constants
-	const url = `${baseURL}/membersite/member/EventResult.do?&subsessionid=${subsessionid}`
-	
-	const { data } = await client.get(url)
-	const match = data.match(/SubsessionEventLogging = (\[.*\]);/)
-	
-	const events = JSON.parse(match[1])
-	
-	return events
-		.filter(event => event.eventtype === 6)
-		.map(event => {
-			return {
-				type: event.message === 'Caution+ended.'
-					? 'green'
-					: 'caution',
-				lap: event.lap_num
-			}
-		})
-}
+exports.Client = Client
