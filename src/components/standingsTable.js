@@ -3,6 +3,8 @@ import { renderDriverChip } from './driverChip'
 import Table from './table'
 
 const Standings = (props) => {
+	console.log(props)
+	
 	const data = React.useMemo(
 		() => props.data.reduce(
 			(p, e) => e.race ? [...p, ...e.race.participants] : p, 
@@ -73,7 +75,7 @@ const Standings = (props) => {
 												({ id }) => row.id === id
 											),
 								prior = priorWeek.findIndex(
-									({ driverId }) => driverId == row.groupingValue
+									({ driverId }) => driverId === Math.floor(row.groupingValue)
 								)
 					const change = prior - pos
 					return (
