@@ -3,7 +3,6 @@ import { graphql } from "gatsby"
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import moment from 'moment'
 import Layout from '../components/layout'
-import Meta from '../components/meta'
 import { Carousel, Slide } from '../components/carousel'
 import DriverChip from '../components/driverChip'
 import ResultsTable from '../components/results'
@@ -12,10 +11,41 @@ import * as styles from './results.module.scss'
 
 const ResultsTemplate = (props) => {
 	const { race, trackLogos } = props.data
-	const { node: logoNode = null } = trackLogos.edges.find(({ node }) => Math.floor(node.name) === race.trackConfigId) ?? {}
+	
+	// Get track logo
+	const { node: logoNode = null } = React.useMemo(
+		() => trackLogos.edges.find(
+						({ node }) => Math.floor(node.name) === race.schedule.trackConfigId
+					) ?? {},
+		[trackLogos, race.schedule.trackConfigId]
+	)
+	
+	// Calculate race superlatives
+	let bestAvgPos, bestPasses, bestRestarts, bestClosingPasses, bestFastLap, bestQualityPasses, bestAvgFastLap, bestNumFastLap, hardCharger
+	
+	race.participants.forEach(p => {
+		if (p.avgPos > -1 && p.avgPos < (bestAvgPos?.avgPos ?? 999999))
+			bestAvgPos = p
+		if (p.fastestLapTime > 0 && p.fastestLapTime < (bestFastLap?.fastestLapTime ?? 999999))
+			bestFastLap = p
+		if (p.fastestRestart > 0 && p.fastestRestart < (bestRestarts?.fastestRestart ?? 999999))
+			bestRestarts = p
+		if (p.numFastLap > 0 && p.numFastLap > (bestNumFastLap?.numFastLap ?? 0))
+			bestNumFastLap = p
+		if (p.avgFastLap > 0 && p.avgFastLap > (bestAvgFastLap?.avgFastLap ?? 0))
+			bestAvgFastLap = p
+		if (p.passes > 0 && p.passes > (bestPasses?.passes ?? 0))
+			bestPasses = p
+		if (p.qualityPasses > 0 && p.qualityPasses > (bestQualityPasses?.qualityPasses ?? 0))
+			bestQualityPasses = p
+		if (p.closingPasses > 0 && p.closingPasses > (bestClosingPasses?.closingPasses ?? 0))
+			bestClosingPasses = p
+		if (p.qualifyTime > 0 && Math.min(p.qualifyPos, 11) - p.finishPos > Math.min(hardCharger?.qualifyPos ?? 0, 11) - (hardCharger?.finishPos ?? 0))
+			hardCharger = p
+	})		
+	
 	return (
 		<Layout {...props}>
-			<Meta {...props} />
 			
 			{ race.eventMedia && 
 				(race.eventMedia.length > 1 
@@ -54,8 +84,8 @@ const ResultsTemplate = (props) => {
 							<div className="column col-8 col-sm-12">
 								<h4 className="page-title">Results</h4>
 								<h5 className="page-subtitle">
-									<span>{moment.parseZone(race.raceDate).format('DD MMM YYYY')}</span>
-									<span>{race.trackName}</span>
+									<span>{moment.parseZone(race.schedule.raceDate).format('DD MMM YYYY')}</span>
+									<span>{race.schedule.trackName}</span>
 								</h5>
 							</div>
 							{ logoNode?.publicURL &&
@@ -69,7 +99,7 @@ const ResultsTemplate = (props) => {
 							{...race}
 							duration={race.raceAvgTime * race.raceLaps}
 							fields={
-								(column) => race.pointsCount !== true 
+								(column) => race.schedule.pointsCount !== true 
 									&& ['racePoints', 'rating'].includes(column)
 							}
 						/>
@@ -106,99 +136,120 @@ const ResultsTemplate = (props) => {
 												)
 											}
 										</dd>
-										{ race.bestAvgPos && 
+										{ bestAvgPos && 
 											<>
 												<dt>Best Average Position</dt>
 												<dd>
-													<DriverChip {...race.bestAvgPos.driver}>
-														({ (race.bestAvgPos.value + 1).toFixed(1) })
-													</DriverChip>
+													{ 
+														renderDriverChip(
+															bestAvgPos, 
+															`(${ (bestAvgPos.avgPos + 1).toFixed(1) })`
+														) 
+													}
 												</dd>
 											</>
 										}
-										{ race.hardCharger &&
+										{ hardCharger &&
 											<>
 												<dt>Hard Charger</dt>
 												<dd>
-													<DriverChip {...race.hardCharger.driver}>
-														({ race.hardCharger.value })
-													</DriverChip>
+													{ 
+														renderDriverChip(
+															hardCharger, 
+															`(${ Math.min(hardCharger.qualifyPos, 11) - hardCharger.finishPos })`
+														) 
+													}
 												</dd>
 											</>
 										}
-										{ race.bestPasses && 
+										{ bestPasses && bestPasses.passes > 0 &&
 											<>
 												<dt>Most Passes</dt>
 												<dd>
-													<DriverChip {...race.bestPasses.driver}>
-														({ race.bestPasses.value })
-													</DriverChip>
+													{ 
+														renderDriverChip(
+															bestPasses, 
+															`(${ bestPasses.passes })`
+														) 
+													}
 												</dd>
 											</>
 										}
-										{ race.bestQualityPasses &&
+										{ bestQualityPasses && bestQualityPasses.qualityPasses > 0 &&
 												<>
 													<dt>Most Quality Passes</dt>
 													<dd>
-														{ race.bestQualityPasses.value !== 0
-																? <DriverChip {...race.bestQualityPasses.driver}>
-																		({ race.bestQualityPasses.value })
-																	</DriverChip>
-																: 'none'
+														{ 
+															renderDriverChip(
+																bestQualityPasses, 
+																`(${ bestQualityPasses.qualityPasses })`
+															) 
 														}
 													</dd>											
 												</>
 										}
-										{ race.bestClosingPasses && 
+										{ bestClosingPasses && bestClosingPasses.closingPasses > 0 &&
 												<>
 													<dt>Most Closing Passes</dt>
 													<dd>
-														{ race.bestClosingPasses.value !== 0
-																? <DriverChip {...race.bestClosingPasses.driver}>
-																		({ race.bestClosingPasses.value })
-																	</DriverChip>
-																: 'none'
+														{ 
+															renderDriverChip(
+																bestClosingPasses, 
+																`(${ bestClosingPasses.closingPasses })`
+															) 
 														}
 													</dd>											
 												</>
 										}
-										{ race.bestFastLap &&
+										{ bestFastLap &&
 											<>
 												<dt>Fastest Lap</dt>
 												<dd>
-													<DriverChip {...race.bestFastLap.driver}>
-														({ getTimeFromMilliseconds(race.bestFastLap.value) })
-													</DriverChip>
+													{ 
+														renderDriverChip(
+															bestFastLap, 
+															`(${ getTimeFromMilliseconds(bestFastLap.fastestLapTime) })`
+														) 
+													}
 												</dd>
 											</>
 										}
-										{ race.bestAvgFastLap && 
+										{ bestAvgFastLap && 
 											<>
 												<dt>Fastest 3-lap Average</dt>
 												<dd>
-													<DriverChip {...race.bestAvgFastLap.driver}>
-														({ getTimeFromMilliseconds(race.bestAvgFastLap.value) })
-													</DriverChip>
+													{ 
+														renderDriverChip(
+															bestAvgFastLap, 
+															`(${ getTimeFromMilliseconds(bestAvgFastLap.avgFastLap) })`
+														) 
+													}
 												</dd>
 											</>
 										}
-										{	race.bestRestarts &&
+										{	race.raceCautions > 0 && bestRestarts &&
 											<>
 												<dt>Fastest Restarts</dt>
 												<dd>
-													<DriverChip {...race.bestRestarts.driver}>
-														({ getTimeFromMilliseconds(race.bestRestarts.value) })
-													</DriverChip>
+													{ 
+														renderDriverChip(
+															bestRestarts, 
+															`(${ getTimeFromMilliseconds(bestRestarts.fastestRestart) })`
+														) 
+													}
 												</dd>
 											</>											
 										}
-										{ race.bestNumFastLap && 
+										{ bestNumFastLap && 
 											<>
 												<dt>Most Fast Laps</dt>
 												<dd>
-													<DriverChip {...race.bestNumFastLap.driver}>
-														({ race.bestNumFastLap.value })
-													</DriverChip>
+													{ 
+														renderDriverChip(
+															bestNumFastLap, 
+															`(${ bestNumFastLap.numFastLap })`
+														) 
+													}
 												</dd>
 											</>
 										}
@@ -219,6 +270,20 @@ const ResultsTemplate = (props) => {
 			</main>
 
 		</Layout>
+	)
+}
+
+const renderDriverChip = (d, children = null) => {
+	return (
+		<DriverChip
+			active={!!d.member}
+			driverName={d.member?.nickName ?? d.member?.displayName ?? d.driverName}
+			carNumber={d.member?.carNumber ?? d.carNumber}
+			driverNumberArt={d.member?.driverNumberArt}
+			link={false}
+		>
+			{ children }
+		</DriverChip>
 	)
 }
 
@@ -261,22 +326,102 @@ const pluralize = (count, noun, suffix = 's') => {
 	return `${count} ${noun}${count !== 1 ? suffix : ''}`
 }
 
-export const query = graphql`
-	query RaceQuery($raceId: Int) {
-		race: simRacerHubRace(
-			raceId: {eq: $raceId}
-		) {
-			...raceData	
-		}
-		trackLogos: allFile(filter: { relativePath: { glob: "tracks/*.png" } }) {
-			edges {
-				node {
-					name
-					publicURL
-				}
-			}
-		}
-	}	
-`
+// export const query = graphql`
+// 	query RaceQuery($raceId: Int) {
+// 		race: mysqlRace(race_id: {eq: $raceId}) {
+// 			raceId: race_id
+// 			eventBroadcast
+// 			eventLogo {
+// 				gatsbyImageData	
+// 			}
+// 			eventMedia {
+// 				gatsbyImageData(
+// 					layout: FULL_WIDTH
+// 					placeholder: BLURRED
+// 				)
+// 			}
+// 			weatherFog: weather_fog
+// 			weatherRh: weather_rh
+// 			weatherSkies: weather_skies
+// 			weatherTemp: weather_temp
+// 			weatherTempUnit: weather_tempunit
+// 			weatherType: weather_type
+// 			weatherWind: weather_wind
+// 			weatherWindDir: weather_winddir
+// 			weatherWindUnit: weather_windunit
+// 			raceAvgTime: race_avg_time
+// 			raceCautions: race_cautions
+// 			raceCautionLaps: race_caution_laps
+// 			raceLaps: race_laps
+// 			raceLeadChanges: race_lead_changes
+// 			participants {
+// 				driverId: driver_id
+// 				driverName: driver_name
+// 				member {
+// 					displayName: display_name
+// 					nickName: nick_name
+// 					carNumber: car_number
+// 					driverNumberArt {
+// 						gatsbyImageData	
+// 						file {
+// 							url
+// 						}
+// 					}
+// 				}
+// 				carId: car_iracing_id
+// 				carName: car_name
+// 				carImage {
+// 					publicURL
+// 				}
+// 				finishPos: finish_pos
+// 				incidents
+// 				interval: intv
+// 				lapsLed: laps_led
+// 				lapsCompleted: num_laps
+// 				qualifyPos: qualify_pos
+// 				qualifyTime: qualify_time
+// 				fastestLapTime: fastest_lap_time
+// 				racePoints: race_points
+// 				avgLap: avg_lap
+// 				status
+// 				avgPos: avg_pos
+// 				arp
+// 				avgFastLap: avg_fast_lap
+// 				numFastLap: num_fast_lap
+// 				fastestRestart: fastest_restart
+// 				passes
+// 				qualityPasses: quality_passes
+// 				closingPasses: closing_passes
+// 				rating
+// 				bonuses {
+// 					bonusDesc: bonus_descr
+// 					bonusPoints: bonus_points
+// 				}
+// 				penalties {
+// 					penaltyDesc: penalty_descr
+// 					penaltyPoints: penalty_points
+// 				}
+// 			}
+// 			schedule {
+// 				eventName: event_name
+// 				pointsCount: points_count
+// 				trackName: track_name
+// 				trackConfigId: track_config_iracing_id
+// 				trackConfigName: track_config_name
+// 				trackTypeId: track_type_id
+// 				raceDate: race_date
+// 				raceTime: race_time
+// 			}
+// 		}
+// 		trackLogos: allFile(filter: { relativePath: { glob: "tracks/*.png" } }) {
+// 			edges {
+// 				node {
+// 					name
+// 					publicURL
+// 				}
+// 			}
+// 		}
+// 	}	
+// `
 
 export default ResultsTemplate

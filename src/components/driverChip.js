@@ -49,4 +49,18 @@ const renderName = (props) => {
 	)
 }
 
+export const renderDriverChip = ({ driver }, children = null) => {
+	return (
+		<DriverChip
+			active={!!driver.member}
+			driverName={driver.member?.driverNickName ?? driver.driverName}
+			carNumber={driver.member?.carNumber ?? driver.driverNumber}
+			driverNumberArt={driver.member?.carNumberArt}
+			link={false}
+		>
+			{ children }
+		</DriverChip>
+	)
+}
+
 export default DriverChip

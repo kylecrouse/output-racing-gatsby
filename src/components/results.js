@@ -36,13 +36,13 @@ const Results = (props) => {
 				accessor: 'driverName',
 				className: 'cell-driver',
 				Cell: ({ row, value }) => (
-					row.original.member
-						? <DriverChip { ...row.original.member } link={false} />
-						: <DriverChip 
-								active={false}
-								driverName={ row.original.driverName }
-								link={false}
-							/>
+					<DriverChip 
+						active={!!row.original.member}
+						driverName={row.original.member?.nickName ?? row.original.member?.displayName ?? row.original.driverName}
+						carNumber={row.original.member?.carNumber ?? row.original.carNumber}
+						driverNumberArt={row.original.member?.driverNumberArt}
+						link={false}
+					/>
 				)
 			},
 			{
@@ -58,10 +58,28 @@ const Results = (props) => {
 			},
 			{
 				Header: 'Points',
-				accessor: 'totalPoints',
+				id: 'totalPoints',
+				accessor: (row, index) => {
+					const bonusPoints = row.bonuses.reduce(
+						(points, { bonusPoints }) => points += bonusPoints, 
+						0
+					)
+					const penaltyPoints = row.penalties.reduce(
+						(points, { penaltyPoints }) => points += penaltyPoints,
+						0
+					)
+					return row.racePoints + bonusPoints - penaltyPoints
+				},
 				className: 'cell-totalPoints',
 				Cell: ({ value, row }) => {
-					const { bonusPoints, penaltyPoints } = row.original
+					const bonusPoints = row.original.bonuses.reduce(
+						(points, { bonusPoints }) => points += bonusPoints, 
+						0
+					)
+					const penaltyPoints = row.original.penalties.reduce(
+						(points, { penaltyPoints }) => points += penaltyPoints,
+						0
+					)
 					return (
 						<div>
 							<span>
@@ -126,6 +144,7 @@ const Results = (props) => {
 				accessor: 'avgPos',
 				className: 'hide-sm',
 				Cell: ({ value, data }) => {
+					if (!value) return null
 					return value === Math.min(
 						...data.reduce((a, { avgPos }) => avgPos !== -1 ? [...a, avgPos] : a, [])
 					)
@@ -243,11 +262,7 @@ const Results = (props) => {
 			data={props.participants}
 			disableSortBy={true} 
 			scrolling={true}
-			getRowProps={row => ({
-				className: row.original.member && row.original.member.active 
-					? '' 
-					: 'inactive'
-			})}
+			getRowProps={row => ({ className: !!row.original.member ? '' : 'inactive' })}
 			initialState={{
 				sortBy: [{ id: 'finishPos', desc: false }],
 				hiddenColumns: columns

@@ -291,87 +291,87 @@ const DriverTemplate = props => {
 	)
 }
 
-export const query = graphql`
-	query DriverQuery($driverId: Int) {
-		driver: simRacerHubDriver(
-			driverId: {eq: $driverId}
-		) {
-			...driverData	
-			driverCareerStats {
-				starts
-				avgStartPos
-				avgFinishPos
-				wins
-				podiums
-				top5s
-				top10s
-				lapsCompleted
-				lapsLed
-				poles
-				incidents
-				incidentsPerRace
-				winPct
-				podiumPct
-				top5Pct
-				top10Pct
-				lapsLedPct
-				polePct
-				incidentsPerLap
-				rating
-			}
-			driverConfigStats {
-				stats {					
-					typeName
-					starts
-					avgStartPos
-					avgFinishPos
-					wins
-					podiums
-					top5s
-					top10s
-					lapsCompleted
-					lapsLed
-					poles
-					incidents
-					incidentsPerRace
-					winPct
-					podiumPct
-					top5Pct
-					top10Pct
-					lapsLedPct
-					polePct
-					incidentsPerLap
-					rating
-				}
-			}
-			driverTrackStats {
-				stats {					
-					trackName
-					typeName
-					starts
-					avgStartPos
-					avgFinishPos
-					wins
-					podiums
-					top5s
-					top10s
-					lapsCompleted
-					lapsLed
-					poles
-					incidents
-					incidentsPerRace
-					winPct
-					podiumPct
-					top5Pct
-					top10Pct
-					lapsLedPct
-					polePct
-					incidentsPerLap
-					rating
-				}
-			}
-		}	
-	}
-`
+// export const query = graphql`
+// 	query DriverQuery($driverId: Int) {
+// 		driver: simRacerHubDriver(
+// 			driverId: {eq: $driverId}
+// 		) {
+// 			...driverData	
+// 			driverCareerStats {
+// 				starts
+// 				avgStartPos
+// 				avgFinishPos
+// 				wins
+// 				podiums
+// 				top5s
+// 				top10s
+// 				lapsCompleted
+// 				lapsLed
+// 				poles
+// 				incidents
+// 				incidentsPerRace
+// 				winPct
+// 				podiumPct
+// 				top5Pct
+// 				top10Pct
+// 				lapsLedPct
+// 				polePct
+// 				incidentsPerLap
+// 				rating
+// 			}
+// 			driverConfigStats {
+// 				stats {					
+// 					typeName
+// 					starts
+// 					avgStartPos
+// 					avgFinishPos
+// 					wins
+// 					podiums
+// 					top5s
+// 					top10s
+// 					lapsCompleted
+// 					lapsLed
+// 					poles
+// 					incidents
+// 					incidentsPerRace
+// 					winPct
+// 					podiumPct
+// 					top5Pct
+// 					top10Pct
+// 					lapsLedPct
+// 					polePct
+// 					incidentsPerLap
+// 					rating
+// 				}
+// 			}
+// 			driverTrackStats {
+// 				stats {					
+// 					trackName
+// 					typeName
+// 					starts
+// 					avgStartPos
+// 					avgFinishPos
+// 					wins
+// 					podiums
+// 					top5s
+// 					top10s
+// 					lapsCompleted
+// 					lapsLed
+// 					poles
+// 					incidents
+// 					incidentsPerRace
+// 					winPct
+// 					podiumPct
+// 					top5Pct
+// 					top10Pct
+// 					lapsLedPct
+// 					polePct
+// 					incidentsPerLap
+// 					rating
+// 				}
+// 			}
+// 		}	
+// 	}
+// `
 
 export default DriverTemplate

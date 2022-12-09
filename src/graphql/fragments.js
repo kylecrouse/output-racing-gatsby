@@ -2,7 +2,7 @@ import * as React from 'react'
 import { graphql } from 'gatsby'
 
 export const driverData = graphql`
-	fragment driverData on SimRacerHubDriver {
+	fragment driverData on MysqlDriver {
 		active
 		driverId
 		driverName
@@ -40,7 +40,7 @@ export const driverData = graphql`
 `
 
 export const driverChipData = graphql`
-	fragment driverChipData on SimRacerHubDriver {
+	fragment driverChipData on MysqlDriver {
 		active
 		driverName
 		carNumber
@@ -54,7 +54,7 @@ export const driverChipData = graphql`
 `
 
 export const eventData = graphql`
-	fragment eventData on SimRacerHubEvent {
+	fragment eventData on MysqlRace {
 		cars {
 			carId
 			carSimId
@@ -79,44 +79,38 @@ export const eventData = graphql`
 `
 
 export const participantData = graphql`
-	fragment participantData on SimRacerHubParticipant {
-		carId
-		carName
+	fragment participantData on MysqlParticipant {
+		driverId: driver_id
+		driverName: driver_name
+		carId: car_id
+		carName: car_name
 		carImage {
 			publicURL
 		}
-		driverId
-		driverName
-		member {
-			...driverChipData
-		}
-		finishPos
+		finishPos: finish_pos
 		incidents
-		interval
-		lapsLed
-		lapsCompleted
-		qualifyPos
-		qualifyTime
-		fastestLapTime
-		totalPoints
-		racePoints
-		avgLap
+		interval: intv
+		lapsLed: laps_led
+		lapsCompleted: num_laps
+		qualifyPos: qualify_pos
+		qualifyTime: qualify_time
+		fastestLapTime: fastest_lap_time
+		racePoints: race_points
+		avgLap: avg_lap
 		status
-		bonusPoints
-		penaltyPoints
-		avgPos
-		arp
-		avgFastLap
-		numFastLap
-		passes
-		qualityPasses
-		closingPasses
-		rating
+		bonuses {
+			bonusDesc: bonus_descr
+			bonusPoints: bonus_points
+		}
+		penalties {
+			penaltyDesc: penalty_descr
+			penaltyPoints: penalty_points
+		}
 	}
 `
 
 export const raceData = graphql`
-	fragment raceData on SimRacerHubRace {
+	fragment raceData on MysqlRace {
 		raceId
 		eventName
 		eventBroadcast
@@ -152,41 +146,11 @@ export const raceData = graphql`
 		raceLaps
 		raceLeadChanges
 		raceTime
-		participants {
-			...participantData
-		}
-		bestAvgPos {
-			...superlativeData
-		}
-		bestFastLap {
-			...superlativeData
-		}
-		bestNumFastLap {
-			...superlativeData
-		}
-		bestAvgFastLap {
-			...superlativeData
-		}
-		bestRestart {
-			...superlativeData
-		}
-		bestPasses {
-			...superlativeData
-		}
-		bestQualityPasses {
-			...superlativeData
-		}
-		bestClosingPasses {
-			...superlativeData
-		}
-		hardCharger {
-			...superlativeData
-		}
 	}
 `
 
 export const standingsData = graphql`
-	fragment standingsData on SimRacerHubSeasonStandings {
+	fragment standingsData on MysqlParticipant {
 		behindLeader
 		behindNext
 		bonusPoints
@@ -211,7 +175,7 @@ export const standingsData = graphql`
 `
 
 export const statsData = graphql`
-	fragment statsData on SimRacerHubCareerStats {
+	fragment statsData on MysqlDriver {
 		trackName
 		typeName
 		starts

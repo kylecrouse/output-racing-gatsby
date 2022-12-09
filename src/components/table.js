@@ -1,30 +1,34 @@
 import React from 'react'
-import { useTable, useSortBy } from 'react-table'
+import {
+	useReactTable,
+	getCoreRowModel,
+	getGroupedRowModel,
+	getSortedRowModel,
+	flexRender,
+} from '@tanstack/react-table'
 import './table.scss'
 
 const Table = ({ 
 	columns, 
 	data, 
 	initialState = {},
-	disableSortBy = false,
 	scrolling = false,
 	getRowProps = () => ({}),
 }) => {
-	const {
-		getTableProps,
-		getTableBodyProps,
-		headerGroups,
-		rows,
-		prepareRow,
-	} = useTable(
-		{
-			columns,
-			data,
-			initialState,
-			disableSortBy
-		},
-		useSortBy
-	)
+	const [grouping, setGrouping] = React.useState(initialState.grouping ?? [])
+	const [sorting, setSorting] = React.useState(initialState.sorting ?? [])
+	
+	const table = useReactTable({
+		data,
+		columns,
+		state: { grouping, sorting },
+		onGroupingChange: setGrouping,
+		onSortingChange: setSorting,
+		getGroupedRowModel: getGroupedRowModel(),
+		getSortedRowModel: getSortedRowModel(),
+		getCoreRowModel: getCoreRowModel(),
+		groupedColumnMode: false,
+	})
 	
 	const [overflowLeft, setOverflowLeft] = React.useState(false)
 	const [overflowRight, setOverflowRight] = React.useState(false)
@@ -87,25 +91,25 @@ const Table = ({
 	React.useEffect(() => {
 		wrapperRef.current.style.setProperty('--left', `${left}px`)
 	}, [left])
-
+	
 	return (
 		<div className="table-container">
 			<div className={wrapperClassName.join(' ')} onScroll={ handleScroll } ref={wrapperRef}>
-				<table { ...getTableProps() } ref={tableRef}>
+				<table ref={tableRef}>
 					<thead>
-						{ headerGroups.map(headerGroup => (
-							<tr { ...headerGroup.getHeaderGroupProps() }>
-								{ headerGroup.headers.map(column => (
-									// Add the sorting props to control sorting. For this example
-									// we can add them into the header props
-									<th { ...column.getHeaderProps(column.getSortByToggleProps()) } className={column.className || ''}>
-										{column.render('Header')}
-										{/* Add a sort direction indicator */}
+						{ table.getHeaderGroups().map(headerGroup => (
+							<tr key={headerGroup.id}>
+								{ headerGroup.headers.map(header => (
+									<th key={header.id} colSpan={header.colSpan} className={header.column.className ?? ''}>
+										{
+											flexRender(
+												header.column.columnDef.header,
+												header.getContext()
+											)
+										}
 										<span className="sort-indicator">
-											{ column.isSorted
-												? column.isSortedDesc
-													? '‹'
-													: '›'
+											{ header.column.getCanSort()
+												? { asc: '›', desc: '‹' }[header.column.getIsSorted()] ?? null
 												: ''
 											}
 										</span>
@@ -114,27 +118,39 @@ const Table = ({
 							</tr>
 						))}
 					</thead>
-					<tbody { ...getTableBodyProps() }>
-						{ rows.map(
-							(row, i) => {
-								prepareRow(row);
-								return (
-									<tr { ...row.getRowProps(getRowProps(row)) }>
-										{ row.cells.map(cell => {
-											return (
-												<td 
-													{ ...cell.getCellProps({
-															className: cell.column.className,
-															style: cell.column.style,
-														}) 
-													}
-												>
-													{ cell.render('Cell') }
-												</td>
-											)
-										})}
-									</tr>
-								)}
+					<tbody>
+						{ table.getRowModel().rows.map((row) => {
+							return (
+								<tr key={row.id}>
+									{ row.getVisibleCells().map((cell) => {
+										return (
+											<td 
+												{...{
+													key: cell.id,
+													className: cell.column.columnDef.className,
+													style: cell.column.style,
+												}}
+											>
+												{ cell.getIsAggregated() ? (
+													// If the cell is aggregated, use the Aggregated
+													// renderer for cell
+													flexRender(
+														cell.column.columnDef.aggregatedCell ??
+															cell.column.columnDef.cell,
+														cell.getContext()
+													)
+												) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
+													// Otherwise, just render the regular cell
+													flexRender(
+														cell.column.columnDef.cell,
+														cell.getContext()
+													)
+												)}
+											</td>
+										)
+									})}
+								</tr>
+							)}
 						)}
 					</tbody>
 				</table>

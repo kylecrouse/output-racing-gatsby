@@ -1,10 +1,8 @@
 import * as React from "react"
-import { Helmet } from 'react-helmet'
-import { Link, graphql } from 'gatsby'
+import { Link, Script, graphql } from 'gatsby'
 import axios from 'axios'
 import { Carousel, Slide } from '../components/carousel'
 import Layout from '../layouts/home'
-import Meta from '../components/meta'
 import ScheduleCard from '../components/scheduleCard'
 import StandingsCard from '../components/standingsCard'
 import Video from '../components/video'
@@ -159,10 +157,7 @@ const IndexPage = props => {
   
   return (
     <Layout {...props}>
-      <Meta {...props}/>
-      <Helmet>
-        <script src= "https://player.twitch.tv/js/embed/v1.js"></script>
-      </Helmet>
+      <Script src= "https://player.twitch.tv/js/embed/v1.js"/>
       
       { isStreamOnline
           ? (
@@ -202,60 +197,62 @@ const IndexPage = props => {
   )
 }
 
-export const query = graphql`
-  query IndexQuery {
-    seasons: allSimRacerHubSeason(
-      filter: {active: {eq: true}}
-      sort: {fields: events___raceDate, order: ASC}
-    ) {
-      edges {
-        node {
-          seasonId
-          seasonName
-          seriesId
-          seriesName
-          seasonClass {
-            seasonClassCars {
-              carId
-              carSimId
-              carName
-            }
-          }
-          events {
-            raceNumber
-            raceDate
-            eventName
-            trackConfigId
-            trackName
-            cars {
-              carId
-              carName
-              carSimId
-            }
-            pointsCount
-            race {
-              participants {
-                finishPos
-                totalPoints
-                member {
-                  ...driverChipData
-                }
-                driverName
-              }
-            }
-          }
-          standings {
-            driverName
-            member {
-              ...driverChipData
-            }
-            position
-            totalPoints
-          }	
-        }
-      }
-    }
-  }
-`
+// export const query = graphql`
+//   query IndexQuery {
+//     seasons: allSimRacerHubSeason(
+//       filter: {active: {eq: true}}
+//       sort: {fields: events___raceDate, order: ASC}
+//     ) {
+//       edges {
+//         node {
+//           seasonId
+//           seasonName
+//           seriesId
+//           seriesName
+//           seasonClass {
+//             seasonClassCars {
+//               carId
+//               carSimId
+//               carName
+//             }
+//           }
+//           events {
+//             raceNumber
+//             raceDate
+//             eventName
+//             trackConfigId
+//             trackName
+//             cars {
+//               carId
+//               carName
+//               carSimId
+//             }
+//             pointsCount
+//             race {
+//               participants {
+//                 finishPos
+//                 totalPoints
+//                 member {
+//                   ...driverChipData
+//                 }
+//                 driverName
+//               }
+//             }
+//           }
+//           standings {
+//             driverName
+//             member {
+//               ...driverChipData
+//             }
+//             position
+//             totalPoints
+//           }	
+//         }
+//       }
+//     }
+//   }
+// `
 
 export default IndexPage
+
+export { Head } from '../components/meta'

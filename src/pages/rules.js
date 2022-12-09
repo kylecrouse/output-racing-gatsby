@@ -1,6 +1,5 @@
 import * as React from "react"
 import { Link, graphql } from 'gatsby'
-import { Helmet } from 'react-helmet'
 import { BLOCKS, MARKS } from "@contentful/rich-text-types"
 import { renderRichText } from "gatsby-source-contentful/rich-text"
 import Layout from '../components/layout'
@@ -38,9 +37,6 @@ const RulesPage = (props) => {
 	return (
 		<Layout {...props}>
 			<main className="container">
-				<Helmet>
-					<title>Output Racing League | Rules</title>
-				</Helmet>
 		
 				<div className="columns">
 					<div className="column col-8 col-xl-10 col-lg-12 col-mx-auto content">

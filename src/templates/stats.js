@@ -828,42 +828,42 @@ const Table = ({
 	)
 }
 
-export const query = graphql`
-	query StatsQuery($seriesId: Int) {
-		activeDrivers: allSimRacerHubDriver(
-			filter: {active: {eq: true}}
-		) {
-			edges {
-				node {
-					driverId
-				}
-			}
-		}
-		cars: allSimRacerHubSeason(
-			filter: {seriesId: {eq: $seriesId}}
-		) {
-			edges {
-				node {
-					active
-					seasonClass {
-						seasonClassName
-						seasonClassCars {
-							carId
-						}
-					}
-				}
-			}
-		}
-		races: allSimRacerHubRace(
-			filter: {seriesId: {eq: $seriesId}}
-		) {
-			edges {
-				node {	
-					...raceData	
-				}
-			}
-		}	
-	}
-`
+// export const query = graphql`
+// 	query StatsQuery($seriesId: Int) {
+// 		activeDrivers: allSimRacerHubDriver(
+// 			filter: {active: {eq: true}}
+// 		) {
+// 			edges {
+// 				node {
+// 					driverId
+// 				}
+// 			}
+// 		}
+// 		cars: allSimRacerHubSeason(
+// 			filter: {seriesId: {eq: $seriesId}}
+// 		) {
+// 			edges {
+// 				node {
+// 					active
+// 					seasonClass {
+// 						seasonClassName
+// 						seasonClassCars {
+// 							carId
+// 						}
+// 					}
+// 				}
+// 			}
+// 		}
+// 		races: allSimRacerHubRace(
+// 			filter: {seriesId: {eq: $seriesId}}
+// 		) {
+// 			edges {
+// 				node {	
+// 					...raceData	
+// 				}
+// 			}
+// 		}	
+// 	}
+// `
 
 export default StatsTemplate
