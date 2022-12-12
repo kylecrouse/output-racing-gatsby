@@ -3,7 +3,6 @@ import { renderDriverChip } from './driverChip'
 import Table from './table'
 
 const Standings = (props) => {
-	console.log(props)
 	
 	const data = React.useMemo(
 		() => props.data.reduce(
@@ -77,7 +76,7 @@ const Standings = (props) => {
 								prior = priorWeek.findIndex(
 									({ driverId }) => driverId === Math.floor(row.groupingValue)
 								)
-					const change = prior - pos
+					const change = (prior === -1 ? pos : prior) - pos
 					return (
 						<span className={ 
 							change > 0 
@@ -206,9 +205,6 @@ const Standings = (props) => {
 		<Table 
 			columns={columns} 
 			data={data}
-			getRowProps={row => ({
-				className: row.original.driver?.member ? '' : 'inactive'
-			})}
 			initialState={{
 				grouping: ['driverId'],
 				sorting: [{ id: 'points', desc: true }],

@@ -3,11 +3,13 @@ import { graphql } from 'gatsby'
 import Cars from '../components/cars'
 import Layout from '../components/layout'
 import StandingsTable from '../components/standingsTable'
-import Select from 'react-select'
+import Select, { components } from 'react-select'
 import * as styles from './stats.module.scss'
 
 const StandingsTemplate = (props) => {
 	const [seasonId, setSeasonId] = React.useState(props.pageContext.seasonId)
+	const [totalRounds, setTotalRounds] = React.useState()
+	const [selectedRound, setSelectedRound] = React.useState()
 	
 	const seasonOptions = React.useMemo(
 		() => props.data.seasons.nodes.map(
@@ -27,26 +29,74 @@ const StandingsTemplate = (props) => {
 	)
 	
 	const season = React.useMemo(
-		() => props.data.seasons.nodes.find((season) => season.seasonId === seasonId),
+		() => props.data.seasons.nodes.find(
+			(season) => season.seasonId === seasonId
+		),
 		[seasonId, props.data.seasons.nodes]
 	)
 
-	const { rounds, totalRounds, roundsCompleted } = React.useMemo(
-		() => season.schedules.reduce(
-			(a, round) => {
-				const { pointsCount, chase, offWeek, race } = round
-				if (pointsCount === 'Y' && offWeek === 'N') {
-					a.rounds.push(round)
-					if (!chase) {
-						a.totalRounds++
-						if (race) a.roundsCompleted++
+	const rounds = React.useMemo(
+		() => {
+			let totalRounds = 0, 
+					roundsCompleted = 0
+			const rounds = season.schedules.reduce(
+				(a, round) => {
+					const { pointsCount, chase, offWeek, race } = round
+					if (pointsCount === 'Y' && offWeek === 'N') {
+						a.push(round)
+						if (!chase) totalRounds++
+						if (race) roundsCompleted++
+					}
+					return a
+				},
+				[]
+			)
+			setTotalRounds(totalRounds)
+			setSelectedRound(roundsCompleted)
+			return rounds
+		},
+		[season]
+	)
+	
+	const roundOptions = React.useMemo(
+		() => {
+			let raceNo = 0
+			return Array.from(
+				rounds.filter(({ chase, race }) => race), 
+				(el, i) => {
+					if (!el.chase) raceNo++
+					return { 
+						label: el.chase 
+							? `-- ${el.eventName ?? `Chase: Top ${el.chase.chaseNumDrivers} Drivers`} --`
+							: `Round ${raceNo}: ${el.trackConfig?.trackName.replace(/\[.*\]\s/, '').replace(/ - \d*$/, '')}`,
+						chipLabel: el.chase
+							? el.eventName
+							: raceNo === totalRounds
+								? 'Final'
+								: `Round ${raceNo} of ${totalRounds}`,
+						value: i + 1
 					}
 				}
-				return a
-			},
-			{ rounds: [], totalRounds: 0, roundsCompleted: 0 }
-		),
-		[season]
+			).sort((a, b) => b.value - a.value)
+		}, 
+		[rounds, totalRounds]
+	)
+	
+	const filteredRounds = React.useMemo(
+		() => {
+			let i = 0
+			return rounds.reduce(
+				(acc, r) => {
+					if (i >= selectedRound) return acc
+					if (r.pointsCount === 'Y') {
+						acc.push(r)
+						i++						
+					}
+					return acc		
+				}, 
+				[]
+			)
+		}, [rounds, selectedRound]
 	)
 	
 	return (
@@ -57,12 +107,19 @@ const StandingsTemplate = (props) => {
 					<div className="column col-8 col-xl-12 col-mx-auto content">
 				
 						<hgroup className="page-header columns">
-							<div className="column col-8">
+							<div className="column col-7">
 								<h2 className="page-title">Standings</h2>
 								<h3 className="page-subtitle columns" style={{ alignItems: "baseline" }}>
-									<div className="col-6" style={{ width: "calc(50% - 1rem)", marginRight: "1rem"}}>
+									<div className="col-7" style={{ width: "calc(50% - 1rem)", marginRight: "1rem"}}>
 									<Select 
 										className={styles.selectContainer}
+										styles={{
+											menu: (baseStyles, state) => ({
+												...baseStyles,
+												whiteSpace: "nowrap",
+												width: "auto !important"
+											})
+										}}
 										onChange={
 											(selected) => setSeasonId(selected.value)
 										}
@@ -70,10 +127,28 @@ const StandingsTemplate = (props) => {
 										defaultValue={seasonOptions[defaultValueIndex]}
 									/>
 									</div>
-									<div className="col-6" style={{ borderLeft: "1px solid #ccc", padding: "2px 0 2px 0.8rem" }}>{	roundsCompleted < totalRounds
-											? `Round ${roundsCompleted} of ${totalRounds}`
-											: 'Final'
-									}</div>
+									<div className="col-5" style={{ borderLeft: "1px solid #ccc", padding: "0 0 0 1rem" }}>
+										<Select 
+											components={{ SingleValue }}
+											className={styles.selectContainer}
+											styles={{
+												container: (baseStyles, state) => ({
+													...baseStyles,
+													margin: "0 !important",
+												}),
+												menu: (baseStyles, state) => ({
+													...baseStyles,
+													whiteSpace: "nowrap",
+													width: "auto !important"
+												})
+											}}
+											onChange={
+												(selected) => setSelectedRound(selected.value)
+											}
+											options={roundOptions}
+											value={roundOptions[roundOptions.length - selectedRound]}
+										/>
+									</div>
 								</h3>
 							</div>
 							{ season.seasonClass?.length > 0 &&
@@ -84,7 +159,7 @@ const StandingsTemplate = (props) => {
 						</hgroup>
 						
 						<StandingsTable
-							data={ rounds }
+							data={ filteredRounds }
 							fields={ column => ['laps'].includes(column) }
 						/>
 							
@@ -93,15 +168,15 @@ const StandingsTemplate = (props) => {
 					
 			</main>
 	
-			{/*<div className="columns seasons-container">
-				<div className="column col-8 col-xl-12 col-mx-auto">
-					<Seasons path={`${props.pageContext.seriesName}/standings`} seasons={seasons} />
-				</div>
-			</div>*/}
-			
 		</Layout>
 	)
 }
+
+const SingleValue = props => (
+	<components.SingleValue {...props}>
+		{props.data.chipLabel}
+	</components.SingleValue>
+)
 
 export const query = graphql`
 	query StandingsQuery(
@@ -121,11 +196,16 @@ export const query = graphql`
 				seasonName: season_name
 				schedules {							
 					scheduleId: schedule_id
+					eventName: event_name
 					pointsCount: points_count
 					chase {
-						chaseId: chase_id
+						chaseNumDrivers: chase_num_drivers
 					}
 					offWeek: off_week
+					raceDate: race_date
+					trackConfig {
+						trackName: track_name
+					}
 					race {
 						raceId: race_id
 						participants {

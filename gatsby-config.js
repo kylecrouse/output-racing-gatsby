@@ -5,7 +5,7 @@ module.exports = {
     siteUrl: "http://outputracing.com",
     title: "Output Racing League",
   },
-  // trailingSlash: 'never',
+  trailingSlash: 'never',
   plugins: [
     {
       resolve: "gatsby-source-contentful",
@@ -49,7 +49,7 @@ module.exports = {
             cardinality: 'OneToMany'
           },
           {
-            statement: 'SELECT sch.* FROM SCHEDULE AS sch JOIN SEASON AS sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710',
+            statement: 'SELECT sch.* FROM SCHEDULE AS sch JOIN SEASON AS sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710 ORDER BY sch.race_date ASC',
             idFieldName: 'schedule_id',
             name: 'schedule',
             parentName: 'season',
