@@ -2,6 +2,13 @@
 	margin-top: -0.8rem;
 }
 
+.selectContainer {
+	font-family: input-mono, mono;
+	font-size: 0.6rem;
+	font-weight: 300;
+	z-index: 10;
+}
+
 .details {
 	align-items: stretch;
 	border-top: 2px solid #f0f0f0;
