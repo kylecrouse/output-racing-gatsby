@@ -16,7 +16,7 @@ const RaceChip = (props) => {
 			}
 		}
 	`)
-	const { node = null } = data.allFile.edges.find(({ node }) => Math.floor(node.name) === props.trackConfigId) ?? {}
+	const { node = null } = data.allFile.edges.find(({ node }) => Math.floor(node.name) === props.trackConfig?.trackConfigIracingId) ?? {}
 	// console.log(props.trackName, props.trackConfigId)
 	return (
 		<div className={ styles.container }>
@@ -24,14 +24,14 @@ const RaceChip = (props) => {
 					<div className={ styles.logo }>
 						<img 
 							src={node.publicURL}
-							alt={ `${props.trackName} logo` }
+							alt={ `${props.trackConfig?.trackName} logo` }
 						/>
 					</div>
 			}
 			<RaceDate date={ props.raceDate }/>
 			<div className={ styles.track }>
-				{ props.trackName &&
-					<h4>{ props.trackName }</h4>
+				{ props.trackConfig?.trackName &&
+					<h4>{ props.trackConfig.trackName }</h4>
 				}
 				<h5>{ props.eventName }</h5>
 			</div>

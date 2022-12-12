@@ -6,21 +6,26 @@ import ResultsChip from '../components/resultsChip'
 import * as styles from './schedule.module.css'
 
 const Schedule = (props) => {
+	console.log(props)
 	return (
 		<div className={ styles.container }>
-			{ props.events.filter(event => !event.offWeek).map((event, index) => {
+			{ props.events.filter(event => event.offWeek === 'N').map((event, index) => {
 					return event.chase
 						? <div key={`schedule-${index}`} className={ styles.chase }>
 								{ event.eventName || 'Chase for the Championship' }
 							</div>
 						: event.race
-							?	<Link key={`schedule-${index}`} to={ `/${props.uri.split('/')[1]}/results/${event.race.raceId}` } className={ styles.details }>
+							?	<Link 
+									key={`schedule-${index}`} 
+									to={ `/${props.uri.split('/')[1]}/results/${event.race.raceId}` } 
+									className={ styles.details }
+								>
 									<RaceChip {...event}/>
 									<ResultsChip
-										counts={event.pointsCount}
+										counts={event.pointsCount === 'Y'}
 										results={
 											event.race.participants
-												.sort((a, b) => a.finishPos - b.finishPos)
+												.sort((a, b) => (a.finishPos ?? 999) - (b.finishPos ?? 999))
 												.slice(0, 3)
 										}
 										hideSm={true}
@@ -30,19 +35,20 @@ const Schedule = (props) => {
 									<RaceChip {...event}/>
 									<div className={ `${styles.info} hide-sm` }>
 										<div>
-											{ event.raceLength && event.raceLengthUnit === 'ms'
+											{ event.plannedTime
 													? <span>
-															<b>{`${moment.duration(event.raceLength).asMinutes()}`}</b> minutes
+															<b>{`${moment.duration(event.plannedTime).asMinutes()}`}</b> minutes
 														</span>
-													: <span>
-															<b>{`${event.raceLength}`}</b>
-															{`\u00A0${event.raceLengthUnit}`}
+													: event.plannedLaps && 
+														<span>
+															<b>{`${event.plannedLaps}`}</b>
+															{`\u00A0laps`}
 														</span>
 											}
-											{ event.trackConfigName && event.trackConfigName.toLowerCase() !== 'oval' &&
+											{ event.trackConfig?.trackConfigName?.toLowerCase() !== 'oval' &&
 													<span>{ event.trackConfigName }</span>
 											}
-											{ !event.pointsCount && <span>non-points</span> }
+											{ event.pointsCount === 'N' && <span>non-points</span> }
 										</div>
 									</div>
 								</div>

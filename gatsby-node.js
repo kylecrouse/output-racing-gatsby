@@ -334,11 +334,11 @@ exports.createPages = async ({ graphql, actions }) => {
 		// })
 		
 		if (seasonId === node.series.seriesCurrSeasonId) {
-			// createPage({
-			// 	path: `${seriesName}/schedule`,
-			// 	component: path.resolve(`src/templates/schedule.js`),
-			// 	context: { seriesId, seriesName, seasonName, seasonId },
-			// })
+			createPage({
+				path: `${seriesName}/schedule`,
+				component: path.resolve(`src/templates/schedule.js`),
+				context: { seriesId, seriesName, seasonName, seasonId },
+			})
 			createPage({
 				path: `${seriesName}/standings`,
 				component: path.resolve(`src/templates/standings.js`),
