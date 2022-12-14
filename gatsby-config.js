@@ -59,7 +59,7 @@ module.exports = {
           {
             statement: 'SELECT c.* FROM CHASE as c JOIN SCHEDULE AS sch ON c.schedule_id = sch.schedule_id JOIN SEASON as sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710',
             idFieldName: 'chase_id',
-            name: 'chase',
+            name: 'chaseConfig',
             parentName: 'schedule',
             foreignKey: 'schedule_id',
             cardinality: 'OneToOne'

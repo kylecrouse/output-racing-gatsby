@@ -68,7 +68,7 @@ const ScheduleTemplate = props => {
 							{ season.schedules
 									.filter(event => event.offWeek === 'N')
 									.map((event, index) => {
-										return event.chase
+										return event.chase === 'Y'
 											? <div key={`schedule-${index}`} className={ styles.chase }>
 													{ event.eventName || 'Chase for the Championship' }
 												</div>
@@ -143,9 +143,7 @@ export const query = graphql`
 					scheduleId: schedule_id
 					eventName: event_name
 					pointsCount: points_count
-					chase {
-						chaseNumDrivers: chase_num_drivers
-					}
+					chase
 					offWeek: off_week
 					raceDate: race_date
 					plannedLaps: planned_laps

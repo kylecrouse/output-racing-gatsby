@@ -8,6 +8,8 @@ import {
 } from '@tanstack/react-table'
 import './table.scss'
 
+const TYPE_ORDER = ['Overall', 'Short Track', '1 mile', 'Intermediate', '2+ mile', 'Superspeedway', 'Road Course', 'Dirt Oval', 'Rallycross']
+
 const Table = ({ 
 	columns, 
 	data, 
@@ -28,6 +30,18 @@ const Table = ({
 		getSortedRowModel: getSortedRowModel(),
 		getCoreRowModel: getCoreRowModel(),
 		groupedColumnMode: false,
+		sortingFns: {
+			trackTypeSorting: (a, b, columnId) => {
+				const [aTrack, aType] = a.getValue(columnId).split('|')
+				const [bTrack, bType] = b.getValue(columnId).split('|')
+				if (aTrack < bTrack)
+					return -1
+				else if (aTrack > bTrack)
+					return 1
+				else
+					return TYPE_ORDER.indexOf(aType) - TYPE_ORDER.indexOf(bType)
+			}
+		},
 	})
 	
 	const [overflowLeft, setOverflowLeft] = React.useState(false)

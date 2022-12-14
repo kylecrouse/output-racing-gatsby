@@ -188,22 +188,6 @@ exports.createResolvers = ({ createResolvers }) => {
 					)
 				}
 			}
-		},
-		MysqlParticipant: {
-			carImage: {
-				type: "File",
-				resolve: async (source, args, context, info) => {
-					const file = await context.nodeModel.findOne({
-						query: {
-							filter: {
-								relativePath: { eq: `cars/${source.car_iracing_id}.svg` }
-							},
-						},
-						type: "File",
-					}).catch(err => console.log(err))
-					return file
-				}
-			}
 		}
 	}
 	createResolvers(resolvers)
@@ -235,17 +219,10 @@ exports.createSchemaCustomization = ({ actions }) => {
 		type MysqlSchedule implements Node {
 			trackConfig: MysqlConfig @link(by: "track_config_id", from: "track_config_id")	
 		}
-
-		type DriverLicense {
-			iRating: Int
-			licColor: String
-			licGroup: Int
-			licGroupDisplayName: String
-			licLevel: Int
-			licLevelDisplayName: String
-			srPrime: String
-			srSub: String
-		}		
+		
+		type IracingMember implements Node {
+			participants: [MysqlParticipant] @link(by: "driver.custid", from: "cust_id")
+		}
 	`
 	createTypes(typeDefs)
 }
@@ -256,13 +233,26 @@ exports.createPages = async ({ graphql, actions }) => {
 		query {
 			drivers: allIracingMember(sort: {car_number: ASC}) {
 				nodes {
+					custId: cust_id
 					driverName: display_name
 					nickName: nick_name
 				}
 			}
-			races: allMysqlRace(sort: {schedule: {race_date: DESC}}) {
+			races: allMysqlRace(
+				sort: {schedule: {race_date: DESC}}
+			) {
 				nodes {
 					raceId: race_id
+					schedule {
+						season {
+							seasonId: season_id
+							seasonName: season_name
+							series {
+								seriesId: series_id
+								seriesName: series_name
+							}
+						}
+					}
 				}
 			}
 			seasons: allMysqlSeason(sort: {schedules: {race_date: DESC}}) {
@@ -285,22 +275,7 @@ exports.createPages = async ({ graphql, actions }) => {
 			}
 		}
 	`)
-	
-	// Create drivers pages
-	data.drivers.nodes.forEach((node) => {
-		const seasonName = pathify(node.driverName),
-					driverId = node.driverId
-
-		// series.forEach(({ seriesId, seriesName }) => {
-		// 	seriesName = pathify(seriesName)
-		// 	createPage({
-		// 		path: `${seriesName}/drivers/${seasonName}`,
-		// 		component: path.resolve(`src/templates/driver.js`),
-		// 		context: { seriesId, seriesName, seasonName, driverId },
-		// 	})			
-		// })
-	})
-	
+		
 	data.series.nodes.forEach(({ seriesId, seriesName }) => {
 		seriesName = pathify(seriesName)
 		// createPage({
@@ -308,6 +283,19 @@ exports.createPages = async ({ graphql, actions }) => {
 		// 	component: path.resolve(`src/templates/drivers.js`),
 		// 	context: { seriesId, seriesName, seasonName: 'Drivers' },
 		// })			
+		
+		// Create drivers pages
+		data.drivers.nodes.forEach((node) => {
+			const seasonName = pathify(node.nickName ?? node.driverName),
+						custId = node.custId
+		
+			createPage({
+				path: `${seriesName}/drivers/${seasonName}`,
+				component: path.resolve(`src/templates/driver.js`),
+				context: { seriesId, seriesName, seasonName, custId },
+			})			
+		})
+
 		// createPage({
 		// 	path: `${seriesName}/stats`,
 		// 	component: path.resolve(`src/templates/stats.js`),
@@ -322,17 +310,6 @@ exports.createPages = async ({ graphql, actions }) => {
 					seasonName = pathify(node.seasonName),
 					seasonId = node.seasonId
 					
-		// createPage({
-		// 	path: `${seriesName}/schedule/${seasonName}`,
-		// 	component: path.resolve(`src/templates/schedule.js`),
-		// 	context: { seriesId, seriesName, seasonName, seasonId },
-		// })
-		// createPage({
-		// 	path: `${seriesName}/standings/${seasonName}`,
-		// 	component: path.resolve(`src/templates/standings.js`),
-		// 	context: { seriesId, seriesName, seasonName, seasonId },
-		// })
-		
 		if (seasonId === node.series.seriesCurrSeasonId) {
 			createPage({
 				path: `${seriesName}/schedule`,
@@ -346,22 +323,27 @@ exports.createPages = async ({ graphql, actions }) => {
 			})
 		}
 		
-		// node.events.forEach(({ race }, index, events) => {
-		// 	if (!race) {
-		// 		if (events?.[index - 1]?.race && node.active === true)
-		// 			createPage({
-		// 				path: `${seriesName}/results`,
-		// 				component: path.resolve(`src/templates/results.js`),
-		// 				context: { seriesId, seriesName, seasonName, seasonId, raceId: events[index - 1].race.raceId },
-		// 			})
-		// 		return
-		// 	}
+	})
+
+	data.races.nodes.forEach((node, index) => {
+		const raceId = node.raceId
+					seriesId = node.schedule.season.series.seriesId,
+					seriesName = pathify(node.schedule.season.series.seriesName),
+					seasonName = pathify(node.schedule.season.seasonName),
+					seasonId = node.schedule.season.seasonId
+
+		// if (index === 0)
 		// 	createPage({
-		// 		path: `${seriesName}/results/${race.raceId}`,
+		// 		path: `${seriesName}/results`,
 		// 		component: path.resolve(`src/templates/results.js`),
-		// 		context: { seriesId, seriesName, seasonName, seasonId, raceId: race.raceId },
+		// 		context: { seriesId, seriesName, seasonName, seasonId, raceId },
 		// 	})
-		// })
+
+		createPage({
+			path: `${seriesName}/results/${raceId}`,
+			component: path.resolve(`src/templates/results.js`),
+			context: { seriesId, seriesName, seasonName, seasonId, raceId },
+		})
 	})
 }
 

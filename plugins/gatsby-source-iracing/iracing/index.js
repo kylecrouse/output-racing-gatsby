@@ -72,8 +72,8 @@ class Client {
     return this._getChunks(`/data/results/lap_chart_data?subsessionid=${subsessionid}&simsesnum=0`)
   }
       
-  getLeague(league_id) {
-    return this._get(`/data/league/get?league_id=${league_id}`)
+  getLeague(league_id, include_licenses = false) {
+    return this._get(`/data/league/get?league_id=${league_id}&include_licenses=${include_licenses}`)
   }
 
   getSessionEvents(subsessionid) {

@@ -20,7 +20,7 @@ exports.sourceNodes = async ({
 }, pluginOptions) => {
   const { createNode } = actions
   
-  const league = await client.getLeague(2732)
+  const league = await client.getLeague(2732, true)
   
   league?.roster.forEach(driver => {
     createNode({

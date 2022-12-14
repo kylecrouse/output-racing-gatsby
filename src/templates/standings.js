@@ -44,7 +44,7 @@ const StandingsTemplate = (props) => {
 					const { pointsCount, chase, offWeek, race } = round
 					if (pointsCount === 'Y' && offWeek === 'N') {
 						a.push(round)
-						if (!chase) totalRounds++
+						if (chase === 'N') totalRounds++
 						if (race) roundsCompleted++
 					}
 					return a
@@ -64,12 +64,12 @@ const StandingsTemplate = (props) => {
 			return Array.from(
 				rounds.filter(({ chase, race }) => race), 
 				(el, i) => {
-					if (!el.chase) raceNo++
+					if (el.chase === 'N') raceNo++
 					return { 
-						label: el.chase 
-							? `-- ${el.eventName ?? `Chase: Top ${el.chase.chaseNumDrivers} Drivers`} --`
+						label: el.chase === 'Y'
+							? `-- ${el.eventName ?? `Chase: Top ${el.chaseConfig.chaseNumDrivers} Drivers`} --`
 							: `Round ${raceNo}: ${el.trackConfig?.trackName.replace(/\[.*\]\s/, '').replace(/ - \d*$/, '')}`,
-						chipLabel: el.chase
+						chipLabel: el.chase === 'Y'
 							? el.eventName
 							: raceNo === totalRounds
 								? 'Final'
@@ -258,14 +258,14 @@ const StandingsTemplate = (props) => {
 			{
 				id: 'top5s',
 				header: 'Top 5',
-				accessorFn: (row) => row.finishPos !== null && row.finishPos < 5 ? 1 : 0,
+				accessorFn: (row) => row.finishPos !== null && row.finishPos <= 5 ? 1 : 0,
 				aggregationFn: 'sum',
 				className: 'hide-sm',
 			},
 			{
 				id: 'top10s',
 				header: 'Top 10',
-				accessorFn: (row) => row.finishPos !== null && row.finishPos < 10 ? 1 : 0,
+				accessorFn: (row) => row.finishPos !== null && row.finishPos <= 10 ? 1 : 0,
 				aggregationFn: 'sum',
 				className: 'hide-sm',
 			},
@@ -398,7 +398,8 @@ export const query = graphql`
 					scheduleId: schedule_id
 					eventName: event_name
 					pointsCount: points_count
-					chase {
+					chase
+					chaseConfig {
 						chaseNumDrivers: chase_num_drivers
 					}
 					offWeek: off_week
