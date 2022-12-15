@@ -75,11 +75,11 @@ exports.createResolvers = ({ createResolvers }) => {
 					const season = await context.nodeModel.findOne({
 						query: {
 							filter: {
-								seriesId: {eq: context.context.seriesId},
+								series_id: {eq: context.context.seriesId},
 								active: {eq: true}
 							}
 						},
-						type: 'SimRacerHubSeason'
+						type: 'MysqlSeason'
 					})
 					
 					const raceId = season.events.reduce(
@@ -116,48 +116,6 @@ exports.createResolvers = ({ createResolvers }) => {
 					}).catch(err => console.log(err))
 				}
 			},
-			// driverCareerStats: {
-			// 	type: "SimRacerHubCareerStats",
-			// 	resolve: async (source, args, context, info) => {
-			// 		return context.nodeModel.findOne({
-			// 			query: {
-			// 				filter: {
-			// 					driverId: { eq: source.driverId },
-			// 					seriesId: { eq: context.context.seriesId }
-			// 				},
-			// 			},
-			// 			type: "SimRacerHubCareerStats",
-			// 		})
-			// 	}
-			// },
-			// driverTrackStats: {
-			// 	type: "SimRacerHubTrackStats",
-			// 	resolve: async (source, args, context, info) => {
-			// 		return context.nodeModel.findOne({
-			// 			query: {
-			// 				filter: {
-			// 					driverId: { eq: source.driverId },
-			// 					seriesId: { eq: context.context.seriesId }
-			// 				},
-			// 			},
-			// 			type: "SimRacerHubTrackStats",
-			// 		})
-			// 	}
-			// },
-			// driverConfigStats: {
-			// 	type: "SimRacerHubConfigStats",
-			// 	resolve: async (source, args, context, info) => {
-			// 		return context.nodeModel.findOne({
-			// 			query: {
-			// 				filter: {
-			// 					driverId: { eq: source.driverId },
-			// 					seriesId: { eq: context.context.seriesId }
-			// 				},
-			// 			},
-			// 			type: "SimRacerHubConfigStats",
-			// 		})
-			// 	}
-			// },
 		},
 		MysqlRace: {
 			eventBroadcast: {

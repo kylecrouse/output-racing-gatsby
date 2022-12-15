@@ -44,7 +44,6 @@ const DriverTemplate = props => {
 		() => {
 			const options = data.reduce(
 				(acc, p) => {
-					console.log(p)
 					if (p.race.schedule.trackConfig) {
 						const name = p.race.schedule.trackConfig.trackName.replace(/(\[Legacy\]\s)|( - 200[89])/g, '')
 						const type = getTrackTypeName(p.race.schedule.trackConfig)
@@ -609,7 +608,7 @@ const DriverTemplate = props => {
 				else 
 					return (
 						[...a, (
-							<Slide>
+							<Slide key={`slide-${m.id}`}>
 								<GatsbyImage 
 									alt="car screenshot"
 									className={ styles.driverImage }
@@ -838,6 +837,18 @@ export const query = graphql`
 		) {
 			driverName: display_name
 			driverNickName: nick_name
+			driverMedia {
+				id: contentful_id
+				gatsbyImageData	
+				metadata {
+					tags {
+						name
+					}
+				}
+				file {
+					url
+				}
+			}						
 			carNumber: car_number
 			carNumberArt: driverNumberArt {
 				gatsbyImageData	

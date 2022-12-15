@@ -5,11 +5,11 @@ import './driverChip.scss'
 const DriverChip = (props) => {
 	return (
 		<div className={`driverChip ${props.className} ${!props.active ? 'inactive' : ''}`}>
-			{ (props.showNumberArt || props.showNumberArt === undefined) && props.driverNumberArt &&
-				<NumberArt number={props.driverNumber} image={props.driverNumberArt.file.url}/>
-			}
-			{ (props.showNumberArt || props.showNumberArt === undefined) &&
-				<div className="numberPlate">{props.carNumber || '-'}</div>
+			{ (props.showNumberArt || props.showNumberArt === undefined) 
+					&& props.numberPlate
+						? <div className="numberPlate">{props.carNumber || '-'}</div>
+						: props.driverNumberArt 
+								&& <NumberArt number={props.driverNumber} image={props.driverNumberArt.file.url}/>				
 			}
 			{ props.active && props.link !== false
 				? <Link to={`drivers/${props.driverName.replace(/\s/g, '-').toLowerCase()}/`}>
@@ -49,13 +49,14 @@ const renderName = (props) => {
 	)
 }
 
-export const renderDriverChip = ({ driver }, children = null) => {
+export const renderDriverChip = ({ driver, seriesId }, children = null) => {
 	return (
 		<DriverChip
 			active={!!driver.member}
 			driverName={driver.member?.driverNickName ?? driver.driverName}
 			carNumber={driver.member?.carNumber ?? driver.driverNumber}
 			driverNumberArt={driver.member?.carNumberArt}
+			numberPlate={seriesId === 8100}
 		>
 			{ children }
 		</DriverChip>

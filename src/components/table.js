@@ -68,13 +68,15 @@ const Table = ({
 	const tableRef = React.useRef()
 	const wrapperRef = React.useRef()
 	
-	const handleScroll = ({ target: { scrollLeft, scrollLeftMax } }) => {
+	const handleScroll = (props) => {
+		const { clientWidth, scrollLeft, scrollWidth } = props.target
+
 		if (scrollLeft > 0)
 			!overflowLeft && setOverflowLeft(true)
 		else 
 			overflowLeft && setOverflowLeft(false)
 			
-		if (scrollLeft < scrollLeftMax)
+		if (scrollLeft + clientWidth < scrollWidth)
 			!overflowRight && setOverflowRight(true)
 		else
 			overflowRight && setOverflowRight(false)
@@ -140,7 +142,7 @@ const Table = ({
 						{ table.getHeaderGroups().map(headerGroup => (
 							<tr key={headerGroup.id}>
 								{ headerGroup.headers.map(header => (
-									<th key={header.id} colSpan={header.colSpan} className={header.column.className ?? ''}>
+									<th key={header.id} colSpan={header.colSpan} className={header.column.columnDef.className ?? ''}>
 										{
 											flexRender(
 												header.column.columnDef.header,
@@ -198,7 +200,7 @@ const Table = ({
 							{table.getFooterGroups().map(footerGroup => (
 								<tr key={footerGroup.id}>
 									{footerGroup.headers.map(header => (
-										<th key={header.id}>
+										<th key={header.id} className={header.column.columnDef.className ?? ''}>
 											{header.isPlaceholder
 												? null
 												: flexRender(
