@@ -2,6 +2,7 @@ import React from 'react'
 import {
 	useReactTable,
 	getCoreRowModel,
+	getFilteredRowModel,
 	getGroupedRowModel,
 	getSortedRowModel,
 	flexRender,
@@ -15,23 +16,34 @@ const Table = ({
 	data, 
 	initialState = {},
 	scrolling = false,
-	getRowProps = () => ({}),
+	showFooter = false,
+	filters = [],
 }) => {
 	const [grouping, setGrouping] = React.useState(initialState.grouping ?? [])
 	const [sorting, setSorting] = React.useState(initialState.sorting ?? [])
+	const [columnFilters, setColumnFilters] = React.useState(initialState.columnFilters ?? [])
+	const [columnVisibility, setColumnVisibility] = React.useState(initialState.columnVisibility ?? {})
 	
 	const table = useReactTable({
 		data,
 		columns,
-		state: { grouping, sorting },
+		state: { 
+			grouping, 
+			sorting, 
+			columnFilters, 
+			columnVisibility 
+		},
 		onGroupingChange: setGrouping,
 		onSortingChange: setSorting,
+		onColumnVisibilityChange: setColumnVisibility,
+		onColumnFiltersChange: setColumnFilters,
+		getFilteredRowModel: getFilteredRowModel(),
 		getGroupedRowModel: getGroupedRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getCoreRowModel: getCoreRowModel(),
 		groupedColumnMode: false,
 		sortingFns: {
-			trackTypeSorting: (a, b, columnId) => {
+			trackNameSorting: (a, b, columnId) => {
 				const [aTrack, aType] = a.getValue(columnId).split('|')
 				const [bTrack, bType] = b.getValue(columnId).split('|')
 				if (aTrack < bTrack)
@@ -40,6 +52,11 @@ const Table = ({
 					return 1
 				else
 					return TYPE_ORDER.indexOf(aType) - TYPE_ORDER.indexOf(bType)
+			},
+			trackTypeSorting: (a, b, columnId) => {
+				const aType = a.getValue(columnId)
+				const bType = b.getValue(columnId)
+				return TYPE_ORDER.indexOf(aType) - TYPE_ORDER.indexOf(bType)
 			}
 		},
 	})
@@ -106,6 +123,15 @@ const Table = ({
 		wrapperRef.current.style.setProperty('--left', `${left}px`)
 	}, [left])
 	
+	React.useEffect(() => {
+		filters?.forEach(
+			({ id, value }) => {
+				const column = table.getColumn(id)
+				column.setFilterValue((old) => value)
+			}
+		)
+	}, [filters, table])
+	
 	return (
 		<div className="table-container">
 			<div className={wrapperClassName.join(' ')} onScroll={ handleScroll } ref={wrapperRef}>
@@ -167,6 +193,24 @@ const Table = ({
 							)}
 						)}
 					</tbody>
+					{ showFooter &&
+						<tfoot>
+							{table.getFooterGroups().map(footerGroup => (
+								<tr key={footerGroup.id}>
+									{footerGroup.headers.map(header => (
+										<th key={header.id}>
+											{header.isPlaceholder
+												? null
+												: flexRender(
+														header.column.columnDef.footer,
+														header.getContext()
+													)}
+										</th>
+									))}
+								</tr>
+							))}
+						</tfoot>						
+					}
 				</table>
 			</div>
 		</div>
