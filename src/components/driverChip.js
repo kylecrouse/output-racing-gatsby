@@ -7,7 +7,7 @@ const DriverChip = (props) => {
 		<div className={`driverChip ${props.className} ${!props.active ? 'inactive' : ''}`}>
 			{ (props.showNumberArt || props.showNumberArt === undefined) 
 					&& props.numberPlate
-						? <div className="numberPlate">{props.carNumber || '-'}</div>
+						? <div className="numberPlate" style={props.carNumber.length > 2 ? { fontSize: '1rem' } : {}}>{props.carNumber || '-'}</div>
 						: props.driverNumberArt 
 								&& <NumberArt number={props.driverNumber} image={props.driverNumberArt.file.url}/>				
 			}

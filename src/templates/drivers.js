@@ -1,25 +1,24 @@
 import * as React from "react"
 import { graphql } from 'gatsby'
 import Layout from "../components/layout"
-import Meta from "../components/meta"
 import DriverCard from '../components/driverCard'
 
 const DriversPage = (props) => {
 	const drivers = React.useMemo(
-		() => props.data.drivers.edges
-			.sort(({ node: a }, { node: b }) => (a.carNumber ? a.carNumber : 1000) - (b.carNumber ? b.carNumber: 1000))
-			.map(({ node }, index) => (
+		() => props.data.drivers.nodes
+			.sort((a, b) => (a.carNumber ? a.carNumber : 1000) - (b.carNumber ? b.carNumber: 1000))
+			.map((node, index) => (
 				<DriverCard 
 					key={`driver-${index}`} 
 					{...node} 
 					seriesName={props.pageContext.seriesName}
+					seriesId={props.pageContext.seriesId}
 				/>
 			)),
-		[props.data.drivers, props.pageContext.seriesName]
+		[props.data.drivers, props.pageContext.seriesName, props.pageContext.seriesId]
 	)
 	return (
 		<Layout {...props}>
-			<Meta {...props}/>
 		
 			<main className="container">
 							
@@ -41,40 +40,48 @@ const DriversPage = (props) => {
 	)
 }
 
-// export const query = graphql`
-// 	query DriversQuery {
-// 		drivers: allSimRacerHubDriver(
-// 			filter: {active: {eq: true}}
-// 		) {
-// 			edges {
-// 				node {
-// 					...driverData	
-// 					driverCareerStats {
-// 						starts
-// 						avgStartPos
-// 						avgFinishPos
-// 						wins
-// 						podiums
-// 						top5s
-// 						top10s
-// 						lapsCompleted
-// 						lapsLed
-// 						poles
-// 						incidents
-// 						incidentsPerRace
-// 						winPct
-// 						podiumPct
-// 						top5Pct
-// 						top10Pct
-// 						lapsLedPct
-// 						polePct
-// 						incidentsPerLap
-// 						rating
-// 					}
-// 				}
-// 			}
-// 		}	
-// 	}
-// `
+export const query = graphql`
+	query DriversQuery {
+		drivers: allIracingMember {
+			nodes {
+				driverName: display_name
+				driverNickName: nick_name
+				carNumber: car_number
+				carNumberArt: driverNumberArt {
+					gatsbyImageData	
+					file {
+						url
+					}
+				}						
+				participants {
+					finishPos: finish_pos
+					loopstat {
+						rating
+					}
+					provisional
+					car {
+						carId: car_iracing_id
+						carName: car_name
+					}
+					race {
+						schedule {
+							raceDate: race_date
+							pointsCount: points_count
+							chase
+							season {
+								seasonId: season_id
+								seasonName: season_name
+								series {
+									seriesId: series_id
+									currSeasonId: curr_season_id
+								}
+							}
+						}
+					}
+				}
+			}
+		}	
+	}
+`
 
 export default DriversPage

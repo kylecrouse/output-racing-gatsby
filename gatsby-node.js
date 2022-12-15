@@ -72,33 +72,34 @@ exports.createResolvers = ({ createResolvers }) => {
 			driverCarLogo: {
 				type: "File",
 				resolve: async (source, args, context, info) => {
-					const season = await context.nodeModel.findOne({
+					const series = await context.nodeModel.findOne({
 						query: {
 							filter: {
 								series_id: {eq: context.context.seriesId},
-								active: {eq: true}
 							}
 						},
-						type: 'MysqlSeason'
+						type: 'MysqlSeries'
 					})
 					
-					const raceId = season.events.reduce(
-						(a, { raceId }) => raceId ? [...a, raceId] : a, []
+					const season = context.nodeModel.getNodeById({ id: `mysql__Season__${series.curr_season_id}` })
+					
+					const raceId = season.schedules.reduce(
+						(a, { race }) => race ? [...a, race.race_id] : a, []
 					)
 					
 					const races = await context.nodeModel.findAll({
 						query: {
 							filter: {
-								raceId: {in: raceId}
+								race_id: {in: raceId}
 							}
 						},
-						type: 'SimRacerHubRace'
+						type: 'MysqlRace'
 					})
 					
 					const carId = Array.from(races.entries).reduce(
 						(a, { participants }) => {
-							const d = participants.find(p => p.driverId === source.driverId) 
-							return d ? d.carSimId : a
+							const d = participants.find(p => p.driver_id === source.driverId) 
+							return d ? d.car.car_iracing_id : a
 						}, 
 						null
 					)
@@ -174,6 +175,10 @@ exports.createSchemaCustomization = ({ actions }) => {
 			series: MysqlSeries @link(by: "series_id", from: "series_id")
 		}
 		
+		type MysqlSeries implements Node {
+			currentSeason: MysqlSeason @link(by: "season_id", from: "curr_season_id")
+		}
+		
 		type MysqlSchedule implements Node {
 			trackConfig: MysqlConfig @link(by: "track_config_id", from: "track_config_id")	
 		}
@@ -236,11 +241,12 @@ exports.createPages = async ({ graphql, actions }) => {
 		
 	data.series.nodes.forEach(({ seriesId, seriesName }) => {
 		seriesName = pathify(seriesName)
-		// createPage({
-		// 	path: `${seriesName}/drivers`,
-		// 	component: path.resolve(`src/templates/drivers.js`),
-		// 	context: { seriesId, seriesName, seasonName: 'Drivers' },
-		// })			
+		
+		createPage({
+			path: `${seriesName}/drivers`,
+			component: path.resolve(`src/templates/drivers.js`),
+			context: { seriesId, seriesName, seasonName: 'Drivers' },
+		})			
 		
 		// Create drivers pages
 		data.drivers.nodes.forEach((node) => {

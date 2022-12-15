@@ -848,7 +848,7 @@ export const query = graphql`
 				file {
 					url
 				}
-			}						
+			}
 			carNumber: car_number
 			carNumberArt: driverNumberArt {
 				gatsbyImageData	
