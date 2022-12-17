@@ -57,6 +57,22 @@ module.exports = {
             cardinality: 'OneToMany'
           },
           {
+            statement: 'SELECT sc.* FROM SEASON_CLASS AS sc JOIN SEASON_CLASS_CAR AS scc ON sc.season_class_id = scc.season_class_id JOIN SEASON AS sea ON sea.season_id = sc.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710',
+            idFieldName: 'season_class_id',
+            name: 'seasonClass',
+            parentName: 'season',
+            foreignKey: 'season_id',
+            cardinality: 'OneToMany'
+          },
+          {
+            statement: 'SELECT scc.*, c.* FROM SEASON_CLASS_CAR AS scc JOIN CAR AS c ON c.car_id = scc.car_id JOIN SEASON_CLASS AS sc ON sc.season_class_id = scc.season_class_id JOIN SEASON AS sea ON sea.season_id = sc.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710',
+            idFieldName: 'car_id',
+            name: 'seasonClassCar',
+            parentName: 'seasonClass',
+            foreignKey: 'season_class_id',
+            cardinality: 'OneToMany'
+          },
+          {
             statement: 'SELECT c.* FROM CHASE as c JOIN SCHEDULE AS sch ON c.schedule_id = sch.schedule_id JOIN SEASON as sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710',
             idFieldName: 'chase_id',
             name: 'chaseConfig',

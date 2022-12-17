@@ -38,16 +38,7 @@ const StatsTemplate = props => {
 	const [trackType, setTrackType] = React.useState([])
 	const [columnFilters, setColumnFilters] = React.useState([])
 	
-	React.useEffect(() => {
-		setColumnFilters([
-			{ id: 'carName', value: carName },
-			{ id: 'trackName', value: trackName },
-			{ id: 'trackType', value: trackType },
-			{ id: 'driverName', value: driverName }
-		])
-	}, [carName, driverName, trackName, trackType])
-
-	const { carOptions, driverOptions, trackOptions, typeOptions } = React.useMemo(
+	const { driverOptions, trackOptions, typeOptions } = React.useMemo(
 		() => {
 			const options = data.reduce(
 				(acc, p) => {
@@ -59,8 +50,6 @@ const StatsTemplate = props => {
 						if (!acc.typeOptions.hasOwnProperty(type))
 							acc.typeOptions[type] = { value: type, label: type }
 					}
-					if (p.car)
-						acc.carOptions[p.car.carName] = { value: p.car.carName, label: p.car.carName }
 					acc.driverOptions[p.driver.driverName] = { 
 						value: p.driver.driverName, 
 						label: p.driver.member?.driverNickName ?? p.driver.driverName
@@ -70,7 +59,6 @@ const StatsTemplate = props => {
 				{ carOptions: [], driverOptions: [], trackOptions: [], typeOptions: [] }
 			)
 			return {
-				carOptions: Object.values(options.carOptions).sort(sortAlpha),
 				driverOptions: Object.values(options.driverOptions).sort(sortAlpha),
 				trackOptions: Object.values(options.trackOptions).sort(sortAlpha),
 				typeOptions: Object.values(options.typeOptions).sort(
@@ -81,7 +69,35 @@ const StatsTemplate = props => {
 		[data]
 	)
 
-
+	const carOptions = React.useMemo(
+		() => {
+			const options = props.data.classes.nodes.reduce(
+				(acc, node) => !acc.hasOwnProperty(node.seasonClassName)
+					? { ...acc, [node.seasonClassName]: {
+							value: node.seasonClassName,
+							label: node.seasonClassName,
+							cars: node.seasonClassCars.map(({ carName }) => carName)
+						}}
+					: acc,
+				{}
+			)
+			return Object.values(options).sort(sortAlpha)
+		},
+		[props.data.classes]
+	)
+	
+	React.useEffect(() => {
+		setColumnFilters([
+			{ id: 'carName', value: carName.reduce(
+				(acc,value) => [...acc, ...(carOptions.find((option) => option.value === value)?.cars ?? [])], 
+				[]
+			)},
+			{ id: 'trackName', value: trackName },
+			{ id: 'trackType', value: trackType },
+			{ id: 'driverName', value: driverName }
+		])
+	}, [carOptions, carName, driverName, trackName, trackType])
+	
 	const columns = React.useMemo(
 		() => [
 			{
@@ -646,7 +662,16 @@ function renderAggregatedPercentValue({ getValue, table, column }) {
 }
 
 export const query = graphql`
-	query StatsQuery {
+	query StatsQuery($seriesId: Int) {
+		classes: allMysqlSeasonClass(filter: {season: {series_id: {eq: $seriesId}}}) {
+			nodes {
+				seasonClassName: season_class_name
+				seasonClassCars {
+					carId: car_id
+					carName: car_name
+				}
+			}
+		}
 		participants: allMysqlParticipant {
 			nodes {
 				driverId: driver_id
