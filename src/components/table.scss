@@ -44,6 +44,9 @@ thead th {
 	line-height: 1;
 	padding: 0.4rem 0.5rem 0.3rem;
 	text-transform: uppercase;
+	> div {
+		white-space: nowrap;
+	}
 }
 
 thead th .sort-indicator {
@@ -240,4 +243,8 @@ td b {
 hgroup + table,
 hgroup + .table-container {
 	margin-top: -1.4rem;
+}
+
+.cursor-pointer {
+	cursor: pointer
 }

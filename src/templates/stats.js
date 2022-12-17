@@ -1,11 +1,12 @@
 import * as React from "react"
 import { graphql } from 'gatsby'
-import DriverChip from '../components/driverChip'
-import Layout from '../components/layout'
-import Meta from '../components/meta'
 import Select from 'react-select'
-import { useTable, useGroupBy, useSortBy } from 'react-table'
+import { renderDriverChip } from '../components/driverChip'
+import Layout from '../components/layout'
+import Table from '../components/table'
 import * as styles from './stats.module.scss'
+
+const TYPE_ORDER = ['Overall', 'Short Track', '1 mile', 'Intermediate', '2+ mile', 'Superspeedway', 'Road Course', 'Dirt Oval', 'Rallycross']
 
 // const formatValue = ({ value }) => (Math.round(value * 10) / 10).toFixed(1)
 const sortAlpha = (a, b) => {
@@ -19,489 +20,387 @@ const sortAlpha = (a, b) => {
 }
 
 const StatsTemplate = props => {
-	const [carId, setCarId] = React.useState([])
-	const [driverId, setDriverId] = React.useState([])
-	const [trackConfigId, setTrackConfigId] = React.useState([])
-	const [trackType, setTrackType] = React.useState([])
 	const data = React.useMemo(
-		() => props.data.races.edges.reduce(
-			(a, { node }) => {
-				if (trackConfigId.length > 0 && !trackConfigId.includes(node.trackConfigId))
-					return a
-				if (trackType.length > 0 && !trackType.includes(node.trackType))
-					return a
-				return [
-					...a, 
-					...node.participants.filter(p => {
-						if (driverId.length > 0 && !driverId.includes(p.driverId))
-							return false
-						if (carId.length > 0 && !carId.includes(p.carId))
-							return false
-						return props.data.activeDrivers.edges.some(
-							({ node }) => node.driverId === p.driverId
-						)
-					})
-				]	
-			},
-			[]
+		() => props.data.participants.nodes.filter(
+			(p) => p.driver.member !== null
+							&& p.race.schedule.season.series.seriesId === props.pageContext.seriesId
+							&& p.finishPos > 0 
+							&& p.provisional === 'N' 
+							&& p.race.schedule.pointsCount === 'Y'
+							&& p.race.schedule.chase === 'N'
 		),
-		[
-			props.data.races.edges, 
-			props.data.activeDrivers.edges, 
-			trackConfigId, 
-			trackType, 
-			driverId,
-			carId
-		]
+		[props.data, props.pageContext.seriesId]
 	)
-	const { 
-		driverOptions = [], 
-		trackOptions = [], 
-		typeOptions = []
-	} = React.useMemo(
+
+	const [carName, setCarName] = React.useState([])
+	const [driverName, setDriverName] = React.useState([])
+	const [trackName, setTrackName] = React.useState([])
+	const [trackType, setTrackType] = React.useState([])
+	const [columnFilters, setColumnFilters] = React.useState([])
+	
+	React.useEffect(() => {
+		setColumnFilters([
+			{ id: 'carName', value: carName },
+			{ id: 'trackName', value: trackName },
+			{ id: 'trackType', value: trackType },
+			{ id: 'driverName', value: driverName }
+		])
+	}, [carName, driverName, trackName, trackType])
+
+	const { carOptions, driverOptions, trackOptions, typeOptions } = React.useMemo(
 		() => {
-			const options = props.data.races.edges.reduce(
-				(a, { node }) => {
-					if (!a.config.hasOwnProperty(node.trackConfigId))
-						a.config[node.trackConfigId] = {
-							value: node.trackConfigId, 
-							label: node.trackConfigName 
-								? `${node.trackName} – ${node.trackConfigName}`
-								: node.trackName
-						}
-					if (!a.type.hasOwnProperty(node.trackType))
-						a.type[node.trackType] = {
-							value: node.trackType, 
-							label: node.trackType 
-						}
-					node.participants.forEach(p => {
-						if (!a.driver.hasOwnProperty(p.driverId))
-							if (props.data.activeDrivers.edges.some(
-								({ node }) => node.driverId === p.driverId
-							))
-								a.driver[p.driverId] = {
-									value: p.driverId,
-									label: p.member.driverName,
-									sort: p.member.driverName.split(' ').pop()
-								}
-					})
-					return a
+			const options = data.reduce(
+				(acc, p) => {
+					if (p.race.schedule.trackConfig) {
+						const name = p.race.schedule.trackConfig.trackName.replace(/(\[Legacy\]\s)|( - 200[89])/g, '')
+						const type = getTrackTypeName(p.race.schedule.trackConfig)
+						if (!acc.trackOptions.hasOwnProperty(name))
+							acc.trackOptions[name] = { value: name, label: name }
+						if (!acc.typeOptions.hasOwnProperty(type))
+							acc.typeOptions[type] = { value: type, label: type }
+					}
+					if (p.car)
+						acc.carOptions[p.car.carName] = { value: p.car.carName, label: p.car.carName }
+					acc.driverOptions[p.driver.driverName] = { 
+						value: p.driver.driverName, 
+						label: p.driver.member?.driverNickName ?? p.driver.driverName
+					}
+					return acc
 				},
-				{ driver: {}, config: {}, type: {} }
+				{ carOptions: [], driverOptions: [], trackOptions: [], typeOptions: [] }
 			)
 			return {
-				driverOptions: Object.values(options.driver).sort(sortAlpha),
-				trackOptions: Object.values(options.config).sort(sortAlpha),
-				typeOptions: Object.values(options.type)//.sort(sortAlpha),
+				carOptions: Object.values(options.carOptions).sort(sortAlpha),
+				driverOptions: Object.values(options.driverOptions).sort(sortAlpha),
+				trackOptions: Object.values(options.trackOptions).sort(sortAlpha),
+				typeOptions: Object.values(options.typeOptions).sort(
+					(a, b) => TYPE_ORDER.indexOf(a.value) - TYPE_ORDER.indexOf(b.value)
+				),
 			}
 		},
-		[props.data.races.edges, props.data.activeDrivers.edges]
+		[data]
 	)
-	const carOptions = React.useMemo(
-		() => {
-			const options = props.data.cars.edges.reduce((a, { node }) => {
-				node.seasonClass.forEach(c => {
-					if (!a.hasOwnProperty(c.seasonClassName))
-						a[c.seasonClassName] = c.seasonClassCars.map(({ carId }) => carId)
-				})
-				return a
-			}, {})
-			return Object.entries(options).map(
-				([label, value]) => ({ value, label })
-			).sort(sortAlpha)
-		},
-		[props.data.cars.edges]
-	)
+
+
 	const columns = React.useMemo(
 		() => [
 			{
-				Header: '',
-				accessor: 'driverName',
+				header: 'Driver',
+				id: 'driverName',
+				accessorFn: (row) => row.driver.driverName,
 				className: 'cell-driver',
-				Cell: ({ row }) => (
-					<DriverChip { ...row.leafRows[0].original.member } />
-				)	
+				cell: ({ row }) => renderDriverChip(row.original),
+				filterFn: 'arrIncludesSome',
 			},
 			{
-				Header: 'S',
+				header: 'Car',
+				id: 'carName',
+				accessorFn: (row) => row.car?.carName,
+				className: 'text-left',
+				filterFn: 'arrIncludesSome',
+			},
+			{
+				header: 'Track',
+				id: 'trackName',
+				accessorFn: (row) => row.race.schedule.trackConfig.trackName.replace(/(\[Legacy\]\s)|( - 200[89])/g, ''),
+				className: 'text-left',
+				filterFn: 'arrIncludesSome',
+			},
+			{
+				header: 'Type',
+				id: 'trackType',
+				accessorFn: (row) => getTrackTypeName(row.race.schedule.trackConfig),
+				className: 'text-left',
+				filterFn: 'arrIncludesSome',
+			},
+			{
+				header: 'S',
 				id: 'starts',
+				accessorKey: 'startPos',
 				sortDescFirst: true,
-				accessor: 'raceId',
-				aggregate: 'count',
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.max(...groupedRows.map(({ values }) => values.starts))
-						? <b>{ value }</b>
-						: value
-				}
+				aggregationFn: 'count',
+				aggregatedCell: renderAggregatedIntValue,
 			},
 			{
-				Header: 'AS',
-				accessor: 'qualifyPos',
-				aggregate: (leafValues) => {
-					const attempts = leafValues.filter(v => v)
-					const total = attempts.reduce((a, v) => a + v, 0)
-					return attempts.length > 0 
-						? total/attempts.length
-						: null
+				header: 'AS',
+				id: 'avgStart',
+				sortDescFirst: false,
+				accessorFn: (row) => row.qualifyTime > 0 ? row.startPos : null,
+				aggregationFn: (key, rows) => {
+					const { sum, count } = rows.reduce(
+						(acc, { original: row }) => row.qualifyTime > 0 
+							? { 
+									sum: acc.sum + row.startPos, 
+									count: acc.count + 1 
+								} 
+							: acc,
+						{ sum: 0, count: 0 }
+					)
+					return sum / count
 				},
-				aggregateValue: (value, row) => row.original.qualifyTime > 0 
-					? value 
-					: null,
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.min(...groupedRows.reduce(
-						(a, { values }) => values.qualifyPos 
-							? [...a, values.qualifyPos] 
-							: a,
-						[]
-					))
-						? <b>{ value.toFixed(1) }</b>
-						: value?.toFixed(1) ?? '-'
-				}
+				aggregatedCell: renderAggregatedFloatValue,
 			},
 			{
-				Header: 'AF',
-				accessor: 'finishPos',
-				aggregate: 'average',
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.min(...groupedRows.reduce(
-						(a, { values }) => values.finishPos 
-							? [...a, values.finishPos] 
-							: a,
-						[]
-					))
-						? <b>{ value.toFixed(1) }</b>
-						: value?.toFixed(1) ?? '-'
-				}
+				header: 'AF',
+				id: 'avgFinish',
+				sortDescFirst: false,
+				accessorKey: 'finishPos',
+				aggregationFn: (key, rows) => {
+					const { sum, count } = rows.reduce(
+						(acc, { original: row }) => ({ 
+							sum: acc.sum + row.finishPos, 
+							count: acc.count + 1 
+						}),
+						{ sum: 0, count: 0 }
+					)
+					return sum / count
+				},
+				aggregatedCell: renderAggregatedFloatValue,
 			},
 			{
-				Header: 'ARP',
-				accessor: 'arp',
-				aggregate: 'average',
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.min(...groupedRows.reduce(
-						(a, { values }) => values.arp 
-							? [...a, values.arp] 
-							: a,
-						[]
-					))
-						? <b>{ value.toFixed(1) }</b>
-						: value?.toFixed(1) ?? '-'
-				}
-			},
-			{
-				Header: 'GP',
-				accessor: 'passes',
+				header: 'W',
+				id: 'wins',
+				accessorFn: (row) => row.finishPos === 1 ? 1 : 0,
 				sortDescFirst: true,
-				aggregate: 'sum',
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.max(...groupedRows.reduce(
-						(a, { values }) => values.passes 
-							? [...a, values.passes] 
-							: a,
-						[]
-					))
-						? <b>{ value }</b>
-						: value ?? '-'
-				}
+				aggregationFn: 'sum',
+				aggregatedCell: renderAggregatedIntValue,
 			},
 			{
-				Header: 'QP',
-				accessor: 'qualityPasses',
+				header: 'W%',
+				id: 'pctW',
 				sortDescFirst: true,
-				aggregate: 'sum',
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.max(...groupedRows.reduce(
-						(a, { values }) => values.qualityPasses 
-							? [...a, values.qualityPasses] 
-							: a,
-						[]
-					))
-						? <b>{ value }</b>
-						: value ?? '-'
-				}
+				accessorFn: (row) => row.finishPos === 1 ? 1 : 0,
+				aggregationFn: (key, rows) => {
+					const { sum, count } = rows.reduce(
+						(acc, { original: row }) => ({ 
+							sum: acc.sum + (row.finishPos === 1 ? 1 : 0), 
+							count: acc.count + 1
+						}),
+						{ sum: 0, count: 0 }
+					)
+					return sum / count
+				},
+				aggregatedCell: renderAggregatedPercentValue,
 			},
 			{
-				Header: '#FL',
-				accessor: 'numFastLap',
+				header: 'T5',
+				id: 't5s',
+				accessorFn: (row) => row.finishPos <= 5 ? 1 : 0,
 				sortDescFirst: true,
-				aggregate: 'sum',
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.max(...groupedRows.reduce(
-						(a, { values }) => values.numFastLap 
-							? [...a, values.numFastLap] 
-							: a,
-						[]
-					))
-						? <b>{ value }</b>
-						: value ?? '-'
-				}
+				aggregationFn: 'sum',
+				aggregatedCell: renderAggregatedIntValue,
 			},
 			{
-				Header: 'W',
-				accessor: 'wins',
+				header: 'T5%',
+				id: 'pctT5',
 				sortDescFirst: true,
-				aggregate: (leafRows) => leafRows.reduce((a, v) => a + v, 0),
-				aggregateValue: (value, row) => row.original.finishPos === 1 ? 1 : 0,
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.max(...groupedRows.reduce(
-						(a, { values }) => values.wins 
-							? [...a, values.wins] 
-							: a,
-						[]
-					))
-						? <b>{ value }</b>
-						: value ?? '-'
-				}
+				accessorFn: (row) => row.finishPos <= 5 ? 1 : 0,
+				aggregationFn: (key, rows) => {
+					const { sum, count } = rows.reduce(
+						(acc, { original: row }) => ({ 
+							sum: acc.sum + (row.finishPos <= 5 ? 1 : 0), 
+							count: acc.count + 1
+						}),
+						{ sum: 0, count: 0 }
+					)
+					return sum / count
+				},
+				aggregatedCell: renderAggregatedPercentValue,
 			},
 			{
-				Header: '%W',
-				accessor: 'winPct',
+				header: 'T10',
+				id: 't10s',
 				sortDescFirst: true,
-				aggregate: (leafRows) => Math.round(leafRows.reduce((a, v) => a + v, 0) / leafRows.length * 1000) / 10,
-				aggregateValue: (value, row) => row.original.finishPos === 1 ? 1 : 0,
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.max(...groupedRows.reduce(
-						(a, { values }) => values.winPct 
-							? [...a, values.winPct] 
-							: a,
-						[]
-					))
-						? <b>{ value.toFixed(1) }</b>
-						: value?.toFixed(1) ?? '-'
-				}
+				accessorFn: (row) => row.finishPos <= 10 ? 1 : 0,
+				aggregationFn: 'sum',
+				aggregatedCell: renderAggregatedIntValue,
 			},
 			{
-				Header: 'T5',
-				accessor: 'top5s',
+				header: 'T10%',
+				id: 'pctT10',
 				sortDescFirst: true,
-				aggregate: (leafRows) => leafRows.reduce((a, v) => a + v, 0),
-				aggregateValue: (value, row) => row.original.finishPos <= 5 ? 1 : 0,
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.max(...groupedRows.reduce(
-						(a, { values }) => values.top5s 
-							? [...a, values.top5s] 
-							: a,
-						[]
-					))
-						? <b>{ value }</b>
-						: value ?? '-'
-				}
+				accessorFn: (row) => row.finishPos <= 10 ? 1 : 0,
+				aggregationFn: (key, rows) => {
+					const { sum, count } = rows.reduce(
+						(acc, { original: row }) => ({ 
+							sum: acc.sum + (row.finishPos <= 10 ? 1 : 0), 
+							count: acc.count + 1
+						}),
+						{ sum: 0, count: 0 }
+					)
+					return sum / count
+				},
+				aggregatedCell: renderAggregatedPercentValue,
 			},
 			{
-				Header: '%T5',
-				accessor: 'top5Pct',
+				header: 'P',
+				id: 'poles',
 				sortDescFirst: true,
-				aggregate: (leafRows) => Math.round(leafRows.reduce((a, v) => a + v, 0) / leafRows.length * 1000) / 10,
-				aggregateValue: (value, row) => row.original.finishPos <= 5 ? 1 : 0,
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.max(...groupedRows.reduce(
-						(a, { values }) => values.top5Pct 
-							? [...a, values.top5Pct] 
-							: a,
-						[]
-					))
-						? <b>{ value.toFixed(1) }</b>
-						: value?.toFixed(1) ?? '-'
-				}
+				accessorFn: (row) => row.startPos === 1 ? 1 : 0,
+				aggregationFn: 'sum',
+				aggregatedCell: renderAggregatedIntValue,
 			},
 			{
-				Header: 'T10',
-				accessor: 'top10s',
+				header: `P%`,
+				id: 'pctPole',
 				sortDescFirst: true,
-				aggregate: (leafRows) => leafRows.reduce((a, v) => a + v, 0),
-				aggregateValue: (value, row) => row.original.finishPos <= 10 ? 1 : 0,
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.max(...groupedRows.reduce(
-						(a, { values }) => values.top10s 
-							? [...a, values.top10s] 
-							: a,
-						[]
-					))
-						? <b>{ value }</b>
-						: value ?? '-'
-				}
-			},
+				accessorFn: (row) => row.startPos === 1 ? 1 : 0,
+				aggregationFn: (key, rows) => {
+					const { sum, count } = rows.reduce(
+						(acc, { original: row }) => ({ 
+							sum: acc.sum + (row.startPos === 1 ? 1 : 0), 
+							count: acc.count + 1
+						}),
+						{ sum: 0, count: 0 }
+					)
+					return sum / count
+				},
+				aggregatedCell: renderAggregatedPercentValue,
+			},		
 			{
-				Header: '%T10',
-				accessor: 'top10Pct',
+				header: 'ARP',
+				id: 'avgPos',
+				sortDescFirst: false,
+				accessorFn: (row) => row.loopstat?.avgPos,
+				aggregationFn: (key, rows) => {
+					const { sum, count } = rows.reduce(
+						(acc, { original: row }) => row.loopstat?.avgPos > 0
+							? { 
+									sum: acc.sum + row.loopstat.avgPos, 
+									count: acc.count + 1 
+								} 
+							: acc,
+						{ sum: 0, count: 0 }
+					)
+					return sum / count
+				},
+				aggregatedCell: renderAggregatedFloatValue,
+			},	
+			{
+				header: 'GP',
+				id: 'passes',
 				sortDescFirst: true,
-				aggregate: (leafRows) => Math.round(leafRows.reduce((a, v) => a + v, 0) / leafRows.length * 1000) / 10,
-				aggregateValue: (value, row) => row.original.finishPos <= 10 ? 1 : 0,
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.max(...groupedRows.reduce(
-						(a, { values }) => values.top10Pct 
-							? [...a, values.top10Pct] 
-							: a,
-						[]
-					))
-						? <b>{ value.toFixed(1) }</b>
-						: value?.toFixed(1) ?? '-'
-				}
+				accessorFn: (row) => row.loopstat?.passes,
+				aggregationFn: 'sum',
+				aggregatedCell: renderAggregatedIntValue,
 			},
 			{
-				Header: 'P',
-				accessor: 'poles',
+				header: 'QP',
+				id: 'qualityPasses',
 				sortDescFirst: true,
-				aggregate: (leafRows) => leafRows.reduce((a, v) => a + v, 0),
-				aggregateValue: (value, row) => row.original.qualifyPos === 1 ? 1 : 0,
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.max(...groupedRows.reduce(
-						(a, { values }) => values.poles 
-							? [...a, values.poles] 
-							: a,
-						[]
-					))
-						? <b>{ value }</b>
-						: value ?? '-'
-				}
+				accessorFn: (row) => row.loopstat?.qualityPasses,
+				aggregationFn: 'sum',
+				aggregatedCell: renderAggregatedIntValue,
 			},
 			{
-				Header: `%P`,
-				accessor: 'polePct',
+				header: 'CP',
+				id: 'closingPasses',
 				sortDescFirst: true,
-				aggregate: (leafRows) => Math.round(leafRows.reduce((a, v) => a + v, 0) / leafRows.length * 1000) / 10,
-				aggregateValue: (value, row) => row.original.qualifyPos === 1 ? 1 : 0,
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.max(...groupedRows.reduce(
-						(a, { values }) => values.polePct 
-							? [...a, values.polePct] 
-							: a,
-						[]
-					))
-						? <b>{ value.toFixed(1) }</b>
-						: value?.toFixed(1) ?? '-'
-				}
-
+				accessorFn: (row) => row.loopstat?.closingPasses,
+				aggregationFn: 'sum',
+				aggregatedCell: renderAggregatedIntValue,
 			},
 			{
-				Header: 'LL',
-				accessor: 'lapsLed',
-				aggregate: 'sum',
+				header: 'TL',
+				id: 'laps',
 				sortDescFirst: true,
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.max(...groupedRows.reduce(
-						(a, { values }) => values.lapsLed 
-							? [...a, values.lapsLed] 
-							: a,
-						[]
-					))
-						? <b>{ value }</b>
-						: value ?? '-'
-				}
+				accessorKey: 'lapsCompleted',
+				aggregationFn: 'sum',
+				aggregatedCell: renderAggregatedIntValue,
 			},
 			{
-				Header: '%LL',
-				accessor: 'lapsLedPct',
+				header: 'LL',
+				id: 'lapsLed',
 				sortDescFirst: true,
-				aggregate: (leafRows) => Math.round(
-					leafRows.reduce(
-						(a, { lapsLed }) => a + lapsLed, 0
-					) / leafRows.reduce(
-						(a, { lapsCompleted }) => a + lapsCompleted, 0
-					) * 1000
-				) / 10,
-				aggregateValue: (value, row) => ({ 
-					lapsLed: row.original.lapsLed, 
-					lapsCompleted: row.original.lapsCompleted 
-				}),
-				Aggregated: ({ value, row, groupedRows }) => {
-					return value === Math.max(...groupedRows.reduce(
-						(a, { values }) => values.lapsLedPct
-							? [...a, values.lapsLedPct] 
-							: a,
-						[]
-					))
-						? <b>{ value.toFixed(1) }</b>
-						: value?.toFixed(1) ?? '-'
-				}
+				accessorKey: 'lapsLed',
+				aggregationFn: 'sum',
+				aggregatedCell: renderAggregatedIntValue,
 			},
 			{
-				Header: 'TL',
-				accessor: 'lapsCompleted',
+				header: 'LL%',
+				id: 'pctLed',
 				sortDescFirst: true,
-				aggregate: 'sum',
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.max(...groupedRows.reduce(
-						(a, { values }) => values.lapsCompleted 
-							? [...a, values.lapsCompleted] 
-							: a,
-						[]
-					))
-						? <b>{ value }</b>
-						: value ?? '-'
-				}
+				accessorFn: (row) => row.lapsLed / row.lapsCompleted,
+				aggregationFn: (key, rows) => {
+					const { laps, led } = rows.reduce(
+						(acc, { original: row }) => ({
+							laps: acc.laps + row.lapsCompleted,
+							led: acc.led + row.lapsLed
+						}),
+						{ laps: 0, led: 0 }
+					)
+					return led / laps
+				},
+				aggregatedCell: renderAggregatedPercentValue,
 			},
 			{
-				Header: 'I',
-				accessor: 'incidents',
-				aggregate: 'sum',
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.min(...groupedRows.reduce(
-						(a, { values }) => values.incidents 
-							? [...a, values.incidents] 
-							: a,
-						[]
-					))
-						? <b>{ value }</b>
-						: value ?? '-'
-				}
-			},
-			{
-				Header: 'IR',
-				accessor: 'incidentsRace',
-				aggregate: (leafRows) => Math.round(leafRows.reduce((a, v) => a + v, 0) / leafRows.length * 1000) / 1000,
-				aggregateValue: (value, row) => row.original.incidents,
-				Aggregated: ({ value, row, groupedRows }) => {
-					return value === Math.min(...groupedRows.reduce(
-						(a, { values }) => values.incidentsRace 
-							? [...a, values.incidentsRace] 
-							: a,
-						[]
-					))
-						? <b>{ value.toFixed(2) }</b>
-						: value?.toFixed(2) ?? '-'
-				}
-			},
-			{
-				Header: 'IL',
-				accessor: 'incidentsLap',
-				aggregate: (leafRows) => Math.round(
-					leafRows.reduce(
-						(a, { incidents }) => a + incidents, 0
-					) / leafRows.reduce(
-						(a, { lapsCompleted }) => a + lapsCompleted, 0
-					) * 1000
-				) / 1000,
-				aggregateValue: (value, row) => ({
-					incidents: row.original.incidents, 
-					lapsCompleted: row.original.lapsCompleted 
-				}),
-				Aggregated: ({ value, row, groupedRows }) => {
-					return value === Math.min(...groupedRows.reduce(
-						(a, { values }) => values.incidentsLap
-							? [...a, values.incidentsLap] 
-							: a,
-						[]
-					))
-						? <b>{ value.toFixed(2) }</b>
-						: value?.toFixed(2) ?? '-'
-				}
-			},
-			{
-				Header: 'DR',
-				accessor: 'rating',
+				header: 'FL',
+				id: 'numFastLap',
 				sortDescFirst: true,
-				aggregate: 'average',
-				Aggregated: ({ value, groupedRows }) => {
-					return value === Math.max(...groupedRows.reduce(
-						(a, { values }) => values.rating 
-							? [...a, values.rating] 
-							: a,
-						[]
-					))
-						? <b>{ value.toFixed(1) }</b>
-						: value?.toFixed(1) ?? '-'
-				}
+				accessorFn: (row) => row.loopstat?.numFastLap,
+				aggregationFn: 'sum',
+				aggregatedCell: renderAggregatedIntValue,
+			},
+			{
+				header: 'I',
+				id: 'incidents',
+				sortDescFirst: false,
+				accessorKey: 'incidents',
+				aggregationFn: 'sum',
+				aggregatedCell: renderAggregatedIntValue,
+			},
+			{
+				header: 'IR',
+				id: 'incRace',
+				sortDescFirst: false,
+				accessorFn: (row) => row.incidents,
+				aggregationFn: (key, rows) => {
+					const { sum, count } = rows.reduce(
+						(acc, { original: row }) => ({ 
+							sum: acc.sum + row.incidents, 
+							count: acc.count + 1 
+						}),
+						{ sum: 0, count: 0 }
+					)
+					return sum / count
+				},
+				aggregatedCell: (props) => renderAggregatedFloatValue(props, 2),
+			},
+			{
+				header: 'IL',
+				id: 'incLap',
+				sortDescFirst: false,
+				accessorFn: (row) => row.incidents,
+				aggregationFn: (key, rows) => {
+					const { sum, count } = rows.reduce(
+						(acc, { original: row }) => ({ 
+							sum: acc.sum + row.incidents, 
+							count: acc.count + row.lapsCompleted
+						}),
+						{ sum: 0, count: 0 }
+					)
+					return sum / count
+				},
+				aggregatedCell: (props) => renderAggregatedFloatValue(props, 2),
+			},
+			{
+				header: 'DR',
+				id: 'avgRating',
+				sortDescFirst: true,
+				accessorFn: (row) => row.loopstat?.rating,
+				aggregationFn: (key, rows) => {
+					const { sum, count } = rows.reduce(
+						(acc, { original: row }) => row.loopstat?.rating > 0
+							? { 
+									sum: acc.sum + row.loopstat.rating, 
+									count: acc.count + 1 
+								} 
+							: acc,
+						{ sum: 0, count: 0 }
+					)
+					return sum / count
+				},
+				aggregatedCell: renderAggregatedFloatValue,
 			},
 		],
 		[]
@@ -509,7 +408,6 @@ const StatsTemplate = props => {
 	
 	return (
 		<Layout {...props}>
-			<Meta {...props}/>
 			
 			<main className="container">
 				
@@ -520,12 +418,12 @@ const StatsTemplate = props => {
 							<h2 className="page-title">Stats</h2>
 						</hgroup>
 						
-						<div class="columns">
+						<div className="columns">
 							<div className="column col-6 col-lg-12">
 								<Select 
 									className={styles.selectContainer}
 									isMulti={true}
-									onChange={selected => setDriverId(
+									onChange={selected => setDriverName(
 										selected.map(({ value }) => value)
 									)}
 									options={driverOptions} 
@@ -534,7 +432,7 @@ const StatsTemplate = props => {
 								<Select 
 									className={styles.selectContainer}
 									isMulti={true}
-									onChange={selected => setCarId(
+									onChange={selected => setCarName(
 										selected.flatMap(({ value }) => value)
 									)}
 									options={carOptions} 
@@ -545,7 +443,7 @@ const StatsTemplate = props => {
 								<Select 
 									className={styles.selectContainer}
 									isMulti={true}
-									onChange={selected => setTrackConfigId(
+									onChange={selected => setTrackName(
 										selected.map(({ value }) => value)
 									)}
 									options={trackOptions} 
@@ -566,10 +464,12 @@ const StatsTemplate = props => {
 						<Table 
 							columns={columns} 
 							data={data}
+							filters={columnFilters}
 							scrolling={true}
 							initialState={{
-								groupBy: ['driverName'],
-								sortBy: [{ id: 'starts', desc: true }],
+								grouping: ['driverName'],
+								sorting: [{ id: 'starts', desc: true }],
+								columnVisibility: { carName: false, trackName: false, trackType: false }
 							}}
 						/>
 					
@@ -587,6 +487,38 @@ const StatsTemplate = props => {
 								<dd>
 									Average Finishing Position
 								</dd>
+								<dt>W</dt>
+								<dd>
+									Wins
+								</dd>
+								<dt>W%</dt>
+								<dd>
+									Winning Percentage
+								</dd>
+								<dt>T5</dt>
+								<dd>
+									Top 5s
+								</dd>
+								<dt>T5%</dt>
+								<dd>
+									Top 5 Percentage
+								</dd>
+								<dt>T10</dt>
+								<dd>
+									Top 10s
+								</dd>
+								<dt>T10%</dt>
+								<dd>
+									Top 10 Percentage
+								</dd>
+								<dt>P</dt>
+								<dd>
+									Poles
+								</dd>
+								<dt>P%</dt>
+								<dd>
+									Poles Percentage
+								</dd>
 								<dt>ARP</dt>
 								<dd>
 									Average Running Position<br/>
@@ -601,59 +533,27 @@ const StatsTemplate = props => {
 									Quality Passes<br/>
 									<i>Green flag passes within top seven</i>
 								</dd>
-								<dt>#FL</dt>
+								<dt>CP</dt>
 								<dd>
-									Number of Fast Laps<br/>
-									<i>Fastest time recorded each race lap</i>
+									Closing Passes<br/>
+									<i>Green flag passes within last 10% of race</i>
 								</dd>
-								<dt>QP</dt>
+								<dt>TL</dt>
 								<dd>
-									Quality Passes<br/>
-									<i>Green flag passes within top seven</i>
-								</dd>
-								<dt>W</dt>
-								<dd>
-									Wins
-								</dd>
-								<dt>%W</dt>
-								<dd>
-									Winning Percentage
-								</dd>
-								<dt>T5</dt>
-								<dd>
-									Top 5s
-								</dd>
-								<dt>%T5</dt>
-								<dd>
-									Top 5 Percentage
-								</dd>
-								<dt>T10</dt>
-								<dd>
-									Top 10s
-								</dd>
-								<dt>%T10</dt>
-								<dd>
-									Top 10 Percentage
-								</dd>
-								<dt>P</dt>
-								<dd>
-									Poles
-								</dd>
-								<dt>%P</dt>
-								<dd>
-									Poles Percentage
+									Total Laps Completed
 								</dd>
 								<dt>LL</dt>
 								<dd>
 									Laps Led
 								</dd>
-								<dt>%LL</dt>
+								<dt>LL%</dt>
 								<dd>
 									Laps Led Percentage
 								</dd>
-								<dt>TL</dt>
+								<dt>FL</dt>
 								<dd>
-									Total Laps Completed
+									Number of Fast Laps<br/>
+									<i>Fastest time recorded each race lap</i>
 								</dd>
 								<dt>I</dt>
 								<dd>
@@ -683,187 +583,131 @@ const StatsTemplate = props => {
 	)
 }
 
-const Table = ({ 
-	columns, 
-	data, 
-	initialState = {},
-	disableSortBy = false,
-	scrolling = false,
-	getRowProps = () => ({}),
-}) => {
-	const {
-		getTableProps,
-		getTableBodyProps,
-		headerGroups,
-		rows,
-		prepareRow,
-	} = useTable(
-		{
-			columns,
-			data,
-			initialState,
-			disableSortBy
-		},
-		useGroupBy,
-		useSortBy
-	)
-	
-	const [overflowLeft, setOverflowLeft] = React.useState(false)
-	const [overflowRight, setOverflowRight] = React.useState(false)
-	const [left, setLeft] = React.useState(0)
-	
-	const tableRef = React.useRef()
-	const wrapperRef = React.useRef()
-	
-	const handleScroll = ({ target: { scrollLeft, scrollLeftMax } }) => {
-		if (scrollLeft > 0)
-			!overflowLeft && setOverflowLeft(true)
-		else 
-			overflowLeft && setOverflowLeft(false)
-			
-		if (scrollLeft < scrollLeftMax)
-			!overflowRight && setOverflowRight(true)
-		else
-			overflowRight && setOverflowRight(false)
-	}
-	
-	let wrapperClassName = ['table-wrapper']
-	if (scrolling)
-		wrapperClassName.push('scrolling')
-	if (overflowLeft)
-		wrapperClassName.push('overflow-left')
-	if (overflowRight)
-		wrapperClassName.push('overflow-right')
-		
-	React.useEffect(() => {
-		const stickyCells = Array.from(tableRef.current.querySelectorAll('tbody tr:first-child td'))
-		const stickyCols = stickyCells.reduce((n, cell) => {
-			return (window.getComputedStyle(cell).getPropertyValue("position") === "sticky") 
-				? ++n
-				: n
-		}, 0)
-		
-		setLeft(
-			stickyCells.reduce((a, cell) => {
-				const style = window.getComputedStyle(cell)
-				if (style.getPropertyValue("position") === "sticky")
-					a += parseFloat(style.getPropertyValue("width"))
-				return a
-			}, 0)
-		)
-
-		tableRef.current
-			.querySelectorAll(`th:nth-child(-n+${stickyCols}), td:nth-child(-n+${stickyCols})`)
-			.forEach(cell => {
-				cell.style.setProperty('left', `${cell.offsetLeft}px`)
-			})
-
-		if (scrolling &&
-			parseFloat(window.getComputedStyle(tableRef.current).getPropertyValue('width'))
-				> parseFloat(window.getComputedStyle(wrapperRef.current).getPropertyValue('width'))
-		) 
-			setOverflowRight(true)
-		
-	}, [scrolling])
-	
-	React.useEffect(() => {
-		wrapperRef.current.style.setProperty('--left', `${left}px`)
-	}, [left])
-
-	return (
-		<div className={`table-container ${styles.table}`}>
-			<div className={wrapperClassName.join(' ')} onScroll={ handleScroll } ref={wrapperRef}>
-				<table { ...getTableProps() } ref={tableRef}>
-					<thead>
-						{ headerGroups.map(headerGroup => (
-							<tr { ...headerGroup.getHeaderGroupProps() }>
-								{ headerGroup.headers.map(column => (
-									// Add the sorting props to control sorting. For this example
-									// we can add them into the header props
-									<th { ...column.getHeaderProps(column.getSortByToggleProps()) } className={column.className || ''}>
-										{column.render('Header')}
-										{/* Add a sort direction indicator */}
-										<span className="sort-indicator">
-											{ column.isSorted
-												? column.isSortedDesc
-													? '‹'
-													: '›'
-												: ''
-											}
-										</span>
-									</th>
-								))}
-							</tr>
-						))}
-					</thead>
-					<tbody { ...getTableBodyProps() }>
-						{ rows.map(
-							(row, i) => {
-								prepareRow(row);
-								return (
-									<tr { ...row.getRowProps(getRowProps(row)) }>
-										{ row.cells.map(cell => {
-											return (
-												<td 
-													{ ...cell.getCellProps({
-															className: cell.column.className,
-															style: cell.column.style,
-														}) 
-													}
-												>
-													{ cell.isAggregated 
-															? cell.render('Aggregated')
-															: cell.render('Cell') 
-													}
-												</td>
-											)
-										})}
-									</tr>
-								)}
-						)}
-					</tbody>
-				</table>
-			</div>
-		</div>
-	)
+function getTrackTypeName(trackConfig) {
+	if (!trackConfig) 
+		return null
+	else if (trackConfig.trackType.toLowerCase() !== 'speedway') 
+		return trackConfig.trackType
+	else
+		return trackConfig.trackLength < 2
+			? trackConfig.trackLength > 1
+				? 'Intermediate'
+				: '1 mile'
+			: '2+ mile'
 }
 
-// export const query = graphql`
-// 	query StatsQuery($seriesId: Int) {
-// 		activeDrivers: allSimRacerHubDriver(
-// 			filter: {active: {eq: true}}
-// 		) {
-// 			edges {
-// 				node {
-// 					driverId
-// 				}
-// 			}
-// 		}
-// 		cars: allSimRacerHubSeason(
-// 			filter: {seriesId: {eq: $seriesId}}
-// 		) {
-// 			edges {
-// 				node {
-// 					active
-// 					seasonClass {
-// 						seasonClassName
-// 						seasonClassCars {
-// 							carId
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		races: allSimRacerHubRace(
-// 			filter: {seriesId: {eq: $seriesId}}
-// 		) {
-// 			edges {
-// 				node {	
-// 					...raceData	
-// 				}
-// 			}
-// 		}	
-// 	}
-// `
+function renderAggregatedFloatValue({ getValue, table, column }, power = 1) {
+	const places = Math.pow(10, Number.isInteger(power) ? power : 1)
+	const value = getValue()
+	const values = table.getGroupedRowModel().rows.reduce(
+		(acc, { getValue }) => { 
+			const value = getValue(column.id) 
+			return value > 0 ? [...acc, value] : acc
+		}, 
+		[]
+	)
+	return value > 0 
+		? value === Math[column.columnDef.sortDescFirst ? 'max' : 'min'](...values)
+			? <b>{Math.floor(value * places) / places}</b>
+			: Math.floor(value * places) / places
+		: '-'
+}
+
+function renderAggregatedIntValue({ getValue, table, column }) {
+	const value = getValue()
+	const values = table.getGroupedRowModel().rows.reduce(
+		(acc, { getValue }) => { 
+			const value = getValue(column.id) 
+			return value > 0 ? [...acc, value] : acc
+		}, 
+		[]
+	)
+	return value > 0 
+		? value === Math[column.columnDef.sortDescFirst ? 'max' : 'min'](...values)
+			? <b>{value}</b>
+			: value
+		: '-'
+}
+
+function renderAggregatedPercentValue({ getValue, table, column }) {
+	const value = getValue()
+	const values = table.getGroupedRowModel().rows.reduce(
+		(acc, { getValue }) => { 
+			const value = getValue(column.id) 
+			return value > 0 ? [...acc, value] : acc
+		}, 
+		[]
+	)
+	return value > 0 
+		? value === Math[column.columnDef.sortDescFirst ? 'max' : 'min'](...values)
+			? <b>{`${Math.floor(getValue() * 100)}%`}</b>
+			: `${Math.floor(getValue() * 100)}%`
+		: '-'
+}
+
+export const query = graphql`
+	query StatsQuery {
+		participants: allMysqlParticipant {
+			nodes {
+				driverId: driver_id
+				driver {
+					driverName: driver_name
+					member {
+						driverNickName: nick_name
+						carNumber: car_number
+						carNumberArt: driverNumberArt {
+							gatsbyImageData	
+							file {
+								url
+							}
+						}						
+					}
+				}
+				driverNumber: driver_number
+				startPos: qualify_pos
+				finishPos: finish_pos	
+				incidents
+				lapsLed: laps_led
+				lapsCompleted: num_laps
+				qualifyTime: qualify_time
+				car {
+					carId: car_iracing_id
+					carName: car_name
+				}
+				loopstat {
+					avgPos: avg_pos
+					arp
+					avgFastLap: avg_fast_lap
+					numFastLap: num_fast_lap
+					fastestRestart: fastest_restart
+					passes
+					qualityPasses: quality_passes
+					closingPasses: closing_passes
+					rating
+				}
+				provisional
+				race {
+					schedule {
+						pointsCount: points_count
+						chase
+						trackConfig {
+							trackId: track_config_iracing_id
+							trackName: track_name
+							trackConfigName: track_config_name
+							trackTypeId: track_type_id
+							trackType: type_name
+							trackLength: track_length
+						}
+						season {
+							series {
+								seriesId: series_id
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+`
 
 export default StatsTemplate

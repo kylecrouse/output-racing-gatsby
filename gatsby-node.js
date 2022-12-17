@@ -69,54 +69,6 @@ exports.createResolvers = ({ createResolvers }) => {
 					return context.nodeModel.getNodeById({ id: numberArt___NODE })
 				}
 			},
-			driverCarLogo: {
-				type: "File",
-				resolve: async (source, args, context, info) => {
-					const series = await context.nodeModel.findOne({
-						query: {
-							filter: {
-								series_id: {eq: context.context.seriesId},
-							}
-						},
-						type: 'MysqlSeries'
-					})
-					
-					const season = context.nodeModel.getNodeById({ id: `mysql__Season__${series.curr_season_id}` })
-					
-					const raceId = season.schedules.reduce(
-						(a, { race }) => race ? [...a, race.race_id] : a, []
-					)
-					
-					const races = await context.nodeModel.findAll({
-						query: {
-							filter: {
-								race_id: {in: raceId}
-							}
-						},
-						type: 'MysqlRace'
-					})
-					
-					const carId = Array.from(races.entries).reduce(
-						(a, { participants }) => {
-							const d = participants.find(p => p.driver_id === source.driverId) 
-							return d ? d.car.car_iracing_id : a
-						}, 
-						null
-					)
-					
-					if (!carId)
-						return null
-					
-					return context.nodeModel.findOne({
-						query: {
-							filter: {
-								relativePath: { eq: `cars/${carId}.svg` }
-							},
-						},
-						type: "File",
-					}).catch(err => console.log(err))
-				}
-			},
 		},
 		MysqlRace: {
 			eventBroadcast: {
@@ -260,11 +212,11 @@ exports.createPages = async ({ graphql, actions }) => {
 			})			
 		})
 
-		// createPage({
-		// 	path: `${seriesName}/stats`,
-		// 	component: path.resolve(`src/templates/stats.js`),
-		// 	context: { seriesId, seriesName, seasonName: 'Stats' },
-		// })			
+		createPage({
+			path: `${seriesName}/stats`,
+			component: path.resolve(`src/templates/stats.js`),
+			context: { seriesId, seriesName, seasonName: 'Stats' },
+		})			
 	})
 	
 	// Create schedule, standings and results pages

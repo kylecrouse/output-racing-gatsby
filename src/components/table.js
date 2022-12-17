@@ -142,19 +142,32 @@ const Table = ({
 						{ table.getHeaderGroups().map(headerGroup => (
 							<tr key={headerGroup.id}>
 								{ headerGroup.headers.map(header => (
-									<th key={header.id} colSpan={header.colSpan} className={header.column.columnDef.className ?? ''}>
-										{
-											flexRender(
-												header.column.columnDef.header,
-												header.getContext()
-											)
-										}
-										<span className="sort-indicator">
-											{ header.column.getCanSort()
-												? { asc: '›', desc: '‹' }[header.column.getIsSorted()] ?? null
-												: ''
+									<th 
+										key={header.id} 
+										colSpan={header.colSpan} 
+										className={header.column.columnDef.className ?? ''}
+									>
+										<div 
+											{...{
+												className: header.column.getCanSort()
+													? 'cursor-pointer'
+													: '',
+												onClick: header.column.getToggleSortingHandler(),
+											}}
+										>
+											{
+												flexRender(
+													header.column.columnDef.header,
+													header.getContext()
+												)
 											}
-										</span>
+											<span className="sort-indicator">
+												{ header.column.getCanSort()
+													? { asc: '›', desc: '‹' }[header.column.getIsSorted()] ?? null
+													: ''
+												}
+											</span>
+										</div>
 									</th>
 								))}
 							</tr>
