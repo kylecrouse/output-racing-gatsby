@@ -16,7 +16,7 @@ import promo from '../images/ORL-Season-2-promo.mp4'
 const channel = "aussie_sim_commentator"
 const isStreamOnlineURL = `https://api.outputracing.com/isStreamOnline?channel=${channel}`
 
-const pathify = (string) => string.replace(/[:-]/g, '').replace(/\s+/g, '-').toLowerCase()
+const pathify = (string) => string?.replace(/[:-]/g, '').replace(/\s+/g, '-').toLowerCase()
 
 const IndexPage = props => {
   const [ isStreamOnline, setIsStreamOnline ] = React.useState(false)
@@ -44,46 +44,46 @@ const IndexPage = props => {
     })
   }, [isStreamOnline])
   
-  let startAt = React.useRef(null),
-      offset = React.useRef(0)
-  const mergedEvents = React.useMemo(() => {
-    const events = props.data.seasons.edges.reduce(
-      (a, { node: { seriesId, seriesName, seasonId, seasonName, seasonClass, events }}) => [ 
-        ...a, 
-        ...events.map(
-          e => ({ seriesId, seriesName, seasonId, seasonName, seasonClass, ...e })
+  const { cards = [] } = React.useMemo(
+    () => props.data.schedules.nodes.reduce(
+      (a, node) => {
+        if (node.chase === 'Y')
+          a.chase.set(node.season.seasonId, node.eventName)
+        else
+          a.count.set(
+            node.season.seasonId, 
+            (a.count.get(node.season.seasonId) ?? 0) + 1
+          )
+        if (node.trackConfig?.trackId)
+          node.trackAsset = props.data.assets.nodes.find(
+            ({ trackId }) => trackId === node.trackConfig.trackId
+          )
+        if (
+          node.season.seasonId === node.season.series.currSeasonId
+            && node.chase !== 'Y'
+            && node.race === null
         )
-      ], 
-      []
-    )
-    let chase = {}
-    return events 
-      ? events
-          .sort((a, b) => new Date(a.raceDate) - new Date(b.raceDate))
-          .map((e, i) => {
-            if (!e.raceNumber) {
-              if (e.eventName) chase[e.seasonId] = e.eventName
-              if (startAt.current === null) offset.current += 1
-              return null
-            }
-            if (startAt.current === null && !e.race)
-              startAt.current = i
-            return (
-              <Slide key={`event-${i}`}>
-                <ScheduleCard 
-                  { ...e }
-                  title={chase[e.seasonId]}
-                  countdown={startAt.current === i}
-                  className={pathify(e.seriesName)}
-                />
-              </Slide>
-            ) 
-          })
-      : null
-  }, [props.data.seasons])
+          a.cards = [...a.cards, (
+            <Slide key={`event-${node.scheduleId}`}>
+              <ScheduleCard 
+                { ...node }
+                title={a.chase.get(node.season.seasonId)}
+                countdown={true}
+                className={pathify(node.season.series.seriesName)}
+                seriesId={node.season.seriesId}
+                raceNumber={a.count.get(node.season.seasonId)}
+              />
+            </Slide>
+          )]
+        return a
+      }, 
+      { cards: [], chase: new Map(), count: new Map() }
+    ),
+    [props.data.schedules, props.data.assets]
+  )
   
-  const series = React.useMemo(() => props.data.seasons.edges.reduce(
-    (a, { node }) => ({
+  const series = React.useMemo(() => props.data.series.nodes.reduce(
+    (a, node) => ({
       ...a,
       [node.seriesId]: (
         <section className={`${styles.section} ${node.seriesId === 8100 ? styles.nightOwl : styles.output}`}>
@@ -102,10 +102,10 @@ const IndexPage = props => {
               }
               { node.seriesId === 8100
                   ? <p>
-                      Output Racing League's road racing series for drivers of all skill levels. Races on Thursday nights at tracks that Tuesday night drivers mostly already own. 2022 Season 3 starts soon, featuring Skippy double-headers with NASCAR AI drivers. <Link to="/apply" className={`${styles.btn} ${styles.btnPrimary}`}><span>Apply now</span></Link>
+                      Output Racing League's road racing series for drivers of all skill levels. Congratulations to James Watson for closing out 2022 with the season 4 championship!<br/><br/>2023 Season 1 kicks off in the new year in GT4 cars with a small multi-class field of AI racers in TCRs. Races are held on Thursday nights with a schedule that is budget-friendly to Output's Tuesday night drivers. <Link to="/apply" className={`${styles.btn} ${styles.btnPrimary}`}><span>Apply now</span></Link>
                     </p>
                   : <p>
-                      Output Racing League's flagship Tuesday late-night NASCAR series. Congratulations to Thomas Harmon for winning 2022 season 1 championship in Camping World trucks! Season two kicks off mid-July, featuring the Next-Gen Cup Cars. <Link to="/apply" className={`${styles.btn} ${styles.btnPrimary}`}><span>Apply now</span></Link>
+                      Output Racing League's flagship Tuesday late-night NASCAR series. Congratulations once again to Thomas Harmon for winning the 2022 season 2 championship over Matt Burgess and James Watson!<br/><br/>For 2023 the Output Series will be back in the Next Gen Cup Cars starting in February with the Daytona 500. Come join our clean and competitive community! <Link to="/apply" className={`${styles.btn} ${styles.btnPrimary}`}><span>Apply now</span></Link>
                     </p>
               }
               <nav className={styles.nav}>
@@ -127,33 +127,53 @@ const IndexPage = props => {
                   </li>
                 </ul>
               </nav>
-              { node.standings?.length > 0 && 
-                <>
-                  <h3>Current Standings</h3>
-                  { node.standings
-                      .slice(0, 3)
-                      .map((item, index) => (
-                        <StandingsCard 
-                          position={item.position}
-                          driver={item.member ? item.member : item.driverName}
-                          totalPoints={item.totalPoints}
-                        />
-                      ))
-                  }
-                  <p className="cta">                    
-                    <Link to={`/${pathify(node.seriesName)}/standings`}>
-                      <span>Full Standings</span>
-                    </Link>
-                  </p>
-                </>
+              <h3>Current Standings</h3>
+              { Array.from(
+                  node.currentSeason?.schedules.reduce(
+                    (acc, schedule) => {
+                      schedule.race?.participants.forEach(
+                        (p) => {
+                          const bonusPoints = p.bonuses?.reduce(
+                            (points, { bonusPoints }) => points += bonusPoints, 
+                            0
+                          ) ?? 0
+                          const penaltyPoints = p.penalties?.reduce(
+                            (points, { penaltyPoints }) => points += penaltyPoints,
+                            0
+                          ) ?? 0
+                          const totalPoints = p.racePoints + bonusPoints - penaltyPoints
+    
+                          const key = p.driver.member?.driverNickName ?? p.driver.driverName
+                          acc.set(key, (acc.get(key) ?? 0) + totalPoints)
+                        }
+                      )
+                      return acc
+                    }, 
+                    new Map()
+                  ) ?? {}
+                ).sort(
+                  (a, b) => b[1] - a[1]
+                ).slice(0,3).map(([driverName, totalPoints], index) => (
+                  <StandingsCard 
+                    key={`standings-${index}`}
+                    position={index + 1}
+                    driver={{ driverName }}
+                    totalPoints={totalPoints}
+                  />
+                ))
               }
+              <p className="cta">                    
+                <Link to={`/${pathify(node.seriesName)}/standings`}>
+                  <span>Full Standings</span>
+                </Link>
+              </p>
             </div>
           </div>
         </section>
       )
     }),
     {}
-  ), [props.data.seasons])
+  ), [props.data.series])
   
   return (
     <Layout {...props}>
@@ -173,10 +193,9 @@ const IndexPage = props => {
                   ? (
                     <Carousel options={{ 
                       type: "carousel", 
-                      perView: 1, 
-                      startAt: startAt.current - offset.current
+                      perView: 1
                     }}>
-                      { mergedEvents }
+                      { cards }
                     </Carousel>                    
                   ) 
                   : null
@@ -185,9 +204,9 @@ const IndexPage = props => {
           )
       }
       
-      { series[6842] }
+      {series[6842]}
       
-      { series[8100] }
+      {series[8100]}
       
       <div className={`${styles.promo} hide-md`}>
         <Video src={{ mp4: promo }}/>
@@ -197,61 +216,78 @@ const IndexPage = props => {
   )
 }
 
-// export const query = graphql`
-//   query IndexQuery {
-//     seasons: allSimRacerHubSeason(
-//       filter: {active: {eq: true}}
-//       sort: {fields: events___raceDate, order: ASC}
-//     ) {
-//       edges {
-//         node {
-//           seasonId
-//           seasonName
-//           seriesId
-//           seriesName
-//           seasonClass {
-//             seasonClassCars {
-//               carId
-//               carSimId
-//               carName
-//             }
-//           }
-//           events {
-//             raceNumber
-//             raceDate
-//             eventName
-//             trackConfigId
-//             trackName
-//             cars {
-//               carId
-//               carName
-//               carSimId
-//             }
-//             pointsCount
-//             race {
-//               participants {
-//                 finishPos
-//                 totalPoints
-//                 member {
-//                   ...driverChipData
-//                 }
-//                 driverName
-//               }
-//             }
-//           }
-//           standings {
-//             driverName
-//             member {
-//               ...driverChipData
-//             }
-//             position
-//             totalPoints
-//           }	
-//         }
-//       }
-//     }
-//   }
-// `
+export const query = graphql`
+  query IndexQuery {
+    series: allMysqlSeries(
+     filter: {series_active: {eq: "Y"}} 
+    ) {
+      nodes {
+        seriesId: series_id
+        seriesName: series_name
+        currentSeason {
+          schedules {
+            race {
+              participants {
+                driverId: driver_id
+                driver {
+                  driverName: driver_name
+                  member {
+                    driverNickName: nick_name
+                  }
+                }
+                racePoints: race_points
+                bonuses {
+                  bonusPoints: bonus_points
+                }
+                penalties {
+                  penaltyPoints: penalty_points
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    assets: allIracingTrackAsset {
+      nodes {
+        trackId: track_id
+        logo
+        map: track_map
+        layers: track_map_layers {
+          active
+        }
+      }
+    }
+    schedules: allMysqlSchedule(
+      sort: {race_date: ASC}
+    ) {
+      nodes {							
+        scheduleId: schedule_id
+        eventName: event_name
+        chase
+        raceDate: race_date
+        raceTime: race_time
+        race {
+          raceId: race_id
+        }
+        season {
+          seasonId: season_id
+          seasonName: season_name
+          seriesId: series_id
+          series {
+            seriesName: series_name
+            currSeasonId: curr_season_id
+          }
+        }
+        trackConfigId: track_config_id
+        trackConfig {
+          trackName: track_name
+          trackId: track_config_iracing_id
+        }
+      }
+    }
+  }			
+`
 
 export default IndexPage
 

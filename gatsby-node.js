@@ -135,6 +135,10 @@ exports.createSchemaCustomization = ({ actions }) => {
 			trackConfig: MysqlConfig @link(by: "track_config_id", from: "track_config_id")	
 		}
 		
+		type MysqlConfig implements Node {
+			trackAssets: IracingTrackAsset @link(by: "track_config_iracing_id", from: "track_id")	
+		}
+		
 		type IracingMember implements Node {
 			participants: [MysqlParticipant] @link(by: "driver.custid", from: "cust_id")
 		}

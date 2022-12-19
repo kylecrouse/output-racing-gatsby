@@ -89,7 +89,12 @@ const StatsTemplate = props => {
 	React.useEffect(() => {
 		setColumnFilters([
 			{ id: 'carName', value: carName.reduce(
-				(acc,value) => [...acc, ...(carOptions.find((option) => option.value === value)?.cars ?? [])], 
+				(acc,value) => [
+					...acc, 
+					...(carOptions.find(
+						(option) => option.value === value)?.cars ?? []
+					)
+				], 
 				[]
 			)},
 			{ id: 'trackName', value: trackName },

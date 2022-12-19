@@ -10,14 +10,14 @@ import Video from '../components/video'
 import * as styles from './results.module.scss'
 
 const ResultsTemplate = (props) => {
-	const { race, carLogos, trackLogos } = props.data
+	const { race, carLogos } = props.data
 	
 	// Get track logo
-	const { node: logoNode = null } = React.useMemo(
-		() => trackLogos.edges.find(
-						({ node }) => Math.floor(node.name) === race.schedule.trackConfig.trackConfigId
-					) ?? {},
-		[trackLogos, race.schedule.trackConfig.trackConfigId]
+	const trackAsset = React.useMemo(
+		() => props.data.assets.nodes.find(
+			({ trackId }) => trackId === race.schedule.trackConfig.trackConfigId
+		) ?? {},
+		[props.data.assets, race.schedule.trackConfig]
 	)
 	
 	// Calculate race superlatives
@@ -350,9 +350,9 @@ const ResultsTemplate = (props) => {
 									<span>{race.schedule.trackConfig.trackName}</span>
 								</h5>
 							</div>
-							{ logoNode?.publicURL &&
+							{ trackAsset &&
 								<div className="column col-4 text-right hide-sm">
-									<img className={ styles.logo } src={ logoNode.publicURL } alt="track logo"/>
+									<img className={ styles.logo } src={ `https://images-static.iracing.com${trackAsset.logo}` } alt="track logo"/>
 								</div>
 							}
 						</hgroup>
@@ -683,11 +683,13 @@ export const query = graphql`
 				}
 			}
 		}
-		trackLogos: allFile(filter: { relativePath: { glob: "tracks/*.png" } }) {
-			edges {
-				node {
-					name
-					publicURL
+		assets: allIracingTrackAsset {
+			nodes {
+				trackId: track_id
+				logo
+				map: track_map
+				layers: track_map_layers {
+					active
 				}
 			}
 		}

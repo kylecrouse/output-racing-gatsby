@@ -1,29 +1,14 @@
 import * as React from 'react'
-import { useStaticQuery, graphql } from "gatsby"
 import RaceDate from '../components/raceDate'
 import * as styles from './raceChip.module.scss'
 
 const RaceChip = (props) => {
-	const data = useStaticQuery(graphql`
-		{
-			allFile(filter: { relativePath: { glob: "tracks/*" } }) {
-				edges {
-					node {
-						name
-						publicURL
-					}
-				}
-			}
-		}
-	`)
-	const { node = null } = data.allFile.edges.find(({ node }) => Math.floor(node.name) === props.trackConfig?.trackConfigIracingId) ?? {}
-	// console.log(props.trackName, props.trackConfigId)
 	return (
 		<div className={ styles.container }>
-			{ node?.publicURL &&
+			{ props.trackAsset &&
 					<div className={ styles.logo }>
 						<img 
-							src={node.publicURL}
+							src={`https://images-static.iracing.com${props.trackAsset.logo}`}
 							alt={ `${props.trackConfig?.trackName} logo` }
 						/>
 					</div>

@@ -20,8 +20,8 @@ exports.sourceNodes = async ({
 }, pluginOptions) => {
   const { createNode } = actions
   
+  // Create nodes for league members
   const league = await client.getLeague(2732, true)
-  
   league?.roster.forEach(driver => {
     createNode({
       ...driver,
@@ -33,4 +33,19 @@ exports.sourceNodes = async ({
       },
     })
   })          
+  
+  // Create nodes for track assets
+  const assets = await client.getTrackAssets()
+  if (assets)
+    Object.entries(assets).forEach(([trackId, data]) => {
+      createNode({
+        ...data,
+        id: createNodeId(`IracingTrackAsset-${trackId}`),
+        internal: {
+          type: 'IracingTrackAsset',
+          content: JSON.stringify(data),
+          contentDigest: createContentDigest(data),
+        },
+      })      
+    })
 }

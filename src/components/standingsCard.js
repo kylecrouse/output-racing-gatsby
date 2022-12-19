@@ -8,7 +8,7 @@ const StandingsCard = (props) => {
 			<div className={ styles.position }>
 				<span>{props.position}</span>
 			</div>
-			<DriverChip {...props.driver} link={false} showNumberArt={false} />
+			<DriverChip active={true} {...props.driver} link={false} showNumberArt={false} />
 			<div className={ styles.totalPoints }>
 				<b>{props.totalPoints}</b> pts
 			</div>

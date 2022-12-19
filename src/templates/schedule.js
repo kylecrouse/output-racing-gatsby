@@ -78,7 +78,14 @@ const ScheduleTemplate = props => {
 														to={ `/${props.uri.split('/')[1]}/results/${event.race.raceId}` } 
 														className={ styles.details }
 													>
-														<RaceChip {...event}/>
+														<RaceChip 
+															{...event} 
+															trackAsset={
+																event.trackConfig && props.data.assets.nodes.find(
+																	({ trackId }) => trackId === event.trackConfig.trackConfigIracingId
+																)
+															}
+														/>
 														<ResultsChip
 															counts={event.pointsCount === 'Y'}
 															results={
@@ -90,7 +97,14 @@ const ScheduleTemplate = props => {
 														/>
 													</Link>
 												: <div key={`schedule-${index}`} className={ styles.details }>
-														<RaceChip {...event}/>
+														<RaceChip 
+															{...event}
+															trackAsset={
+																event.trackConfig && props.data.assets.nodes.find(
+																	({ trackId }) => trackId === event.trackConfig.trackConfigIracingId
+																)
+															}
+														/>
 														<div className={ `${styles.info} hide-sm` }>
 															<div>
 																{ event.plannedTime
@@ -127,6 +141,16 @@ export const query = graphql`
 	query ScheduleQuery(
 		$seriesId: Int
 	) {
+		assets: allIracingTrackAsset {
+			nodes {
+				trackId: track_id
+				logo
+				map: track_map
+				layers: track_map_layers {
+					active
+				}
+			}
+		}
 		series: mysqlSeries(
 			series_id: {eq: $seriesId}
 		) {

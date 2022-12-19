@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { useStaticQuery, graphql } from "gatsby"
 import moment from 'moment-timezone'
 import Cars from '../components/cars'
 import RaceChip from '../components/raceChip'
@@ -9,20 +8,6 @@ import nightowlLogo from '../images/nightowl-logo.svg'
 import * as styles from './scheduleCard.module.scss'
 
 const ScheduleCard = (props) => {
-	const data = useStaticQuery(graphql`
-		{
-			maps: allFile(filter: { relativePath: { glob: "tracks/*_map.png" } }) {
-				edges {
-					node {
-						name
-						publicURL
-					}
-				}
-			}
-		}
-	`)
-	// const image = `https://images-static.iracing.com${props.folder}/${props.smallImage}`
-	const { node: mapNode = null } = data.maps.edges.find(({ node }) => node.name === `${props.trackConfigId}_map`) ?? {}
 	const date = moment(`${props.raceDate}T${props.raceTime ?? '21:00:00'}`).tz("America/Los_Angeles")
 	const getDuration = () => {
 		return moment.duration(date.diff(moment().tz("America/Los_Angeles")))
@@ -36,7 +21,6 @@ const ScheduleCard = (props) => {
 		}, 1000)
 		return () => clearTimeout(timer)
 	})
-	// console.log(props.trackName, props.trackConfigId)
 	return (
 		<div className={ `${styles.container} ${props.className}` }>
 			<div className={ styles.header }>
@@ -54,9 +38,9 @@ const ScheduleCard = (props) => {
 				</h3>
 			</div>
 			<RaceChip {...props}/>
-			{ mapNode?.publicURL &&
+			{ props.trackAsset &&
 					<div className={ styles.map }>
-						<img src={ mapNode.publicURL } alt="track map"/>
+						<img src={`${props.trackAsset.map}${props.trackAsset.layers.active}`} alt="track map"/>
 					</div>
 			}
 			{ props.race 
