@@ -163,6 +163,7 @@ exports.createPages = async ({ graphql, actions }) => {
 				nodes {
 					raceId: race_id
 					schedule {
+						chase
 						season {
 							seasonId: season_id
 							seasonName: season_name
@@ -185,17 +186,32 @@ exports.createPages = async ({ graphql, actions }) => {
 					}
 				}
 			}
-			series: allMysqlSeries(filter: {series_active: {eq: "Y"}}) {
+			series: allMysqlSeries(
+				filter: {series_active: {eq: "Y"}}
+				sort: {currentSeason: {schedules: {race_date: DESC}}}
+			) {
 				nodes {
 					seriesId: series_id
 					seriesName: series_name
-					currSeasonId: curr_season_id						
+					currSeasonId: curr_season_id	
+					currentSeason {
+						seasonId: season_id
+						seasonName: season_name
+						schedules {
+							raceDate: race_date
+							raceTime: race_time
+							chase
+							race {
+								raceId: race_id
+							}	
+						}	
+					}					
 				}	
 			}
 		}
 	`)
 		
-	data.series.nodes.forEach(({ seriesId, seriesName }) => {
+	data.series.nodes.forEach(({ seriesId, seriesName, currentSeason }) => {
 		seriesName = pathify(seriesName)
 		
 		createPage({
@@ -214,6 +230,27 @@ exports.createPages = async ({ graphql, actions }) => {
 				component: path.resolve(`src/templates/driver.js`),
 				context: { seriesId, seriesName, seasonName, custId },
 			})			
+		})
+		
+		createPage({
+			path: `${seriesName}/results`,
+			component: path.resolve(`src/templates/results.js`),
+			context: { 
+				seriesId, 
+				seriesName, 
+				seasonName: currentSeason.seasonName, 
+				seasonId: currentSeason.seasonId, 
+				raceId: currentSeason.schedules.reduce(
+					(recent, schedule) => {
+						const scheduleDate = new Date(`${schedule.raceDate.split('T')[0]}T${schedule.raceTime}`)
+						const recentDate = recent.raceDate ? new Date(`${recent.raceDate.split('T')[0]}T${recent.raceTime}`) : null
+						return schedule.race !== null && schedule.chase === 'N' && (!recentDate || scheduleDate.getTime() > recentDate?.getTime())
+							? schedule
+							: recent
+					}, 
+					{}
+				).race?.raceId
+			},
 		})
 
 		createPage({
@@ -246,18 +283,13 @@ exports.createPages = async ({ graphql, actions }) => {
 	})
 
 	data.races.nodes.forEach((node, index) => {
+		if (node.schedule.chase === 'Y') return
+		
 		const raceId = node.raceId
 					seriesId = node.schedule.season.series.seriesId,
 					seriesName = pathify(node.schedule.season.series.seriesName),
 					seasonName = pathify(node.schedule.season.seasonName),
 					seasonId = node.schedule.season.seasonId
-
-		// if (index === 0)
-		// 	createPage({
-		// 		path: `${seriesName}/results`,
-		// 		component: path.resolve(`src/templates/results.js`),
-		// 		context: { seriesId, seriesName, seasonName, seasonId, raceId },
-		// 	})
 
 		createPage({
 			path: `${seriesName}/results/${raceId}`,
