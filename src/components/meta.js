@@ -9,7 +9,6 @@ const depathify = string => string
 	.replace(/\w\S*/g, s => `${s.charAt(0).toUpperCase()}${s.substr(1)}`)
 
 const Head = props => {
-	console.log(props)
 	let { title, siteUrl } = useSiteMetadata(),
 			description = `An asphalt league for the late-night racer.`
 	if (props.location.pathname !== '/')

@@ -3,7 +3,7 @@ import { graphql } from 'gatsby'
 import Select, { components } from 'react-select'
 import Layout from '../components/layout'
 import Meta from '../components/meta'
-import { renderDriverChip } from '../components/driverChip'
+import { renderDriverChip as renderChipHelper } from '../components/driverChip'
 import Table from '../components/table'
 import * as styles from './standings.module.scss'
 
@@ -11,6 +11,8 @@ const StandingsTemplate = (props) => {
 	const [seasonId, setSeasonId] = React.useState(props.pageContext.seasonId)
 	const [totalRounds, setTotalRounds] = React.useState()
 	const [selectedRound, setSelectedRound] = React.useState()
+	
+	const renderDriverChip = (p, c) => renderChipHelper({ ...p, location: props.location }, c)
 	
 	const seasonOptions = React.useMemo(
 		() => props.data.seasons.nodes.map(

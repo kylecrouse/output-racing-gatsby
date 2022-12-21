@@ -47,6 +47,9 @@ thead th {
 	> div {
 		white-space: nowrap;
 	}
+	&.text-wrap > div {
+		white-space: normal;
+	}
 }
 
 thead th .sort-indicator {

@@ -2,7 +2,7 @@ import * as React from "react"
 import { graphql } from 'gatsby'
 import Select from 'react-select'
 import Meta from '../components/meta'
-import { renderDriverChip } from '../components/driverChip'
+import { renderDriverChip as renderChipHelper } from '../components/driverChip'
 import Layout from '../components/layout'
 import Table from '../components/table'
 import * as styles from './stats.module.scss'
@@ -21,6 +21,8 @@ const sortAlpha = (a, b) => {
 }
 
 const StatsTemplate = props => {
+	const renderDriverChip = (p, c) => renderChipHelper({ ...p, location: props.location }, c)
+	
 	const data = React.useMemo(
 		() => props.data.participants.nodes.filter(
 			(p) => p.driver.member !== null

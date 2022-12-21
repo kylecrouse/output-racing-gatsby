@@ -5,13 +5,15 @@ import moment from 'moment'
 import Layout from '../components/layout'
 import Meta from '../components/meta'
 import { Carousel, Slide } from '../components/carousel'
-import { renderDriverChip } from '../components/driverChip'
+import { renderDriverChip as renderChipHelper } from '../components/driverChip'
 import Table from '../components/table'
 import Video from '../components/video'
 import * as styles from './results.module.scss'
 
 const ResultsTemplate = (props) => {
 	const { race, carLogos } = props.data
+
+	const renderDriverChip = (p, c) => renderChipHelper({ ...p, location: props.location }, c)
 	
 	// Get track logo
 	const trackAsset = React.useMemo(
@@ -50,8 +52,12 @@ const ResultsTemplate = (props) => {
 			{
 				header: null,
 				id: 'finishPos',
-				accessorKey: 'finishPos',
-				className: 'cell-position'
+				accessorFn: (row) => row.provisional === 'Y' ? 99 : row.finishPos,
+				className: 'cell-position',
+				cell: ({ getValue }) => {
+					const value = getValue()
+					return value === 99 ? null : value
+				}
 			},
 			{
 				header: null,
@@ -190,9 +196,9 @@ const ResultsTemplate = (props) => {
 				}
 			},
 			{
-				header: 'Average Position',
+				header: `Average Position`,
 				accessorFn: (row) => row.loopstat?.avgPos,
-				className: 'hide-sm',
+				className: 'hide-sm text-wrap',
 				cell: ({ getValue }) => {
 					const value = getValue()
 					if (!value) return 0
@@ -204,7 +210,7 @@ const ResultsTemplate = (props) => {
 			{
 				header: 'Total Passes',
 				accessorFn: (row) => row.loopstat?.passes,
-				className: 'hide-sm',
+				className: 'hide-sm text-wrap',
 				cell: ({ getValue }) => {
 					const value = getValue()
 					return value !== 0 && value === bestPasses?.loopstat?.passes
@@ -215,7 +221,7 @@ const ResultsTemplate = (props) => {
 			{
 				header: 'Quality Passes',
 				accessorFn: (row) => row.loopstat?.qualityPasses,
-				className: 'hide-sm',
+				className: 'hide-sm text-wrap',
 				cell: ({ getValue }) => {
 					const value = getValue()
 					return value !== 0 && value === bestQualityPasses?.loopstat?.qualityPasses
@@ -226,7 +232,7 @@ const ResultsTemplate = (props) => {
 			{
 				header: 'Closing Passes',
 				accessorFn: (row) => row.loopstat?.closingPasses,
-				className: 'hide-sm',
+				className: 'hide-sm text-wrap',
 				cell: ({ getValue }) => {
 					const value = getValue()
 					return value !== 0 && value === bestClosingPasses?.loopstat?.closingPasses
@@ -260,7 +266,7 @@ const ResultsTemplate = (props) => {
 			{
 				header: 'Fast Laps',
 				accessorFn: (row) => row.loopstat?.numFastLap,
-				className: 'hide-sm',
+				className: 'hide-sm text-wrap',
 				cell: ({ getValue }) => {
 					const value = getValue()
 					return value !== 0 && value === bestNumFastLap?.loopstat?.numFastLap
@@ -271,7 +277,7 @@ const ResultsTemplate = (props) => {
 			{
 				header: 'Fast Lap',
 				accessorKey: 'fastestLapTime',
-				className: 'hide-sm',
+				className: 'hide-sm text-wrap',
 				cell: ({ getValue, table }) => {
 					const { rows } = table.getRowModel()
 					const value = getValue()
@@ -288,7 +294,7 @@ const ResultsTemplate = (props) => {
 			{
 				header: 'Qual Lap',
 				accessorKey: 'qualifyTime',
-				className: 'hide-sm',
+				className: 'hide-sm text-wrap',
 				cell: ({ getValue, table }) => {
 					const { rows } = table.getRowModel()
 					const value = getValue()
@@ -364,7 +370,7 @@ const ResultsTemplate = (props) => {
 							disableSortBy={true} 
 							scrolling={true}
 							initialState={{
-								sortBy: [{ id: 'finishPos', desc: false }],
+								sorting: [{ id: 'finishPos', desc: false }],
 								hiddenColumns: columns
 									.map(({ id, accessor }) => id || accessor)
 									.filter(

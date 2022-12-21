@@ -12,7 +12,7 @@ const DriverChip = (props) => {
 								&& <NumberArt number={props.driverNumber} image={props.driverNumberArt.file.url}/>				
 			}
 			{ props.active && props.link !== false
-				? <Link to={`drivers/${props.driverName.replace(/\s/g, '-').toLowerCase()}/`}>
+				? <Link to={`/${props.location?.pathname.split('/')[1]}/drivers/${props.driverName.replace(/\s/g, '-').toLowerCase()}/`}>
 						{ renderName(props) }
 					</Link>
 				: renderName(props)
@@ -49,9 +49,11 @@ const renderName = (props) => {
 	)
 }
 
-export const renderDriverChip = ({ driver, seriesId, link }, children = null) => {
+export const renderDriverChip = (props, children = null) => {
+	const { driver, seriesId, link } = props
 	return (
 		<DriverChip
+			location={props.location}
 			active={!!driver.member}
 			driverName={driver.member?.driverNickName ?? driver.driverName}
 			carNumber={driver.member?.carNumber ?? driver.driverNumber}
