@@ -3,6 +3,7 @@ import { Link, graphql } from 'gatsby'
 import { BLOCKS, MARKS } from "@contentful/rich-text-types"
 import { renderRichText } from "gatsby-source-contentful/rich-text"
 import Layout from '../components/layout'
+import Meta from '../components/meta'
 import Tabs from '../components/tabs'
 import * as styles from './rules.module.css'
 
@@ -173,3 +174,7 @@ export const query = graphql`
 `
 
 export default RulesPage
+
+export const Head = (props) => (
+	<Meta {...props}/>
+)

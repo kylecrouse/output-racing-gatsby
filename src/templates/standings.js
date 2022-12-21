@@ -2,6 +2,7 @@ import * as React from 'react'
 import { graphql } from 'gatsby'
 import Select, { components } from 'react-select'
 import Layout from '../components/layout'
+import Meta from '../components/meta'
 import { renderDriverChip } from '../components/driverChip'
 import Table from '../components/table'
 import * as styles from './standings.module.scss'
@@ -449,3 +450,7 @@ export const query = graphql`
 `
 
 export default StandingsTemplate
+
+export const Head = (props) => (
+	<Meta {...props}/>
+)

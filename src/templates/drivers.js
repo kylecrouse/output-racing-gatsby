@@ -1,6 +1,7 @@
 import * as React from "react"
 import { graphql } from 'gatsby'
 import Layout from "../components/layout"
+import Meta from '../components/meta'
 import DriverCard from '../components/driverCard'
 
 const DriversPage = (props) => {
@@ -85,3 +86,7 @@ export const query = graphql`
 `
 
 export default DriversPage
+
+export const Head = (props) => (
+	<Meta {...props}/>
+)

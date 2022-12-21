@@ -1,5 +1,6 @@
 import * as React from "react"
 import Layout from '../components/layout'
+import Meta from '../components/meta'
 
 const ProtestPage = (props) => {
 	return (
@@ -18,3 +19,7 @@ const ProtestPage = (props) => {
 }
 
 export default ProtestPage
+
+export const Head = (props) => (
+	<Meta {...props}/>
+)

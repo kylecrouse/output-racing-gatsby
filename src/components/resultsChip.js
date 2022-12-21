@@ -11,6 +11,7 @@ const ResultsChip = (props) => {
 						<ResultItem
 							key={`result-${index}`}
 							counts={props.counts}
+							link={props.link ?? true}
 							{...item}
 							index={index}
 						/>

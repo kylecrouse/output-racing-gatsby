@@ -3,6 +3,7 @@ import { Link, Script, graphql } from 'gatsby'
 import axios from 'axios'
 import { Carousel, Slide } from '../components/carousel'
 import Layout from '../layouts/home'
+import Meta from '../components/meta'
 import ScheduleCard from '../components/scheduleCard'
 import StandingsCard from '../components/standingsCard'
 import Video from '../components/video'
@@ -291,4 +292,6 @@ export const query = graphql`
 
 export default IndexPage
 
-export { Head } from '../components/meta'
+export const Head = (props) => (
+  <Meta {...props}/>
+)

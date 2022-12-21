@@ -1,5 +1,6 @@
 import * as React from "react"
 import Layout from '../components/layout'
+import Meta from '../components/meta'
 
 const ApplyPage = (props) => {
 	return (
@@ -18,3 +19,7 @@ const ApplyPage = (props) => {
 }
 
 export default ApplyPage
+
+export const Head = (props) => (
+	<Meta {...props}/>
+)

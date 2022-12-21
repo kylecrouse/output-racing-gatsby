@@ -1,6 +1,7 @@
 import * as React from "react"
 import { graphql } from 'gatsby'
 import Select from 'react-select'
+import Meta from '../components/meta'
 import { renderDriverChip } from '../components/driverChip'
 import Layout from '../components/layout'
 import Table from '../components/table'
@@ -741,3 +742,7 @@ export const query = graphql`
 `
 
 export default StatsTemplate
+
+export const Head = (props) => (
+	<Meta {...props}/>
+)

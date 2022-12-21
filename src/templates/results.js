@@ -3,6 +3,7 @@ import { graphql } from "gatsby"
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import moment from 'moment'
 import Layout from '../components/layout'
+import Meta from '../components/meta'
 import { Carousel, Slide } from '../components/carousel'
 import { renderDriverChip } from '../components/driverChip'
 import Table from '../components/table'
@@ -15,7 +16,7 @@ const ResultsTemplate = (props) => {
 	// Get track logo
 	const trackAsset = React.useMemo(
 		() => props.data.assets.nodes.find(
-			({ trackId }) => trackId === race.schedule.trackConfig.trackConfigId
+			({ trackId }) => trackId === race.schedule.trackConfig?.trackConfigId
 		) ?? {},
 		[props.data.assets, race.schedule.trackConfig]
 	)
@@ -195,7 +196,7 @@ const ResultsTemplate = (props) => {
 				cell: ({ getValue }) => {
 					const value = getValue()
 					if (!value) return 0
-					return value === bestAvgPos.loopstat?.avgPos
+					return value === bestAvgPos?.loopstat?.avgPos
 						? <b>{ (value + 1).toFixed(1) }</b>
 						: value !== -1 ? (value + 1).toFixed(1) : '-'
 				}
@@ -206,7 +207,7 @@ const ResultsTemplate = (props) => {
 				className: 'hide-sm',
 				cell: ({ getValue }) => {
 					const value = getValue()
-					return value !== 0 && value === bestPasses.loopstat?.passes
+					return value !== 0 && value === bestPasses?.loopstat?.passes
 						? <b>{ value }</b>
 						: value ?? 0
 				}
@@ -217,7 +218,7 @@ const ResultsTemplate = (props) => {
 				className: 'hide-sm',
 				cell: ({ getValue }) => {
 					const value = getValue()
-					return value !== 0 && value === bestQualityPasses.loopstat?.qualityPasses
+					return value !== 0 && value === bestQualityPasses?.loopstat?.qualityPasses
 						? <b>{ value }</b>
 						: value ?? 0
 				}
@@ -228,7 +229,7 @@ const ResultsTemplate = (props) => {
 				className: 'hide-sm',
 				cell: ({ getValue }) => {
 					const value = getValue()
-					return value !== 0 && value === bestClosingPasses.loopstat?.closingPasses
+					return value !== 0 && value === bestClosingPasses?.loopstat?.closingPasses
 						? <b>{ value }</b>
 						: value ?? 0
 				}
@@ -262,7 +263,7 @@ const ResultsTemplate = (props) => {
 				className: 'hide-sm',
 				cell: ({ getValue }) => {
 					const value = getValue()
-					return value !== 0 && value === bestNumFastLap.loopstat?.numFastLap
+					return value !== 0 && value === bestNumFastLap?.loopstat?.numFastLap
 						? <b>{ value }</b>
 						: value ?? 0
 				}
@@ -347,7 +348,7 @@ const ResultsTemplate = (props) => {
 								<h4 className="page-title">Results</h4>
 								<h5 className="page-subtitle">
 									<span>{moment.parseZone(race.schedule.raceDate).format('DD MMM YYYY')}</span>
-									<span>{race.schedule.trackConfig.trackName}</span>
+									<span>{race.schedule.trackConfig?.trackName}</span>
 								</h5>
 							</div>
 							{ trackAsset &&
@@ -697,3 +698,7 @@ export const query = graphql`
 `
 
 export default ResultsTemplate
+
+export const Head = (props) => (
+	<Meta {...props}/>
+)

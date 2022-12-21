@@ -9,10 +9,13 @@ const depathify = string => string
 	.replace(/\w\S*/g, s => `${s.charAt(0).toUpperCase()}${s.substr(1)}`)
 
 const Head = props => {
+	console.log(props)
 	let { title, siteUrl } = useSiteMetadata(),
 			description = `An asphalt league for the late-night racer.`
-	if (props.uri !== '/')
-		title += ` | ${depathify(props.uri)} | ${depathify(props.pageContext.seasonName)}`
+	if (props.location.pathname !== '/')
+		title += ` | ${depathify(props.location.pathname)}`
+	if (props.pageContext.seasonName)
+		title += ` | ${depathify(props.pageContext.seasonName)}`
 	return (
 		<>
 			<title>{title}</title>

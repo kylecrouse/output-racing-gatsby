@@ -8,7 +8,7 @@ import nightowlLogo from '../images/nightowl-logo.svg'
 import * as styles from './scheduleCard.module.scss'
 
 const ScheduleCard = (props) => {
-	const date = moment(`${props.raceDate}T${props.raceTime ?? '21:00:00'}`).tz("America/Los_Angeles")
+	const date = moment(`${props.raceDate.split('T')[0]}T${props.raceTime ?? '21:00:00'}`).tz("America/Los_Angeles")
 	const getDuration = () => {
 		return moment.duration(date.diff(moment().tz("America/Los_Angeles")))
 	}

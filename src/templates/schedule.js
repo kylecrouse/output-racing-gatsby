@@ -3,6 +3,7 @@ import { graphql, Link } from 'gatsby'
 import moment from 'moment'
 import Select from 'react-select'
 import Layout from '../components/layout'
+import Meta from '../components/meta'
 import RaceChip from '../components/raceChip'
 import ResultsChip from '../components/resultsChip'
 import * as styles from './schedule.module.scss'
@@ -93,6 +94,7 @@ const ScheduleTemplate = props => {
 																	.sort((a, b) => (a.finishPos ?? 999) - (b.finishPos ?? 999))
 																	.slice(0, 3)
 															}
+															link={false}
 															hideSm={true}
 														/>
 													</Link>
@@ -211,3 +213,7 @@ export const query = graphql`
 `
 
 export default ScheduleTemplate
+
+export const Head = (props) => (
+	<Meta {...props}/>
+)

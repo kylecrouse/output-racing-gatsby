@@ -7,6 +7,7 @@ import { Carousel, Slide } from '../components/carousel'
 import DriverChip from '../components/driverChip'
 import Layout from '../components/layout'
 import License from '../components/license'
+import Meta from '../components/meta'
 import Table from '../components/table'
 import * as styles from './driver.module.scss'
 
@@ -916,3 +917,7 @@ export const query = graphql`
 `
 
 export default DriverTemplate
+
+export const Head = (props) => (
+	<Meta {...props}/>
+)
