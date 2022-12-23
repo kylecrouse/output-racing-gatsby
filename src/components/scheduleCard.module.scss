@@ -68,7 +68,7 @@
 		color: var(--highlight-opposite-color);
 		font-family: obvia-expanded, sans-serif;
 		font-style: italic;
-		font-size: 0.8vw;
+		font-size: 0.6vw;
 		font-weight: 900;
 		line-height: 1;
 		margin: 0;
@@ -79,13 +79,21 @@
 		z-index: 1;
 		> span {
 			position: relative;
-			top: 0.5rem;
+			top: 0.75rem;
 			z-index: 2;
 			span {
+				border-top: 1px solid white;
+				display: inline-block;
 				font-size: 1.5vw;
 				line-height: 1.4;
+				margin-top: 0.4rem;
+				padding-top: 0.2rem;
 				white-space: nowrap;
 				word-spacing: 0.3rem;
+				&.chase {
+					font-size: 0.8vw;
+					padding-top: 0.3rem;
+				}
 			}
 		}
 	}

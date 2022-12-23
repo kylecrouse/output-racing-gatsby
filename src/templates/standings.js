@@ -308,10 +308,10 @@ const StandingsTemplate = (props) => {
 					<div className="column col-8 col-xl-12 col-mx-auto content">
 				
 						<hgroup className="page-header columns">
-							<div className="column col-7">
+							<div className="column col-7 col-lg-12">
 								<h2 className="page-title">Standings</h2>
 								<h3 className="page-subtitle columns" style={{ alignItems: "baseline" }}>
-									<div className="col-7" style={{ width: "calc(50% - 1rem)", marginRight: "1rem"}}>
+									<div className="col-7 col-lg-12" style={{ width: "calc(50% - 1rem)", marginRight: "1rem"}}>
 									<Select 
 										className={styles.selectContainer}
 										styles={{
@@ -328,7 +328,7 @@ const StandingsTemplate = (props) => {
 										defaultValue={seasonOptions[defaultValueIndex]}
 									/>
 									</div>
-									<div className="col-5" style={{ borderLeft: "1px solid #ccc", padding: "0 0 0 1rem" }}>
+									<div className="col-5 col-lg-12" style={{ borderLeft: "1px solid #ccc", padding: "0 0 0 1rem" }}>
 										<Select 
 											components={{ SingleValue }}
 											className={styles.selectContainer}

@@ -9,9 +9,9 @@ import StandingsCard from '../components/standingsCard'
 import Video from '../components/video'
 import * as styles from './index.module.scss'
 import outputLogo from '../images/output-logo.svg'
-import outputImage from '../images/output-screenshot-trucks.png'
+import outputImage from '../images/output-screenshot-cup.png'
 import nightowlLogo from '../images/nightowl-logo.svg'
-import nightOwlImage from '../images/night-owl-screenshot.png'
+import nightOwlImage from '../images/night-owl-screenshot-gt4.png'
 import promo from '../images/ORL-Season-2-promo.mp4'
 
 const channel = "aussie_sim_commentator"
@@ -48,6 +48,7 @@ const IndexPage = props => {
   const { cards = [] } = React.useMemo(
     () => props.data.schedules.nodes.reduce(
       (a, node) => {
+        const date = new Date(`${node.raceDate.split('T')[0]}T${node.raceTime}`)
         if (node.chase === 'Y')
           a.chase.set(node.season.seasonId, node.eventName)
         else
@@ -59,11 +60,7 @@ const IndexPage = props => {
           node.trackAsset = props.data.assets.nodes.find(
             ({ trackId }) => trackId === node.trackConfig.trackId
           )
-        if (
-          node.season.seasonId === node.season.series.currSeasonId
-            && node.chase !== 'Y'
-            && node.race === null
-        )
+        if (date > Date.now() && node.chase !== 'Y' && node.race === null)
           a.cards = [...a.cards, (
             <Slide key={`event-${node.scheduleId}`}>
               <ScheduleCard 
@@ -72,6 +69,7 @@ const IndexPage = props => {
                 countdown={true}
                 className={pathify(node.season.series.seriesName)}
                 seriesId={node.season.seriesId}
+                seasonName={node.season.seasonName}
                 raceNumber={a.count.get(node.season.seasonId)}
               />
             </Slide>
@@ -193,7 +191,8 @@ const IndexPage = props => {
               { true
                   ? (
                     <Carousel options={{ 
-                      type: "carousel", 
+                      type: "slider", 
+                      rewind: false,
                       perView: 1
                     }}>
                       { cards }

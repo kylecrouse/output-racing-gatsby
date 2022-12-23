@@ -30,10 +30,10 @@ const ScheduleCard = (props) => {
 				}
 				<h3>
 					<span>
-						{ props.title
-								? props.title
-								: <span>{`Round ${props.raceNumber}`}</span>
-						}
+						{`${props.seasonName}\u000a`}
+						<span className={props.title ? 'chase' : 'round'}>
+							{ props.title ?? `Round ${props.raceNumber}` }
+						</span>
 					</span>
 				</h3>
 			</div>
