@@ -282,7 +282,10 @@ const StandingsTemplate = (props) => {
 				id: 'rating',
 				header: 'Avg Rating',
 				accessorFn: (row) => row.loopstat?.rating ?? 0,
-				aggregationFn: 'mean',
+				aggregationFn: (id, rows) => {
+					rows = rows.filter((row) => row.getValue(id) > 0)
+					return rows.reduce((sum, row) => sum + row.getValue(id), 0) / rows.length
+				},
 				className: 'hide-sm',
 				aggregatedCell: ({ getValue }) => getValue()?.toFixed(1) ?? 0
 			},
