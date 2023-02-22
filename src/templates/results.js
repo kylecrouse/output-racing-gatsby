@@ -168,9 +168,9 @@ const ResultsTemplate = (props) => {
 							? moment.utc(moment.duration(race.raceAvgTime * race.raceLaps, 's').as('milliseconds'))
 									.format('HH:mm:ss')
 							: (status.toLowerCase() === 'running')
-								? `+${race.raceLaps - lapsCompleted} lap${race.raceLaps - lapsCompleted > 1 ? 's' : ''}`
+								? `+${race.raceLaps - lapsCompleted}L`
 								: provisional === 'Y'
-									? 'provisional'
+									? 'DNS'
 									: 'DNF'
 				}
 			},
