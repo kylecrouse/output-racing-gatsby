@@ -2,7 +2,7 @@ import * as React from 'react';
 import './nav.scss'
 import logo from '../images/logo.png'
 import outputLogo from '../images/output-logo.svg'
-import nightowlLogo from '../images/nightowl-logo.svg'
+import nightowlLogo from '../images/reverb-logo.svg'
 
 const Nav = (props) => {
 	return (
@@ -13,8 +13,8 @@ const Nav = (props) => {
 			<a href="/output-series/schedule" className="output-logo">
 				<img src={outputLogo} alt="Output Series"/>
 			</a>
-			<a href="/night-owl-series/schedule" className="nightowl-logo">
-				<img src={nightowlLogo} alt="Night Owl Series"/>
+			<a href="/reverb-series/schedule" className="nightowl-logo">
+				<img src={nightowlLogo} alt="Reverb Series"/>
 			</a>
 		</section>
 	)

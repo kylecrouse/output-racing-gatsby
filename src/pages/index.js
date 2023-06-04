@@ -10,7 +10,7 @@ import Video from '../components/video'
 import * as styles from './index.module.scss'
 import outputLogo from '../images/output-logo.svg'
 import outputImage from '../images/output-screenshot-cup.png'
-import nightowlLogo from '../images/nightowl-logo.svg'
+import nightowlLogo from '../images/reverb-logo.svg'
 import nightOwlImage from '../images/night-owl-screenshot-gt4.png'
 import promo from '../images/ORL-Season-2-promo.mp4'
 
@@ -92,8 +92,8 @@ const IndexPage = props => {
             </div>
             <div className={styles.sectionContent}>
               { node.seriesId === 8100
-                  ? <Link to="/night-owl-series/schedule" className={styles.seriesLogo}>
-                      <img src={nightowlLogo} alt="Night Owl Series"/>
+                  ? <Link to="/reverb-series/schedule" className={styles.seriesLogo}>
+                      <img src={nightowlLogo} alt="Reverb Series"/>
                     </Link>
                   : <Link to="/output-series/schedule" className={styles.seriesLogo}>
                       <img src={outputLogo} alt="Output Series"/>
@@ -101,7 +101,7 @@ const IndexPage = props => {
               }
               { node.seriesId === 8100
                   ? <p>
-                      Output Racing League's road racing series for drivers of all skill levels. Congratulations to James Watson for closing out 2022 with the season 4 championship!<br/><br/>2023 Season 1 kicks off in the new year in GT4 cars with a small multi-class field of AI racers in TCRs. Races are held on Thursday nights with a schedule that is budget-friendly to Output's Tuesday night drivers. <Link to="/apply" className={`${styles.btn} ${styles.btnPrimary}`}><span>Apply now</span></Link>
+                      Output Racing League's new Thursday night short track series for west coast and late night racers. Join our tight-knit community for exciting weekly fender-to-fender racing using the new late model stock car from iRacing.<Link to="/apply" className={`${styles.btn} ${styles.btnPrimary}`}><span>Apply now</span></Link>
                     </p>
                   : <p>
                       Output Racing League's flagship Tuesday late-night NASCAR series. Congratulations once again to Thomas Harmon for winning the 2022 season 2 championship over Matt Burgess and James Watson!<br/><br/>For 2023 the Output Series will be back in the Next Gen Cup Cars starting in February with the Daytona 500. Come join our clean and competitive community! <Link to="/apply" className={`${styles.btn} ${styles.btnPrimary}`}><span>Apply now</span></Link>

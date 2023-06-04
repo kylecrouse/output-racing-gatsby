@@ -4,7 +4,7 @@ import Cars from '../components/cars'
 import RaceChip from '../components/raceChip'
 import ResultsChip from '../components/resultsChip'
 import outputLogo from '../images/output-logo.svg'
-import nightowlLogo from '../images/nightowl-logo.svg'
+import nightowlLogo from '../images/reverb-logo.svg'
 import * as styles from './scheduleCard.module.scss'
 
 const ScheduleCard = (props) => {
@@ -25,8 +25,8 @@ const ScheduleCard = (props) => {
 		<div className={ `${styles.container} ${props.className}` }>
 			<div className={ styles.header }>
 				{ props.seriesId === 8100
-						? <img src={nightowlLogo} alt="Night Owl Series"/>
-						: <img src={outputLogo} alt="Night Owl Series"/>
+						? <img src={nightowlLogo} alt="Reverb Series"/>
+						: <img src={outputLogo} alt="Output Series"/>
 				}
 				<h3>
 					<span>

@@ -4,7 +4,7 @@ import './navbar.scss'
 import './nav.scss'
 import logo from '../images/logo.png'
 import outputLogo from '../images/output-logo.svg'
-import nightowlLogo from '../images/nightowl-logo.svg'
+import nightowlLogo from '../images/reverb-logo.svg'
 
 const Navbar = (props) => {
 	return (
@@ -19,8 +19,8 @@ const Navbar = (props) => {
 							<Link to="/output-series/schedule" className={`output-logo ${props.series === 'output-series' ? 'hide-sm' : ''}`}>
 								<img src={outputLogo} alt="Output Series"/>
 							</Link>
-							<Link to="/night-owl-series/schedule" className={`nightowl-logo ${props.series === 'night-owl-series' ? 'hide-sm' : ''}`}>
-								<img src={nightowlLogo} alt="Night Owl Series"/>
+							<Link to="/reverb-series/schedule" className={`nightowl-logo ${props.series === 'reverb-series' ? 'hide-sm' : ''}`}>
+								<img src={nightowlLogo} alt="Reverb Series"/>
 							</Link>
 						</section>	
 						<section className="navbar-section">
@@ -48,9 +48,9 @@ const Navbar = (props) => {
 					<div className="subnav columns col-gapless">
 						<div className="column col-8 col-xl-10 col-lg-12 col-mx-auto col-gapless">
 							<div className="subnav-section">
-								{	props.series === 'night-owl-series'
-										? (	<Link to="/night-owl-series/schedule" className="nightowl-logo">
-													<img src={nightowlLogo} alt="Night Owl Series"/>
+								{	props.series === 'reverb-series'
+										? (	<Link to="/reverb-series/schedule" className="nightowl-logo">
+													<img src={nightowlLogo} alt="Reverb Series"/>
 												</Link>
 											)
 										: (	<Link to="/output-series/schedule" className="output-logo">

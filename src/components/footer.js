@@ -3,7 +3,7 @@ import { Link } from 'gatsby'
 import './footer.css'
 import logo from '../images/logo.png'
 import outputLogo from '../images/output-logo.svg'
-import nightOwlLogo from '../images/nightowl-logo.svg'
+import nightOwlLogo from '../images/reverb-logo.svg'
 
 const Footer = (props) => {
 	return (
@@ -35,20 +35,20 @@ const Footer = (props) => {
 								</Link>
 							</nav>
 						<hr/>
-							<Link to="/night-owl-series/schedule" className="night-owl-logo">
+							<Link to="/reverb-series/schedule" className="reverb-logo">
 								<img src={nightOwlLogo} alt="Night Owl Series"/>
 							</Link>		
 							<nav className="footer-nav">
-								<Link to={`/night-owl-series/drivers`}>
+								<Link to={`/reverb-series/drivers`}>
 									<span>Drivers</span>
 								</Link>
-								<Link to={`/night-owl-series/schedule`}>
+								<Link to={`/reverb-series/schedule`}>
 									<span>Schedule</span>
 								</Link>
-								<Link to={`/night-owl-series/standings`}>
+								<Link to={`/reverb-series/standings`}>
 									<span>Standings</span>
 								</Link>
-								<Link to={`/night-owl-series/stats`}>
+								<Link to={`/reverb-series/stats`}>
 									<span>Stats</span>
 								</Link>
 							</nav>

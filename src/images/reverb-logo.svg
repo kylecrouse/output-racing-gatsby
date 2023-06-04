@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1329.45 308.11">
+  <defs>
+    <style>
+      .cls-1 {
+        font-family: ZeroAthletics, 'Zero Athletics';
+        font-size: 100px;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #231f20;
+      }
+
+      .cls-2 {
+        font-family: FullPack2025, 'Full Pack 2025';
+        font-size: 220px;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <text class="cls-2" transform="translate(32.01 199.38)"><tspan x="0" y="0">REVERB</tspan></text>
+    <g>
+      <text class="cls-1" transform="translate(510.13 291.61) scale(.93) skewX(-22)"><tspan x="0" y="0">SERIES</tspan></text>
+      <text class="cls-1" transform="translate(510.13 291.61) scale(.93) skewX(-22)"><tspan x="0" y="0">SERIES</tspan></text>
+    </g>
+  </g>
+</svg>
