@@ -10,7 +10,7 @@ const Navbar = (props) => {
 					<div className="column col-8 col-xl-10 col-lg-12 col-mx-auto">
 						<img src={logo} alt="Output Racing"/>
 						<div className={styles.tagline}>
-							<p>An Asphalt League for the Late-Night Racer</p>
+							<p>An Asphalt Oval League for the Late-Night Racer</p>
 						</div>
 					</div>
 				</div>
