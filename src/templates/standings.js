@@ -7,10 +7,9 @@ import { renderDriverChip as renderChipHelper } from '../components/driverChip'
 import Table from '../components/table'
 import * as styles from './standings.module.scss'
 
+const pathify = (string) => string.replace(/[:-]/g, '').replace(/\s+/g, '-').toLowerCase()
+
 const StandingsTemplate = (props) => {
-	const [seasonId, setSeasonId] = React.useState(props.pageContext.seasonId)
-	const [totalRounds, setTotalRounds] = React.useState()
-	const [selectedRound, setSelectedRound] = React.useState()
 	
 	const renderDriverChip = (p, c) => renderChipHelper({ ...p, location: props.location }, c)
 	
@@ -24,13 +23,20 @@ const StandingsTemplate = (props) => {
 		[props.data.seasons]
 	)
 	
-	const defaultValueIndex = React.useMemo(
-		() => seasonOptions.findIndex(
-			({ value }) => value === props.data.series.currSeasonId
-		),
-		[seasonOptions, props.data.series]
-	)
+  const defaultValueIndex = React.useMemo(
+    () => {
+      const index = seasonOptions.findIndex(({ label }) => window.location.hash === `#${pathify(label)}`)
+      return (index >= 0) 
+        ? index 
+        : seasonOptions.findIndex(({ value }) => value === props.data.series.currSeasonId)
+    },
+    [seasonOptions, props.data.series.currSeasonId]
+  )
 	
+	const [seasonId, setSeasonId] = React.useState(seasonOptions[defaultValueIndex].value)
+	const [totalRounds, setTotalRounds] = React.useState()
+	const [selectedRound, setSelectedRound] = React.useState()
+		
 	const season = React.useMemo(
 		() => props.data.seasons.nodes.find(
 			(season) => season.seasonId === seasonId
@@ -325,7 +331,10 @@ const StandingsTemplate = (props) => {
 											})
 										}}
 										onChange={
-											(selected) => setSeasonId(selected.value)
+											(selected) => {
+												setSeasonId(selected.value)
+												window.history.pushState({ seasonId: selected.value }, '', `standings#${pathify(selected.label)}`)
+											}
 										}
 										options={seasonOptions} 
 										defaultValue={seasonOptions[defaultValueIndex]}
@@ -347,7 +356,7 @@ const StandingsTemplate = (props) => {
 												})
 											}}
 											onChange={
-												(selected) => setSelectedRound(selected.value)
+												(selected) => setSeasonId(selected.value)
 											}
 											options={roundOptions}
 											value={roundOptions[roundOptions.length - selectedRound]}
