@@ -8,9 +8,9 @@ import RaceChip from '../components/raceChip'
 import ResultsChip from '../components/resultsChip'
 import * as styles from './schedule.module.scss'
 
-const ScheduleTemplate = props => {
-	const [seasonId, setSeasonId] = React.useState(props.pageContext.seasonId)
+const pathify = (string) => string.replace(/[:-]/g, '').replace(/\s+/g, '-').toLowerCase()
 
+const ScheduleTemplate = props => {
 	const seasonOptions = React.useMemo(
 		() => props.data.seasons.nodes.map(
 			(node) => ({
@@ -20,14 +20,15 @@ const ScheduleTemplate = props => {
 		), 
 		[props.data.seasons]
 	)
-	
-	const defaultValueIndex = React.useMemo(
-		() => seasonOptions.findIndex(
-			({ value }) => value === props.data.series.currSeasonId
-		),
-		[seasonOptions, props.data.series]
-	)
-	
+
+  const defaultValueIndex = React.useMemo(
+    () => seasonOptions.findIndex(({ label }) => window.location.hash === `#${pathify(label)}`)
+      ?? seasonOptions.findIndex(({ value }) => props.data.series.currSeasonId),
+    [seasonOptions, props.data.series.currSeasonId]
+  )
+
+  const [seasonId, setSeasonId] = React.useState(seasonOptions[defaultValueIndex].value)
+
 	const season = React.useMemo(
 		() => props.data.seasons.nodes.find(
 			(season) => season.seasonId === seasonId
@@ -56,7 +57,10 @@ const ScheduleTemplate = props => {
 											})
 										}}
 										onChange={
-											(selected) => setSeasonId(selected.value)
+											(selected) => {
+												setSeasonId(selected.value)
+												window.history.pushState({ seasonId: selected.value }, '', `schedule#${pathify(selected.label)}`)
+											}
 										}
 										options={seasonOptions} 
 										defaultValue={seasonOptions[defaultValueIndex]}
