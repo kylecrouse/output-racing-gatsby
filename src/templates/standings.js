@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { graphql } from 'gatsby'
+import { graphql, navigate } from 'gatsby'
 import Select, { components } from 'react-select'
 import Layout from '../components/layout'
 import Meta from '../components/meta'
@@ -25,7 +25,7 @@ const StandingsTemplate = (props) => {
 	
   const defaultValueIndex = React.useMemo(
     () => {
-      const index = seasonOptions.findIndex(({ label }) => window.location.hash === `#${pathify(label)}`)
+      const index = seasonOptions.findIndex(({ label }) => props.location.hash === `#${pathify(label)}`)
       return (index >= 0) 
         ? index 
         : seasonOptions.findIndex(({ value }) => value === props.data.series.currSeasonId)
@@ -333,7 +333,7 @@ const StandingsTemplate = (props) => {
 										onChange={
 											(selected) => {
 												setSeasonId(selected.value)
-												window.history.pushState({ seasonId: selected.value }, '', `standings#${pathify(selected.label)}`)
+												navigate(`standings#${pathify(selected.label)}`)
 											}
 										}
 										options={seasonOptions} 

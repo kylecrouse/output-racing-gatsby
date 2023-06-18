@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { graphql, Link } from 'gatsby'
+import { graphql, Link, navigate } from 'gatsby'
 import moment from 'moment'
 import Select from 'react-select'
 import Layout from '../components/layout'
@@ -23,7 +23,7 @@ const ScheduleTemplate = props => {
 
   const defaultValueIndex = React.useMemo(
     () => {
-      const index = seasonOptions.findIndex(({ label }) => window.location.hash === `#${pathify(label)}`)
+      const index = seasonOptions.findIndex(({ label }) => props.location.hash === `#${pathify(label)}`)
       return (index >= 0) 
         ? index 
         : seasonOptions.findIndex(({ value }) => value === props.data.series.currSeasonId)
@@ -63,7 +63,7 @@ const ScheduleTemplate = props => {
 										onChange={
 											(selected) => {
 												setSeasonId(selected.value)
-												window.history.pushState({ seasonId: selected.value }, '', `schedule#${pathify(selected.label)}`)
+												navigate(`#${pathify(selected.label)}`)
 											}
 										}
 										options={seasonOptions} 
