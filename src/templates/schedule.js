@@ -22,8 +22,12 @@ const ScheduleTemplate = props => {
 	)
 
   const defaultValueIndex = React.useMemo(
-    () => seasonOptions.findIndex(({ label }) => window.location.hash === `#${pathify(label)}`)
-      ?? seasonOptions.findIndex(({ value }) => props.data.series.currSeasonId),
+    () => {
+      const index = seasonOptions.findIndex(({ label }) => window.location.hash === `#${pathify(label)}`)
+      return (index >= 0) 
+        ? index 
+        : seasonOptions.findIndex(({ value }) => value === props.data.series.currSeasonId)
+    },
     [seasonOptions, props.data.series.currSeasonId]
   )
 
