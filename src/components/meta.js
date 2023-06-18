@@ -10,11 +10,11 @@ const depathify = string => string
 
 const Head = props => {
 	let { title, siteUrl } = useSiteMetadata(),
-			description = `An asphalt league for the late-night racer.`
+			description = `An asphalt oval league for the late-night racer.`
 	if (props.location.pathname !== '/')
 		title += ` | ${depathify(props.location.pathname)}`
-	if (props.pageContext.seasonName)
-		title += ` | ${depathify(props.pageContext.seasonName)}`
+	// if (props.pageContext.seasonName)
+	// 	title += ` | ${depathify(props.pageContext.seasonName)}`
 	return (
 		<>
 			<title>{title}</title>
