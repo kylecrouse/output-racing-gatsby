@@ -30,7 +30,7 @@ const StandingsTemplate = (props) => {
         ? index 
         : seasonOptions.findIndex(({ value }) => value === props.data.series.currSeasonId)
     },
-    [seasonOptions, props.data.series.currSeasonId]
+    [seasonOptions, props.data.series.currSeasonId, props.location.hash]
   )
 	
 	const [seasonId, setSeasonId] = React.useState(seasonOptions[defaultValueIndex].value)
