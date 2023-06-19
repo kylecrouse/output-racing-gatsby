@@ -11,8 +11,8 @@
 	text-align: center;
 }
 
-.footer .columns {
-	align-items: center;
+.footer > .columns {
+	align-items: flex-start;
 	border-top: 1px solid #333;
 	margin: 2rem 0;
 	padding-top: 1rem;
@@ -37,9 +37,8 @@
 }
 
 .footer .about {
-	align-items: stretch;
+	align-items: center;
 	border-top: 0;
-	margin-top: 0;
 	padding-top: 0;
 }
 
@@ -72,10 +71,8 @@
 		url(../images/plus-white-x1.png);
 	background-repeat: no-repeat, no-repeat, repeat;
 	display: flex;
-	flex-direction: column;
-	height: 100%;
+	flex-direction: row;
 	justify-content: space-evenly;
-	padding: 1rem 0;
 }
 
 .footer-nav-container hr {
@@ -98,7 +95,8 @@
 	color: #666;
 	font-family: obvia, sans-serif;
 	font-size: 0.5rem;
-	padding: 0 0.5rem;
+	display: block;
+	padding: 0.5rem;
 	text-transform: uppercase;
 }
 
