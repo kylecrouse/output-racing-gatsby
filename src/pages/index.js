@@ -1,6 +1,7 @@
 import * as React from "react"
 import { Link, Script, graphql } from 'gatsby'
 import axios from 'axios'
+import moment from 'moment'
 import { Carousel, Slide } from '../components/carousel'
 import Layout from '../layouts/home'
 import Meta from '../components/meta'
@@ -100,11 +101,11 @@ const IndexPage = props => {
                     </Link>
               }
               { node.seriesId === 8100
-                  ? <p>
-                      Output Racing League's new Thursday night short track series for west coast and late night racers. Join our tight-knit community for exciting weekly fender-to-fender racing using the new late model stock car from iRacing.<Link to="/apply" className={`${styles.btn} ${styles.btnPrimary}`}><span>Apply now</span></Link>
+                  ? <p className="text-center">
+                      Thursday late-night short track racing
                     </p>
-                  : <p>
-                      Output Racing League's flagship Tuesday late-night NASCAR series. Congratulations once again to Thomas Harmon for winning the 2022 season 2 championship over Matt Burgess and James Watson!<br/><br/>For 2023 the Output Series will be back in the Next Gen Cup Cars starting in February with the Daytona 500. Come join our clean and competitive community! <Link to="/apply" className={`${styles.btn} ${styles.btnPrimary}`}><span>Apply now</span></Link>
+                  : <p className="text-center">
+                      Premiere Tuesday late-night NASCAR racing
                     </p>
               }
               <nav className={styles.nav}>
@@ -124,8 +125,38 @@ const IndexPage = props => {
                       <span>Stats</span>
                     </Link>
                   </li>
+                  <li>
+                    <Link to={`/apply`}>
+                      <span>Apply</span>
+                    </Link>
+                  </li>
                 </ul>
               </nav>
+              <h3>Latest News</h3>
+              <ul className={styles.newsContainer}>
+                {
+                  props.data.news.nodes.reduce((items, item) => {
+                    if ((node.seriesId === 8100 && item.series === 'reverb')
+                      || (node.seriesId === 6842 && item.series === 'output')) {
+                      items.push(
+                          <li key={item.contentful_id}>
+                            <div className="date"><span className="day">{moment(item.date).format('DD')}</span><span className="month">{moment(item.date).format('MMM').toUpperCase()}</span></div>
+                            <Link to={'#'}>
+                              {item.title}
+                            </Link>
+                            <i className="icon icon-arrow-right"></i>
+                          </li>
+                        )
+                    }
+                    return items
+                  }, [])
+                }
+              </ul>
+              <p className="cta">                    
+                <Link to={`/${pathify(node.seriesName)}/news`}>
+                  <span>More News</span>
+                </Link>
+              </p>
               <h3>Current Standings</h3>
               { Array.from(
                   node.currentSeason?.schedules.reduce(
@@ -172,7 +203,7 @@ const IndexPage = props => {
       )
     }),
     {}
-  ), [props.data.series])
+  ), [props.data.series, props.data.news])
   
   return (
     <Layout {...props}>
@@ -188,19 +219,19 @@ const IndexPage = props => {
           )
           : (
             <div className={styles.scheduleContainer}>
-              { true
-                  ? (
-                    <Carousel options={{ 
-                      type: "slider", 
-                      rewind: false,
-                      perView: 1
-                    }}>
-                      { cards }
-                    </Carousel>                    
-                  ) 
-                  : null
-              }
-            </div>            
+                 { true
+                    ? (
+                      <Carousel options={{ 
+                        type: "slider", 
+                        rewind: false,
+                        perView: 1
+                      }}>
+                        { cards }
+                      </Carousel>                    
+                    ) 
+                    : null
+                }
+              </div>            
           )
       }
       
@@ -286,6 +317,17 @@ export const query = graphql`
         }
       }
     }
+    news: allContentfulNews(sort: {date: DESC}) {
+      nodes {
+        contentful_id
+        title
+        date
+        body {
+          raw
+        }
+        series
+      }
+    }  
   }			
 `
 
