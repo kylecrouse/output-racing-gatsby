@@ -28,6 +28,9 @@ const Navbar = (props) => {
 								<a href="https://www.youtube.com/c/AussieSimCommentator" target="_blank" rel="noreferrer">
 									<span>Broadcast</span>
 								</a>
+								<Link to="/news" activeClassName="active" partiallyActive={true}>
+									<span>News</span>
+								</Link>
 								<a href="https://shop.champsspeedshop.com/collections/t-shirts/products/output-racing-league-t-shirt" target="_blank" rel="noreferrer">
 									<span>Merch</span>
 								</a>

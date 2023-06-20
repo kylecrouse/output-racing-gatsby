@@ -70,9 +70,6 @@
 		radial-gradient(farthest-corner at 50% 45%, transparent 50%, rgba(0,0,0,0.9)),
 		url(../images/plus-white-x1.png);
 	background-repeat: no-repeat, no-repeat, repeat;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-evenly;
 }
 
 .footer-nav-container hr {
@@ -80,7 +77,7 @@
 	border: 0;
 	color: rgba(0,0,0,0);
 	height: 2px;
-	margin: 1rem 2rem;
+	margin: 2rem;
 }
 
 .footer-nav-container div > a {
@@ -96,8 +93,19 @@
 	font-family: obvia, sans-serif;
 	font-size: 0.5rem;
 	display: block;
-	padding: 0.5rem;
+	padding: 0.5rem 1rem;
 	text-transform: uppercase;
+}
+
+a + .footer-nav {
+	margin-top: 0.5rem;
+}
+
+.footer-nav {
+	align-items: center;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
 }
 
 .footer-nav a:hover,

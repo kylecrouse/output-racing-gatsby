@@ -15,8 +15,7 @@ const Footer = (props) => {
 					<p>If you are a late-night racer that is looking for a fun group to chill and race with once a week, feel free to apply. We welcome a wide range of skill levels with a minimum C class 2.0 SR license and 1000 IR.</p>
 					<p><Link to="/apply" className="btn btn-primary"><span>Apply Now</span></Link></p>
 				</div>
-        <div className="col-6 col-sm-12 footer-nav-container columns">
-          <div className="col-4">
+        <div className="col-6 col-sm-12 footer-nav-container">
               <Link to="/output-series/schedule" className="output-logo">
 								<img src={outputLogo} alt="Output Series"/>
 							</Link>		
@@ -34,27 +33,8 @@ const Footer = (props) => {
 									<span>Stats</span>
 								</Link>
 							</nav>
-            </div>
-            <div className="col-4">
-							<nav className="footer-nav">
-								<a href="https://www.youtube.com/c/AussieSimCommentator" target="_blank" rel="noreferrer">
-									<span>Broadcast</span>
-								</a>
-								<a href="https://shop.champsspeedshop.com/collections/t-shirts/products/output-racing-league-t-shirt" target="_blank" rel="noreferrer">
-									<span>Merch</span>
-								</a>
-								<Link to="/rules">
-									<span>Rules</span>
-								</Link>
-								<Link to="/protest">
-									<span>Protest</span>
-								</Link>
-								<Link to="/apply">
-									<span>Apply</span>
-								</Link>
-							</nav>
-            </div>
-            <div className="col-4">
+
+            <hr/>
 							<Link to="/reverb-series/schedule" className="reverb-logo">
 								<img src={nightOwlLogo} alt="Night Owl Series"/>
 							</Link>		
@@ -72,7 +52,27 @@ const Footer = (props) => {
 									<span>Stats</span>
 								</Link>
 							</nav>
-            </div>
+							<hr/>
+							<nav className={`footer-nav`}>
+								<a href="https://www.youtube.com/c/AussieSimCommentator" target="_blank" rel="noreferrer">
+									<span>Broadcast</span>
+								</a>
+								<Link to="/news">
+									<span>News</span>
+								</Link>
+								<a href="https://shop.champsspeedshop.com/collections/t-shirts/products/output-racing-league-t-shirt" target="_blank" rel="noreferrer">
+									<span>Merch</span>
+								</a>
+								<Link to="/rules">
+									<span>Rules</span>
+								</Link>
+								<Link to="/protest">
+									<span>Protest</span>
+								</Link>
+								<Link to="/apply">
+									<span>Apply</span>
+								</Link>
+							</nav>
         </div>
 			</div>
 			<div className="columns">

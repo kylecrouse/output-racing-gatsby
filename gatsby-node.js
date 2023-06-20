@@ -208,6 +208,12 @@ exports.createPages = async ({ graphql, actions }) => {
 					}					
 				}	
 			}
+			posts: allContentfulNews {
+				nodes {
+					slug
+					series
+				}
+			}
 		}
 	`)
 		
@@ -297,6 +303,18 @@ exports.createPages = async ({ graphql, actions }) => {
 			context: { seriesId, seriesName, seasonName, seasonId, raceId },
 		})
 	})
+
+	// Create news pages
+	data.posts.nodes.forEach((node) => {
+		const seriesId = node.series === 'output' ? 6842 : 8100,
+					seriesName = `${node.series} Series`
+
+		createPage({
+			path: `/news/${node.slug}`,
+			component: path.resolve(`src/templates/post.js`),
+			context: { seriesId, seriesName, slug: node.slug },
+		})			
+	})	
 }
 
 exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {

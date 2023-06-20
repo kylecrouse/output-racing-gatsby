@@ -100,14 +100,6 @@ const IndexPage = props => {
                       <img src={outputLogo} alt="Output Series"/>
                     </Link>
               }
-              { node.seriesId === 8100
-                  ? <p className="text-center">
-                      Thursday late-night short track racing
-                    </p>
-                  : <p className="text-center">
-                      Premiere Tuesday late-night NASCAR racing
-                    </p>
-              }
               <nav className={styles.nav}>
                 <ul>
                   <li>
@@ -138,10 +130,11 @@ const IndexPage = props => {
                   props.data.news.nodes.reduce((items, item) => {
                     if ((node.seriesId === 8100 && item.series === 'reverb')
                       || (node.seriesId === 6842 && item.series === 'output')) {
-                      items.push(
+                      if (items.length < 2) 
+                        items.push(
                           <li key={item.contentful_id}>
                             <div className="date"><span className="day">{moment(item.date).format('DD')}</span><span className="month">{moment(item.date).format('MMM').toUpperCase()}</span></div>
-                            <Link to={'#'}>
+                            <Link to={`/news/${item.slug}`}>
                               {item.title}
                             </Link>
                             <i className="icon icon-arrow-right"></i>
@@ -153,7 +146,7 @@ const IndexPage = props => {
                 }
               </ul>
               <p className="cta">                    
-                <Link to={`/${pathify(node.seriesName)}/news`}>
+                <Link to={`/news`}>
                   <span>More News</span>
                 </Link>
               </p>
@@ -326,6 +319,7 @@ export const query = graphql`
           raw
         }
         series
+        slug
       }
     }  
   }			
