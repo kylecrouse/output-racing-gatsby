@@ -255,6 +255,16 @@
 	[class*="standingsCard-module--container"]:nth-of-type(3) {
 		margin-left: -0.8rem;
 	}
+
+	.news-container {
+		li {
+			margin-right: 1rem;
+
+			&:nth-child(2) {
+				margin-left: 0.4rem;
+			}
+		}
+	}
 }
 
 .output {
