@@ -329,6 +329,7 @@
 	a:link,
 	a:visited {
 		color: var(--highlight-color);
+		white-space: nowrap;
 	}
 	
 	a:hover,

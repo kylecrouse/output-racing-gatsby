@@ -12,7 +12,7 @@ import * as styles from './index.module.scss'
 import outputLogo from '../images/output-logo.svg'
 import outputImage from '../images/output-screenshot-cup.png'
 import nightowlLogo from '../images/reverb-logo.svg'
-import nightOwlImage from '../images/night-owl-screenshot-gt4.png'
+import nightOwlImage from '../images/reverb-screenshot-lmsc.jpg'
 import promo from '../images/ORL-Season-2-promo.mp4'
 
 const channel = "aussie_sim_commentator"
