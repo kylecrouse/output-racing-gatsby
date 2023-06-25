@@ -121,3 +121,8 @@
 .recent-news a:visited {
 	color: inherit;
 }
+
+[class*="gatsby-image-wrapper"] {
+	float: right;
+	margin: 0 0 1rem;
+}

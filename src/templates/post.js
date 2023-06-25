@@ -1,9 +1,10 @@
 import * as React from "react"
 import { Link, graphql } from 'gatsby'
+import { GatsbyImage } from 'gatsby-plugin-image'
 import { BLOCKS, MARKS } from "@contentful/rich-text-types"
 import { renderRichText } from "gatsby-source-contentful/rich-text"
 import Layout from '../components/layout'
-import Meta from '../components/meta'
+import useSiteMetadata from '../hooks/use-site-metadata'
 import * as styles from './post.module.css'
 
 const Bold = ({ children }) => <span className="bold">{children}</span>
@@ -25,13 +26,11 @@ const options = {
 			)
 		},
 		[BLOCKS.PARAGRAPH]: (node, children) => <Text>{children}</Text>,
-		[BLOCKS.EMBEDDED_ASSET]: node => {
-			return (
-				<pre>
-					<code>{JSON.stringify(node, null, 2)}</code>
-				</pre>
-			)
-		},
+		"embedded-asset-block": node => {
+      const { gatsbyImageData, title } = node.data.target
+      if (!gatsbyImageData) return null
+      return <GatsbyImage image={gatsbyImageData} alt={title || ''}/>
+    },
 	},
 }
 
@@ -96,6 +95,15 @@ export const query = graphql`
 			date(formatString: "DD MMM YYYY")
 			body {
 				raw
+				references {
+					... on ContentfulAsset {
+						contentful_id
+						__typename
+						gatsbyImageData
+						title
+						url
+					}
+				}			
 			}
 		}
 		posts: allContentfulNews(filter: {slug: {ne: $slug}}, sort: {fields: date, order: DESC}, limit: 3) {
@@ -110,6 +118,29 @@ export const query = graphql`
 
 export default PostPage
 
-export const Head = (props) => (
-	<Meta {...props}/>
-)
+export const Head = (props) => {
+	let { title, siteUrl } = useSiteMetadata(),
+		richText = renderRichText(props.data.post.body, options),
+		description = '',
+		image = props.data.post.body.references?.[0]?.url ?? null
+
+	const text = richText.find(({ props }) => Array.isArray(props.children))
+	if (text) description = text.props.children.join()
+
+	return (
+		<>
+			<title>{title} | {props.data.post.title}</title>
+			{ image ? <meta property="og:image" content={image} /> : null }
+			<meta property="og:description" content={description} />
+			<meta property="og:title" content={title} />
+			<meta property="og:type" content="website"/>
+			<meta property="og:url" content={ `${siteUrl}${props.location.pathname}` } />
+			<meta name="twitter:card" content="summary_large_image"/>
+			<meta name="twitter:title" content={title} />
+			title
+			{ image ? <meta name="twitter:image" content={image} /> : null }
+			<meta name="twitter:description" content={description} />
+			<meta name="theme-color" content="#000000"/>
+		</>
+	)
+}
