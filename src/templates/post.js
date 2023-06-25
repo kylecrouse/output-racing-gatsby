@@ -132,12 +132,12 @@ export const Head = (props) => {
 			<title>{title} | {props.data.post.title}</title>
 			{ image ? <meta property="og:image" content={image} /> : null }
 			<meta property="og:description" content={description} />
+			<meta property="og:site_name" content="Output Racing League" />
 			<meta property="og:title" content={props.data.post.title} />
 			<meta property="og:type" content="website"/>
 			<meta property="og:url" content={ `${siteUrl}${props.location.pathname}` } />
 			<meta name="twitter:card" content="summary_large_image"/>
 			<meta name="twitter:title" content={props.data.post.title} />
-			title
 			{ image ? <meta name="twitter:image" content={image} /> : null }
 			<meta name="twitter:description" content={description} />
 			<meta name="theme-color" content="#000000"/>
