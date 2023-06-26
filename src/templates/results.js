@@ -3,12 +3,13 @@ import { graphql } from "gatsby"
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import moment from 'moment'
 import Layout from '../components/layout'
-import Meta from '../components/meta'
+import useSiteMetadata from '../hooks/use-site-metadata'
 import { Carousel, Slide } from '../components/carousel'
 import { renderDriverChip as renderChipHelper } from '../components/driverChip'
 import Table from '../components/table'
 import Video from '../components/video'
 import * as styles from './results.module.scss'
+import logo from '../images/logo.png'
 
 const ResultsTemplate = (props) => {
 	const { race, carLogos } = props.data
@@ -705,6 +706,24 @@ export const query = graphql`
 
 export default ResultsTemplate
 
-export const Head = (props) => (
-	<Meta {...props}/>
-)
+export const Head = (props) => {
+	const { title, siteUrl } = useSiteMetadata()
+	const seriesName = `${props.pageContext.seriesId === 6842 ? 'Output' : 'Reverb'} Series`
+	const description = `Results from the ${seriesName} ${props.data.race.schedule.eventName} at ${props.data.race.schedule.trackConfig.trackName} on ${moment.parseZone(props.data.race.schedule.raceDate).format('DD MMM YYYY')}`
+	return (
+		<>
+			<title>{title} | {`${seriesName} Results`} | {props.data.race.schedule.eventName || props.data.race.schedule.trackConfig.trackName}</title>
+			<meta property="og:image" content={logo} />
+			<meta property="og:description" content={description} />
+			<meta property="og:site_name" content="Output Racing League" />
+			<meta property="og:title" content={`${seriesName} Results | ${props.data.race.schedule.eventName || props.data.race.schedule.trackConfig.trackName}`} />
+			<meta property="og:type" content="website"/>
+			<meta property="og:url" content={ `${siteUrl}${props.location.pathname}` } />
+			<meta name="twitter:card" content="summary_large_image"/>
+			<meta name="twitter:title" content={`${seriesName} Results | ${props.data.race.schedule.eventName || props.data.race.schedule.trackConfig.trackName}`} />
+			<meta name="twitter:image" content={logo} />
+			<meta name="twitter:description" content={description} />
+			<meta name="theme-color" content="#000000"/>
+		</>
+	)
+}
