@@ -65,17 +65,8 @@ const DriverCard = (props) => {
 			<div className={ styles.stats }>
 				<div className={ styles.driver }>
 					{ (!showNumberArt || (showNumberArt && !props.carNumberArt)) &&
-						<div 
-							className={ `${styles.numberText} number-plate-${props.seriesName}` }
-							style={
-								props.carNumber?.length > 2 
-									? props.seriesId === 8100 
-										? { fontSize:  '0.95rem', lineHeight: '1.2' } 
-										: { fontSize:  '1.4rem', lineHeight: 2.5 } 
-									: {}
-							}
-						>
-							{ props.carNumber || '-' }
+						<div className={ `${styles.numberText} number-plate-${props.seriesName}` }>
+							{ props.carNumber?.length <= 2 ? props.carNumber : '-' }
 						</div>	
 					}
 					{ logo &&
