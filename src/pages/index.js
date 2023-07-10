@@ -150,46 +150,50 @@ const IndexPage = props => {
                   <span>More News</span>
                 </Link>
               </p>
-              <h3>Current Standings</h3>
-              { Array.from(
-                  node.currentSeason?.schedules.reduce(
-                    (acc, schedule) => {
-                      schedule.race?.participants.forEach(
-                        (p) => {
-                          const bonusPoints = p.bonuses?.reduce(
-                            (points, { bonusPoints }) => points += bonusPoints, 
-                            0
-                          ) ?? 0
-                          const penaltyPoints = p.penalties?.reduce(
-                            (points, { penaltyPoints }) => points += penaltyPoints,
-                            0
-                          ) ?? 0
-                          const totalPoints = p.racePoints + bonusPoints - penaltyPoints
-    
-                          const key = p.driver.member?.driverNickName ?? p.driver.driverName
-                          acc.set(key, (acc.get(key) ?? 0) + totalPoints)
-                        }
-                      )
-                      return acc
-                    }, 
-                    new Map()
-                  ) ?? {}
-                ).sort(
-                  (a, b) => b[1] - a[1]
-                ).slice(0,3).map(([driverName, totalPoints], index) => (
-                  <StandingsCard 
-                    key={`standings-${index}`}
-                    position={index + 1}
-                    driver={{ driverName }}
-                    totalPoints={totalPoints}
-                  />
-                ))
+              { node.currentSeason?.schedules.some(({ race }) => race !== null) > 0 && 
+                <>
+                  <h3>Current Standings</h3>
+                  { Array.from(
+                      node.currentSeason?.schedules.reduce(
+                        (acc, schedule) => {
+                          schedule.race?.participants.forEach(
+                            (p) => {
+                              const bonusPoints = p.bonuses?.reduce(
+                                (points, { bonusPoints }) => points += bonusPoints, 
+                                0
+                              ) ?? 0
+                              const penaltyPoints = p.penalties?.reduce(
+                                (points, { penaltyPoints }) => points += penaltyPoints,
+                                0
+                              ) ?? 0
+                              const totalPoints = p.racePoints + bonusPoints - penaltyPoints
+        
+                              const key = p.driver.member?.driverNickName ?? p.driver.driverName
+                              acc.set(key, (acc.get(key) ?? 0) + totalPoints)
+                            }
+                          )
+                          return acc
+                        }, 
+                        new Map()
+                      ) ?? {}
+                    ).sort(
+                      (a, b) => b[1] - a[1]
+                    ).slice(0,3).map(([driverName, totalPoints], index) => (
+                      <StandingsCard 
+                        key={`standings-${index}`}
+                        position={index + 1}
+                        driver={{ driverName }}
+                        totalPoints={totalPoints}
+                      />
+                    ))
+                  }
+                  <p className="cta">                    
+                    <Link to={`/${pathify(node.seriesName)}/standings`}>
+                      <span>Full Standings</span>
+                    </Link>
+                  </p>
+                </>
               }
-              <p className="cta">                    
-                <Link to={`/${pathify(node.seriesName)}/standings`}>
-                  <span>Full Standings</span>
-                </Link>
-              </p>
             </div>
           </div>
         </section>
