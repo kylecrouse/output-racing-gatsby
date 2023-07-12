@@ -18,7 +18,7 @@ const RaceChip = (props) => {
 				{ props.trackConfig?.trackName &&
 					<h4>{ props.trackConfig.trackName }</h4>
 				}
-				<h5>{ props.eventName }</h5>
+				<h5>{ props.eventName?.replace(/&#?(\w+);/g, ($0, $1) => String.fromCharCode($1)) }</h5>
 			</div>
 		</div>
 	)
