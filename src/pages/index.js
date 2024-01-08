@@ -49,7 +49,8 @@ const IndexPage = props => {
   const { cards = [] } = React.useMemo(
     () => props.data.schedules.nodes.reduce(
       (a, node) => {
-        const date = new Date(`${node.raceDate.split('T')[0]}T${node.raceTime}`)
+        const date = new Date(`${node.raceDate.split('T')[0]}T${node.raceTime ?? '20:55:00'}`)
+        console.log(node)
         if (node.chase === 'Y')
           a.chase.set(node.season.seasonId, node.eventName)
         else
