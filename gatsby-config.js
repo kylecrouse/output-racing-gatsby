@@ -1,11 +1,11 @@
-const dotenv = require('dotenv').config()
+const dotenv = require("dotenv").config();
 
 module.exports = {
   siteMetadata: {
     siteUrl: "http://outputracing.com",
     title: "Output Racing League",
   },
-  trailingSlash: 'never',
+  trailingSlash: "never",
   plugins: [
     {
       resolve: "gatsby-source-contentful",
@@ -15,7 +15,7 @@ module.exports = {
         enableTags: true,
       },
     },
-    'gatsby-source-iracing',
+    "gatsby-source-iracing",
     {
       resolve: `gatsby-source-mysql`,
       options: {
@@ -24,113 +24,131 @@ module.exports = {
           port: process.env.MYSQL_PORT,
           user: process.env.MYSQL_USERNAME,
           password: process.env.MYSQL_PASSWORD,
-          database: process.env.MYSQL_DATABASE
+          database: process.env.MYSQL_DATABASE,
         },
         queries: [
           {
-            statement: 'SELECT * FROM LEAGUE WHERE league_id = 1710',
-            idFieldName: 'league_id',
-            name: 'league'
+            statement: "SELECT * FROM LEAGUE WHERE league_id = 1710",
+            idFieldName: "league_id",
+            name: "league",
           },
           {
-            statement: 'SELECT * FROM SERIES WHERE league_id = 1710',
-            idFieldName: 'series_id',
-            name: 'series',
-            parentName: 'league',
-            foreignKey: 'league_id',
-            cardinality: 'OneToMany'
+            statement: "SELECT * FROM SERIES WHERE league_id = 1710",
+            idFieldName: "series_id",
+            name: "series",
+            parentName: "league",
+            foreignKey: "league_id",
+            cardinality: "OneToMany",
           },
           {
-            statement: 'SELECT sea.* FROM SEASON AS sea JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710',
-            idFieldName: 'season_id',
-            name: 'season',
-            parentName: 'series',
-            foreignKey: 'series_id',
-            cardinality: 'OneToMany'
+            statement:
+              "SELECT sea.* FROM SEASON AS sea JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710",
+            idFieldName: "season_id",
+            name: "season",
+            parentName: "series",
+            foreignKey: "series_id",
+            cardinality: "OneToMany",
           },
           {
-            statement: 'SELECT sch.* FROM SCHEDULE AS sch JOIN SEASON AS sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710 ORDER BY sch.race_date ASC',
-            idFieldName: 'schedule_id',
-            name: 'schedule',
-            parentName: 'season',
-            foreignKey: 'season_id',
-            cardinality: 'OneToMany'
+            statement:
+              "SELECT sch.* FROM SCHEDULE AS sch JOIN SEASON AS sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710 ORDER BY sch.race_date ASC",
+            idFieldName: "schedule_id",
+            name: "schedule",
+            parentName: "season",
+            foreignKey: "season_id",
+            cardinality: "OneToMany",
           },
           {
-            statement: 'SELECT sc.* FROM SEASON_CLASS AS sc JOIN SEASON_CLASS_CAR AS scc ON sc.season_class_id = scc.season_class_id JOIN SEASON AS sea ON sea.season_id = sc.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710',
-            idFieldName: 'season_class_id',
-            name: 'seasonClass',
-            parentName: 'season',
-            foreignKey: 'season_id',
-            cardinality: 'OneToMany'
+            statement:
+              "SELECT sc.* FROM SEASON_CLASS AS sc JOIN SEASON_CLASS_CAR AS scc ON sc.season_class_id = scc.season_class_id JOIN SEASON AS sea ON sea.season_id = sc.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710",
+            idFieldName: "season_class_id",
+            name: "seasonClass",
+            parentName: "season",
+            foreignKey: "season_id",
+            cardinality: "OneToMany",
           },
           {
-            statement: 'SELECT scc.*, c.* FROM SEASON_CLASS_CAR AS scc JOIN CAR AS c ON c.car_id = scc.car_id JOIN SEASON_CLASS AS sc ON sc.season_class_id = scc.season_class_id JOIN SEASON AS sea ON sea.season_id = sc.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710',
-            idFieldName: 'car_id',
-            name: 'seasonClassCar',
-            parentName: 'seasonClass',
-            foreignKey: 'season_class_id',
-            cardinality: 'OneToMany'
+            statement:
+              "SELECT scc.*, c.* FROM SEASON_CLASS_CAR AS scc JOIN CAR AS c ON c.car_id = scc.car_id JOIN SEASON_CLASS AS sc ON sc.season_class_id = scc.season_class_id JOIN SEASON AS sea ON sea.season_id = sc.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710",
+            idFieldName: "car_id",
+            name: "seasonClassCar",
+            parentName: "seasonClass",
+            foreignKey: "season_class_id",
+            cardinality: "OneToMany",
           },
           {
-            statement: 'SELECT c.* FROM CHASE as c JOIN SCHEDULE AS sch ON c.schedule_id = sch.schedule_id JOIN SEASON as sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710',
-            idFieldName: 'chase_id',
-            name: 'chaseConfig',
-            parentName: 'schedule',
-            foreignKey: 'schedule_id',
-            cardinality: 'OneToOne'
+            statement:
+              "SELECT c.* FROM CHASE as c JOIN SCHEDULE AS sch ON c.schedule_id = sch.schedule_id JOIN SEASON as sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710",
+            idFieldName: "chase_id",
+            name: "chaseConfig",
+            parentName: "schedule",
+            foreignKey: "schedule_id",
+            cardinality: "OneToOne",
           },
           {
-            statement: 'SELECT tc.*, t.*, tt.* FROM TRACK_CONFIG AS tc JOIN TRACK AS t ON t.track_id = tc.track_id JOIN TRACK_TYPE AS tt ON tt.track_type_id = tc.track_type_id',
-            idFieldName: 'track_config_id',
-            name: 'config',
+            statement:
+              "SELECT tc.*, t.*, tt.* FROM TRACK_CONFIG AS tc JOIN TRACK AS t ON t.track_id = tc.track_id JOIN TRACK_TYPE AS tt ON tt.track_type_id = tc.track_type_id",
+            idFieldName: "track_config_id",
+            name: "config",
           },
           {
-            statement: 'SELECT r.* FROM RACE AS r JOIN SCHEDULE AS sch ON sch.schedule_id = r.schedule_id JOIN SEASON as sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710',
-            idFieldName: 'race_id',
-            name: 'race',
-            parentName: 'schedule',
-            foreignKey: 'schedule_id',
-            cardinality: 'OneToOne'
+            statement:
+              "SELECT r.* FROM RACE AS r JOIN SCHEDULE AS sch ON sch.schedule_id = r.schedule_id JOIN SEASON as sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710 and r.session_num = 0.0",
+            idFieldName: "race_id",
+            name: "race",
+            parentName: "schedule",
+            foreignKey: "schedule_id",
+            cardinality: "OneToOne",
           },
           {
-            statement: 'SELECT rp.* FROM RACE_PARTICIPANT AS rp JOIN RACE AS r ON r.race_id = rp.race_id JOIN SCHEDULE AS sch ON sch.schedule_id = r.schedule_id JOIN SEASON as sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710',
-            idFieldName: 'race_participant_id',
-            name: 'participant',
-            parentName: 'race',
-            foreignKey: 'race_id',
-            cardinality: 'OneToMany'
+            statement:
+              "SELECT rp.*, r.schedule_id FROM RACE_PARTICIPANT AS rp JOIN RACE AS r ON r.race_id = rp.race_id JOIN SCHEDULE AS sch ON sch.schedule_id = r.schedule_id JOIN SEASON as sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710 and r.session_num = 0.0",
+            idFieldName: "race_participant_id",
+            name: "participant",
+            parentName: "race",
+            foreignKey: "race_id",
+            cardinality: "OneToMany",
           },
           {
-            statement: 'SELECT s.* FROM RACE_LOOP_STATS AS s JOIN RACE_PARTICIPANT AS rp ON rp.race_participant_id = s.race_participant_id JOIN RACE AS r ON r.race_id = rp.race_id JOIN SCHEDULE AS sch ON sch.schedule_id = r.schedule_id JOIN SEASON as sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710',
-            idFieldName: 'race_participant_id',
-            name: 'loopstats',
-            parentName: 'participant',
-            foreignKey: 'race_participant_id',
-            cardinality: 'OneToOne'
+            statement:
+              "SELECT s.* FROM RACE_LOOP_STATS AS s JOIN RACE_PARTICIPANT AS rp ON rp.race_participant_id = s.race_participant_id JOIN RACE AS r ON r.race_id = rp.race_id JOIN SCHEDULE AS sch ON sch.schedule_id = r.schedule_id JOIN SEASON as sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710 and r.session_num = 0.0",
+            idFieldName: "race_participant_id",
+            name: "loopstats",
+            parentName: "participant",
+            foreignKey: "race_participant_id",
+            cardinality: "OneToOne",
           },
           {
-            statement: 'SELECT d.* FROM DRIVER AS d JOIN RACE_PARTICIPANT AS rp ON rp.driver_id = d.driver_id JOIN RACE AS r ON r.race_id = rp.race_id JOIN SCHEDULE AS sch ON sch.schedule_id = r.schedule_id JOIN SEASON as sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710',
-            idFieldName: 'driver_id',
-            name: 'driver',
+            statement:
+              "SELECT d.* FROM DRIVER AS d JOIN RACE_PARTICIPANT AS rp ON rp.driver_id = d.driver_id JOIN RACE AS r ON r.race_id = rp.race_id JOIN SCHEDULE AS sch ON sch.schedule_id = r.schedule_id JOIN SEASON as sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710 and r.session_num = 0.0",
+            idFieldName: "driver_id",
+            name: "driver",
           },
           {
-            statement: 'SELECT * FROM CAR',
-            idFieldName: 'car_id',
-            name: 'car',
+            statement: "SELECT * FROM CAR",
+            idFieldName: "car_id",
+            name: "car",
           },
           {
-            statement: 'SELECT b.* FROM RACE_BONUS AS b JOIN RACE_PARTICIPANT AS rp ON rp.race_participant_id = b.race_participant_id JOIN RACE AS r ON r.race_id = rp.race_id JOIN SCHEDULE AS sch ON sch.schedule_id = r.schedule_id JOIN SEASON as sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710',
-            idFieldName: 'race_bonus_id',
-            name: 'bonus',
+            statement:
+              "SELECT b.* FROM RACE_BONUS AS b JOIN RACE_PARTICIPANT AS rp ON rp.race_participant_id = b.race_participant_id JOIN RACE AS r ON r.race_id = rp.race_id JOIN SCHEDULE AS sch ON sch.schedule_id = r.schedule_id JOIN SEASON as sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710 and r.session_num = 0.0",
+            idFieldName: "race_bonus_id",
+            name: "bonus",
           },
           {
-            statement: 'SELECT p.* FROM RACE_PENALTY AS p JOIN RACE_PARTICIPANT AS rp ON rp.race_participant_id = p.race_participant_id JOIN RACE AS r ON r.race_id = rp.race_id JOIN SCHEDULE AS sch ON sch.schedule_id = r.schedule_id JOIN SEASON as sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710',
-            idFieldName: 'race_penalty_id',
-            name: 'penalty',
+            statement:
+              "SELECT p.* FROM RACE_PENALTY AS p JOIN RACE_PARTICIPANT AS rp ON rp.race_participant_id = p.race_participant_id JOIN RACE AS r ON r.race_id = rp.race_id JOIN SCHEDULE AS sch ON sch.schedule_id = r.schedule_id JOIN SEASON as sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710 and r.session_num = 0.0",
+            idFieldName: "race_penalty_id",
+            name: "penalty",
           },
-        ]
-      }
+          {
+            statement:
+              "SELECT rp.race_participant_id, rp.driver_id, rp.race_id, r.schedule_id, sch.season_id, rp.race_points AS stage_points, r.session_num FROM RACE_PARTICIPANT AS rp JOIN RACE AS r ON r.race_id = rp.race_id JOIN SCHEDULE AS sch ON sch.schedule_id = r.schedule_id JOIN SEASON as sea ON sea.season_id = sch.season_id JOIN SERIES AS ser ON ser.series_id = sea.series_id WHERE ser.league_id = 1710 and r.session_num > -1 and r.session_num < 0",
+            idFieldName: "race_participant_id",
+            name: "stages",
+          },
+        ],
+      },
     },
     {
       resolve: "gatsby-source-filesystem",
@@ -141,13 +159,13 @@ module.exports = {
     },
     "gatsby-plugin-image",
     "gatsby-plugin-sharp",
-    'gatsby-plugin-sass',
+    "gatsby-plugin-sass",
     {
       resolve: `gatsby-plugin-s3`,
       options: {
         bucketName: "output-racing-gatsby",
-        region: 'us-west-2',
-        acl: null
+        region: "us-west-2",
+        acl: null,
       },
     },
     "gatsby-transformer-sharp",
