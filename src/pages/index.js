@@ -66,7 +66,12 @@ const IndexPage = (props) => {
             node.trackAsset = props.data.assets.nodes.find(
               ({ trackId }) => trackId === node.trackConfig.trackId
             );
-          if (date > Date.now() && node.chase !== "Y" && node.race === null)
+          if (
+            date > Date.now() &&
+            node.chase !== "Y" &&
+            node.offWeek !== "Y" &&
+            node.race === null
+          )
             a.cards = [
               ...a.cards,
               <Slide key={`event-${node.scheduleId}`}>
@@ -284,6 +289,8 @@ const IndexPage = (props) => {
 
       {series[8100]}
 
+      {series[11326]}
+
       <div className={`${styles.promo} hide-md`}>
         <Video src={{ mp4: promo }} />
       </div>
@@ -339,6 +346,7 @@ export const query = graphql`
         scheduleId: schedule_id
         eventName: event_name
         chase
+        offWeek: off_week
         raceDate: race_date
         raceTime: race_time
         race {
