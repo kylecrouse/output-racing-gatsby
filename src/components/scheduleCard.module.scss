@@ -1,288 +1,311 @@
 .container {
-	background-color: white;
-	background-image:
-		radial-gradient(farthest-corner at 50% 45%, white 65%, rgba(255,255,255,0.6)), 
-		url(../images/plus-x2.png); 
-	background-position: center, center;
-	background-repeat: no-repeat, repeat;
-	background-size: 100%, 8px;
-	border-radius: 0.25rem;
-	/* box-shadow: 10px 10px 20px black, inset 0 0 0.6rem rgba(0,0,0,0.5); */
-	margin: 0 auto;
-	max-width: 20rem;
-	padding-bottom: 1rem;
-	overflow: hidden;
-	position: relative;
-	width: 26vw;
-	&[class*="reverb-series"] {
-		--highlight-color: #FF0066;
-		--primary-color: #0FC3E8;
-		--secondary-color: #0194BE;
-		--highlight-opposite-color: white;
-	}
-	&[class*="output-series"] {
-		--highlight-color: #fccc00;
-		--primary-color: #530388;
-		--secondary-color: #37096c;
-		--highlight-opposite-color: white;
-	}
+  background-color: white;
+  background-image: radial-gradient(
+      farthest-corner at 50% 45%,
+      white 65%,
+      rgba(255, 255, 255, 0.6)
+    ),
+    url(../images/plus-x2.png);
+  background-position: center, center;
+  background-repeat: no-repeat, repeat;
+  background-size: 100%, 8px;
+  border-radius: 0.25rem;
+  /* box-shadow: 10px 10px 20px black, inset 0 0 0.6rem rgba(0,0,0,0.5); */
+  margin: 0 auto;
+  max-width: 20rem;
+  padding-bottom: 1rem;
+  overflow: hidden;
+  position: relative;
+  width: 26vw;
+  &[class*="echo-dirt-series"] {
+    --highlight-color: #ffc26f;
+    --primary-color: #884a39;
+    --secondary-color: hsl(13, 41%, 28%);
+    --highlight-opposite-color: white;
+    img {
+      z-index: 1;
+    }
+    img + img {
+      filter: brightness(0) saturate(1);
+      height: auto;
+      margin: 0 0 0;
+      position: absolute;
+      z-index: 0;
+    }
+  }
+  &[class*="reverb-series"] {
+    --highlight-color: #ff0066;
+    --primary-color: #0fc3e8;
+    --secondary-color: #0194be;
+    --highlight-opposite-color: white;
+  }
+  &[class*="output-series"] {
+    --highlight-color: #fccc00;
+    --primary-color: #530388;
+    --secondary-color: #37096c;
+    --highlight-opposite-color: white;
+  }
 }
 
 .header {
-	align-items: center;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	margin: 0 -2px 1rem;
-	padding: 1rem 0 1rem 1rem;
-	position: relative;
-	z-index: 1;
-	
-	&::before,
-	h3::before {
-		background: var(--primary-color);
-		clip-path: polygon(0 0, 0 100%, 100% 80%, 100% 0);
-		bottom: 0;
-		content: ' ';
-		left: 0;
-		position: absolute;
-		right: 0;
-		top: 0;
-	}
-	
-	h3::before {
-		background: var(--secondary-color);
-		bottom: -1.5rem;
-		clip-path: polygon(10% 15%, 0% 90%, 100% 100%, 100% 0);
-		top: -0.5rem;
-		z-index: 1;
-	}
-	
-	img {
-		filter: brightness(0) saturate(1) invert(1);
-		width: 45%;
-	}
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0 -2px 1rem;
+  padding: 1rem 0 1rem 1rem;
+  position: relative;
+  z-index: 1;
 
-	h3 {
-		align-self: flex-end;
-		color: var(--highlight-opposite-color);
-		font-family: obvia-expanded, sans-serif;
-		font-style: italic;
-		font-size: 0.5rem;
-		font-weight: 900;
-		line-height: 1;
-		margin: 0;
-		padding: 0 1rem 0 8%;
-		position: relative;
-		text-align: center;
-		text-transform: uppercase;
-		z-index: 1;
-		> span {
-			position: relative;
-			top: 0.75rem;
-			z-index: 2;
-			span {
-				border-top: 1px solid white;
-				display: inline-block;
-				font-size: 1.2rem;
-				line-height: 1.4;
-				margin-top: 0.4rem;
-				padding-top: 0.2rem;
-				white-space: nowrap;
-				word-spacing: 0.3rem;
-				&.chase {
-					font-size: 0.8vw;
-					padding-top: 0.3rem;
-				}
-			}
-		}
-	}
+  &::before,
+  h3::before {
+    background: var(--primary-color);
+    clip-path: polygon(0 0, 0 100%, 100% 80%, 100% 0);
+    bottom: 0;
+    content: " ";
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  h3::before {
+    background: var(--secondary-color);
+    bottom: -1.5rem;
+    clip-path: polygon(10% 15%, 0% 90%, 100% 100%, 100% 0);
+    top: -0.5rem;
+    z-index: 1;
+  }
+
+  img {
+    filter: brightness(0) saturate(1) invert(1);
+    width: 45%;
+  }
+
+  h3 {
+    align-self: flex-end;
+    color: var(--highlight-opposite-color);
+    font-family: obvia-expanded, sans-serif;
+    font-style: italic;
+    font-size: 0.5rem;
+    font-weight: 900;
+    line-height: 1;
+    margin: 0;
+    padding: 0 1rem 0 8%;
+    position: relative;
+    text-align: center;
+    text-transform: uppercase;
+    z-index: 1;
+    > span {
+      position: relative;
+      top: 0.75rem;
+      z-index: 2;
+      span {
+        border-top: 1px solid white;
+        display: inline-block;
+        font-size: 1.2rem;
+        line-height: 1.4;
+        margin-top: 0.4rem;
+        padding-top: 0.2rem;
+        white-space: nowrap;
+        word-spacing: 0.3rem;
+        &.chase {
+          font-size: 0.8vw;
+          padding-top: 0.3rem;
+        }
+      }
+    }
+  }
 }
 
 .container [class*="raceChip-module--logo"] {
-	bottom: 25%;
-	left: 1rem;
-	opacity: 0.5;
-	right: -1rem;
-	top: 15%;
-	transform: scale(1);
-	width: auto;
-	&::after {
-		background: linear-gradient(112deg, rgba(255, 255, 255, 1) 30%, rgba(255, 255, 255, 0.6));
-	}
-	img {
-		max-height: 60%;
-		max-width: 100%;
-	}
+  bottom: 25%;
+  left: 1rem;
+  opacity: 0.5;
+  right: -1rem;
+  top: 15%;
+  transform: scale(1);
+  width: auto;
+  &::after {
+    background: linear-gradient(
+      112deg,
+      rgba(255, 255, 255, 1) 30%,
+      rgba(255, 255, 255, 0.6)
+    );
+  }
+  img {
+    max-height: 60%;
+    max-width: 100%;
+  }
 }
 
 .map {
-	align-items: center;
-	display: flex;
-	height: 8rem;
-	justify-content: center;
-	max-width: 80%;
-	margin: 1.5rem auto 2rem;
-	position: relative;
-	z-index: 1;
-	img {
-		max-height: 100%;
-		max-width: 100%;
-		filter: invert(1);
-	}
+  align-items: center;
+  display: flex;
+  height: 8rem;
+  justify-content: center;
+  max-width: 80%;
+  margin: 1.5rem auto 2rem;
+  position: relative;
+  z-index: 1;
+  img {
+    max-height: 100%;
+    max-width: 100%;
+    filter: invert(1);
+  }
 }
 
 .container [class*="cars-container"] {
-	margin: 2.5rem 0 1rem;
-	max-width: 100%;
-	padding: 0 2rem;
+  margin: 2.5rem 0 1rem;
+  max-width: 100%;
+  padding: 0 2rem;
 }
 
 .container [class*="car-container"] {
-	transform: scale(1.5);
-	figcaption {
-		display: none;
-	}
+  transform: scale(1.5);
+  figcaption {
+    display: none;
+  }
 }
 
 .container [class*="raceChip-module--container"] {
-	margin: 1rem 0.5rem 1rem 1.5rem;
-	
-	h4 {
-		font-size: 0.9rem;
-	}
-	
-	h5 {
-		font-size: 0.7rem;
-	}
+  margin: 1rem 0.5rem 1rem 1.5rem;
+
+  h4 {
+    font-size: 0.9rem;
+  }
+
+  h5 {
+    font-size: 0.7rem;
+  }
 }
 
 .container [class*="resultsChip-module--container"] {
-	margin: 0.5rem 2rem 0 2.5rem;
+  margin: 0.5rem 2rem 0 2.5rem;
 }
 
 .countdown {
-	h3 {
-		background: linear-gradient(112deg, 
-			transparent 5%, 
-			green 20%, 
-			green 80%, 
-			transparent 95%
-		);
-		color: white;
-		font-family: obvia-expanded, sans-serif;
-		font-weight: 600;
-		font-size: 0.8rem;
-		font-style: italic;
-		letter-spacing: 3px;
-		margin: 0;
-		text-align: center;
-		text-transform: uppercase;
-		word-spacing: 2px;
-	}
-	
-	div {
-		color: #666;
-		font-size: 0.5rem;
-		line-height: 1;
-		text-align: center;
-		text-transform: uppercase;
-	}
-	
-	& > div {
-		margin: 1rem 2rem 0;
-	}
-	
-	[class^="col-"]:not(:last-child) {
-		border-right: 1px solid #ccc;
-	}
-	
-	b {
-		display: block;
-		font-family: obvia-expanded, sans-serif;
-		font-size: 1.5rem;
-		font-weight: 400;
-		line-height: 1;
-		margin-bottom: 0.2rem;
-	}
+  h3 {
+    background: linear-gradient(
+      112deg,
+      transparent 5%,
+      green 20%,
+      green 80%,
+      transparent 95%
+    );
+    color: white;
+    font-family: obvia-expanded, sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    font-style: italic;
+    letter-spacing: 3px;
+    margin: 0;
+    text-align: center;
+    text-transform: uppercase;
+    word-spacing: 2px;
+  }
+
+  div {
+    color: #666;
+    font-size: 0.5rem;
+    line-height: 1;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  & > div {
+    margin: 1rem 2rem 0;
+  }
+
+  [class^="col-"]:not(:last-child) {
+    border-right: 1px solid #ccc;
+  }
+
+  b {
+    display: block;
+    font-family: obvia-expanded, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 0.2rem;
+  }
 }
 
 [class*="reverb-series"] .countdown b {
-	font-family: graystroke, obvia-expanded, sans-serif;
-	margin-bottom: 0.4rem;
+  font-family: graystroke, obvia-expanded, sans-serif;
+  margin-bottom: 0.4rem;
 }
 
 @media (max-width: 1280px) {
-	.container {
-		width: 35vw;
-	}	
-	.header h3 > span {
-			font-size: 1vw;
-			span {
-				font-size: 2vw;
-			}
-		} 
+  .container {
+    width: 35vw;
+  }
+  .header h3 > span {
+    font-size: 1vw;
+    span {
+      font-size: 2vw;
+    }
+  }
 }
 
-
 @media (max-width: 840px) {
-	.container {
-		width: 50vw;
-	}	
-	
-	.header h3 > span {
-		font-size: 1.5vw;
-		span {
-			font-size: 3vw;
-		}
-	} 
+  .container {
+    width: 50vw;
+  }
+
+  .header h3 > span {
+    font-size: 1.5vw;
+    span {
+      font-size: 3vw;
+    }
+  }
 }
 
 @media (max-width: 480px) {
-	.container {
-		width: 80vw;
-		
-		[class*="raceChip-module--container"] {
-			margin: 1rem 0.5rem 1rem 1rem;
-			
-			h4 {
-				font-size: 0.8rem;
-			}
-			
-			h5 {
-				font-size: 0.6rem;
-			}
-		}
-		
-		[class*="raceDate-module--date"] {
-			padding-right: 0.5rem;
-		}
-		
-		[class*="raceChip-module--track"] {
-			padding-left: 0.6rem;
-		}
-	}	
-	
-	.header h3 > span {
-		font-size: 2.5vw;
-		span {
-			font-size: 5vw;
-		}
-	} 
-	
-	.countdown {
-		h3 {
-			font-size: 0.6rem;
-			line-height: 1.4;
-		}
-		
-		& > div {
-			margin-left: 1.5rem;
-			margin-right: 1.5rem;
-		}
-		
-		b {
-			font-size: 1.2rem;
-		}
-	}
+  .container {
+    width: 80vw;
+
+    [class*="raceChip-module--container"] {
+      margin: 1rem 0.5rem 1rem 1rem;
+
+      h4 {
+        font-size: 0.8rem;
+      }
+
+      h5 {
+        font-size: 0.6rem;
+      }
+    }
+
+    [class*="raceDate-module--date"] {
+      padding-right: 0.5rem;
+    }
+
+    [class*="raceChip-module--track"] {
+      padding-left: 0.6rem;
+    }
+  }
+
+  .header h3 > span {
+    font-size: 2.5vw;
+    span {
+      font-size: 5vw;
+    }
+  }
+
+  .countdown {
+    h3 {
+      font-size: 0.6rem;
+      line-height: 1.4;
+    }
+
+    & > div {
+      margin-left: 1.5rem;
+      margin-right: 1.5rem;
+    }
+
+    b {
+      font-size: 1.2rem;
+    }
+  }
 }

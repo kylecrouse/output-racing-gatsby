@@ -13,6 +13,9 @@ import outputLogo from "../images/output-logo.svg";
 import outputImage from "../images/output-screenshot-cup.png";
 import nightowlLogo from "../images/reverb-logo.svg";
 import nightOwlImage from "../images/reverb-screenshot-lmsc.png";
+import echoLogo from "../images/echo-logo.svg";
+import echoLogoBG from "../images/echo-logo-dirt.svg";
+import echoImage from "../images/output-screenshot-cup.png";
 import promo from "../images/ORL-Season-2-promo.mp4";
 
 const channel = "aussie_sim_commentator";
@@ -101,7 +104,11 @@ const IndexPage = (props) => {
           [node.seriesId]: (
             <section
               className={`${styles.section} ${
-                node.seriesId === 8100 ? styles.nightOwl : styles.output
+                node.seriesId === 11326
+                  ? styles.echo
+                  : node.seriesId === 8100
+                  ? styles.nightOwl
+                  : styles.output
               }`}
             >
               <div className={styles.sectionContainer}>
@@ -115,7 +122,19 @@ const IndexPage = (props) => {
                   />
                 </div>
                 <div className={styles.sectionContent}>
-                  {node.seriesId === 8100 ? (
+                  {node.seriesId === 11326 ? (
+                    <Link
+                      to="/echo-series/schedule"
+                      className={styles.seriesLogo}
+                    >
+                      <img
+                        src={echoLogoBG}
+                        alt=""
+                        className={styles.logoBackground}
+                      />
+                      <img src={echoLogo} alt="Echo Series" />
+                    </Link>
+                  ) : node.seriesId === 8100 ? (
                     <Link
                       to="/reverb-series/schedule"
                       className={styles.seriesLogo}
@@ -158,6 +177,7 @@ const IndexPage = (props) => {
                   <ul className={styles.newsContainer}>
                     {props.data.news.nodes.reduce((items, item) => {
                       if (
+                        (node.seriesId === 11326 && item.series === "echo") ||
                         (node.seriesId === 8100 && item.series === "reverb") ||
                         (node.seriesId === 6842 && item.series === "output")
                       ) {
