@@ -38,6 +38,14 @@ const Navbar = (props) => {
               >
                 <img src={nightowlLogo} alt="Reverb Series" />
               </Link>
+              <Link
+                to="/echo-series/schedule"
+                className={`echo-logo ${
+                  props.series === "echo-dirt-series" ? "hide-sm" : ""
+                }`}
+              >
+                <img src={echoLogo} alt="Echo Series" />
+              </Link>
             </section>
             <section className="navbar-section">
               <nav className="nav">

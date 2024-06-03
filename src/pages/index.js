@@ -309,7 +309,7 @@ const IndexPage = (props) => {
 
       {series[8100]}
 
-      {series[11326]}
+      {/* {series[11326]} */}
 
       <div className={`${styles.promo} hide-md`}>
         <Video src={{ mp4: promo }} />

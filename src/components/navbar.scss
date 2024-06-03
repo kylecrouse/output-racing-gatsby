@@ -48,13 +48,18 @@ header {
   }
 
   .output-logo,
-  .nightowl-logo {
+  .nightowl-logo,
+  .echo-logo {
     position: relative;
     top: 2px;
 
     img {
       filter: brightness(0) saturate(1) invert(0.4);
     }
+  }
+
+  .echo-logo {
+    top: 3px;
   }
 
   &.no-subnav {
