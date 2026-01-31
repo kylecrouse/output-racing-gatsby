@@ -467,11 +467,11 @@ const ResultsTemplate = (props) => {
                   <span>{race.schedule.trackConfig?.trackName}</span>
                 </h5>
               </div>
-              {trackAsset && (
+              {race.schedule.trackConfig?.trackIracingId && (
                 <div className="column col-4 text-right hide-sm">
                   <img
                     className={styles.logo}
-                    src={`https://images-static.iracing.com${trackAsset.logo}`}
+                    src={`https://images-static.iracing.com/img/logos/tracks/${race.schedule.trackConfig.trackIracingId}__light.png`}
                     alt="track logo"
                   />
                 </div>
@@ -784,6 +784,7 @@ export const query = graphql`
           trackName: track_name
           trackTypeId: track_type_id
           trackType: type_name
+          trackIracingId: track_iracing_id
         }
       }
     }

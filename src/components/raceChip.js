@@ -5,10 +5,10 @@ import * as styles from './raceChip.module.scss'
 const RaceChip = (props) => {
 	return (
 		<div className={ styles.container }>
-			{ props.trackAsset &&
+			{ props.trackConfig?.trackIracingId &&
 					<div className={ styles.logo }>
-						<img 
-							src={`https://images-static.iracing.com${props.trackAsset.logo}`}
+						<img
+							src={`https://images-static.iracing.com/img/logos/tracks/${props.trackConfig.trackIracingId}__light.png`}
 							alt={ `${props.trackConfig?.trackName} logo` }
 						/>
 					</div>

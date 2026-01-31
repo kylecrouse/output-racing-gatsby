@@ -188,6 +188,7 @@ export const query = graphql`
             trackName: track_name
             trackConfigIracingId: track_config_iracing_id
             trackConfigName: track_config_name
+            trackIracingId: track_iracing_id
           }
           race {
             raceId: race_id
