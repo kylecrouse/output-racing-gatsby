@@ -8,7 +8,12 @@ const { Client } = require('./iracing')
 const dotenv = require('dotenv').config()
 const util = require('util')
 
-const client = new Client(process.env.IRACING_USERNAME, process.env.IRACING_PASSWORD)
+const client = new Client(
+  process.env.IRACING_USERNAME,
+  process.env.IRACING_PASSWORD,
+  process.env.IRACING_OAUTH_CLIENT_ID,
+  process.env.IRACING_OAUTH_CLIENT_SECRET
+)
   
 exports.sourceNodes = async ({
   actions,
